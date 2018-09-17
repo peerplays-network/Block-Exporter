@@ -1,0 +1,7 @@
+This folder is for PostCSS 
+
+https://github.com/postcss/postcss
+
+We may not need it, but if we do end up using it, it will be done here.
+
+For any other CSS, use your component folder.
