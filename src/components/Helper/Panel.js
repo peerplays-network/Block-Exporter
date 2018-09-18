@@ -1,11 +1,14 @@
+/* Reusable Panel component to be used for drag and drop layout 
+*Props taken in: headerText, width, style, onClose
+* All elements put between <Panel> </Panel> will be rendered by this.props.children
+* Please add anything that is missing! This is not necessarily a completed component
+*/
+
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
 import styles from './styles.css';
 
 class Panel extends Component {
-	constructor(props) {
-		super(props)
-	}
+	
 	render() {
 		return (
 			<div>
