@@ -11,22 +11,55 @@ export default class AccountSearch extends Component {
     super(e);
 
     this.state = {
-        account : ''
+        account : '',
+        data: []
     };
     this.onAccountEnter = this.onAccountEnter.bind(this)
   }
 
   onAccountEnter(e) {
     const account = e.target.value;
-    console.log('account entered is ', account);
     this.setState({ account: e.target.value });
   }
 
-  searchPlayer(e) {
+  searchAccount(e) {
     if (e) e.preventDefault();
     this.findAccount(this.state.account);//function to get account name
     e.currentTarget.reset();
     this.setState({ account: '' });
+  }
+
+  findAccount(accountName) {
+    //API call to search for Account
+    /*
+    .get(`http://<the url or access to the Account>${accountName}`)
+    .then(response => {
+      this.setState({
+        data: response.data.data
+      });
+    })
+    .catch(error => {console.log('error is fetching account data', error);});
+    */
+    /*
+    fetch('https://mywebsite.com/endpoint/', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        firstParam: 'yourValue',
+        secondParam: 'yourOtherValue',
+      }),
+      }).then((response) => response.json())
+        .then((responseJson) => {
+          return responseJson.movies;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    */
+    console.log('account to search is ', accountName);
   }
 
   render() {
@@ -34,7 +67,7 @@ export default class AccountSearch extends Component {
       <div>
         <div>
           <h3> Search Account </h3>
-          <form onSubmit={ this.searchPlayer }>
+          <form onSubmit={ this.searchAccount }>
             <input
               type="text"
               value={this.state.account}
