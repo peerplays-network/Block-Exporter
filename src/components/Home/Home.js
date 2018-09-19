@@ -5,7 +5,6 @@ import styles from './styles.css';
 import {Rnd} from 'react-rnd';
 
 class Welcome extends Component {
-
 	onClosePanel() {
     	console.log('Close Clicked');
   	}
