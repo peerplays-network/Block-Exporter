@@ -64,6 +64,20 @@ const api = {
 			console.error('Could not retrieve new accs: \n', error.data);
 		});
 	},
+    
+	/* Get an account’s balances in various assets
+    name: Account name
+    assets: An array of asset(s) type IDs
+
+    returns: An array containing balances in various asset(s)
+    */
+	getAccountBalanceFromName: (name, assets) => {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().db_api().exec('get_named_account_balances', [name, assets]).then(b => {
+				resolve(b);
+			});
+		});
+	},
 
 	/* Recursively obtain all witnesses on the blockchain
     startChar: Last witness, for recursion. If calling this manually, startChar should ALWAYS be set to ''
@@ -116,6 +130,33 @@ const api = {
 		return new Promise((resolve, reject) => {
 			blockchainWS.Apis.instance().db_api().exec('get_witnesses', [witnessIds]).then(w => {
 				resolve(w);
+			});
+		});
+	},
+
+
+	/* Obtain block from block number
+    blockNum: Height of the block to be returned
+
+    returns: Block object
+    */
+	getBlock: blockNum => {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().db_api().exec('get_block', [blockNum]).then(b => {
+				resolve(b);
+			});
+		});
+	},
+
+	/* Obtain block header from block number
+    blockNum: Height of the block to be returned
+
+    returns: Block header object
+    */
+	getBlockHeader: blockNum => {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().db_api().exec('get_block_header', [blockNum]).then(b => {
+				resolve(b);
 			});
 		});
 	}
