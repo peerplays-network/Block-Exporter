@@ -6,3 +6,7 @@
 .closeButton:hover {
 	opacity: 0.5;
 }
+
+.centerText {
+  text-align: center;
+}
