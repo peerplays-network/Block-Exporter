@@ -3,9 +3,9 @@ import { Button } from 'reactstrap';
 import Panel from '../Helper/Panel';
 import styles from './styles.css';
 import {Rnd} from 'react-rnd';
+import WitnessViewer from '../WitnessViewer';
 
 class Welcome extends Component {
-
 	onClosePanel() {
     	console.log('Close Clicked');
   	}
@@ -20,11 +20,10 @@ class Welcome extends Component {
 				    width: 320,
 				    height: 200,
 				  }}
-				>
-					<Panel headerText={'Transition Feed'} width={'400px'} style={{  margin: '24px auto', width: '400px' }} onClose={this.onClosePanel.bind(this)}>
+				  >
+					<Panel headerText={'Witnesses'} style={{  margin: '24px auto', width: '600px' }} onClose={this.onClosePanel.bind(this)}>
 						<div className={`${styles['data-react']}`}>
-							<h3>Test</h3>
-							<Button>Bootstrap Button</Button>
+							<WitnessViewer />
 						</div>
 					</Panel>
 				</Rnd>
