@@ -10,3 +10,30 @@
 .centerText {
   text-align: center;
 }
+
+/* font for countdown panel */
+
+@font-face {
+  font-family: LiquidCrystal;
+  src: url(../../assets/fonts/liquid_crystal/LiquidCrystal-Bold.otf);
+  
+}
+
+@font-face {
+  font-family: LiquidCrystal;
+  src: url(../../assets/fonts/liquid_crystal/LiquidCrystal-Bold.otf);
+  font-weight: bold;
+  
+}
+
+@font-face {
+  font-family: LiquidCrystal;
+  src: url(../../assets/fonts/liquid_crystal/LiquidCrystal-BoldItalic.otf);
+  font-style: italic;
+}
+
+.digital {
+  font-family: LiquidCrystal;
+}
+
+/* end font code */

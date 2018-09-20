@@ -14,7 +14,7 @@ class MaintenanceCD extends Component {
 							<button className={`${styles['closeButton']} link float-right border-0 bg-transparent`} onClick={this.props.onClose}>X</button>
 						</span>
 					</div>
-					<div className={`${styles['box-shadow']} p-3 ${styles['centerText']}`}>
+					<div className={`${styles['box-shadow']} ${styles['centerText']} ${styles['digital']} p-3`}>
                         <Countdown date={Date.now() + 10000} />
 					</div>
 				</div>
