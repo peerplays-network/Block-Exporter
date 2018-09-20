@@ -29,7 +29,12 @@ export default class NavBar extends React.Component {
 			isOpen: !this.state.isOpen
 		});
 	}
+
 	render() {
+		const slideMenu = () => {
+			const menu = document.querySelector('.sliding-menu');
+			menu.style.right = '0';
+		};
 		return (
 			<div>
 				<Navbar color="light" light expand="md">

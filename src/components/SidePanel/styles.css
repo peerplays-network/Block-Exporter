@@ -1,0 +1,17 @@
+.sliding-menu {
+    z-index: 99;
+    position: fixed;
+    left: 0%;
+    top: 0;
+    background: #f3f3f3;
+    min-width: 300px;
+    height: 93vh;
+    top: 56px;
+    transition: all 0.2s ease;
+ }
+
+
+.welcome-text p {
+    line-height: 1.5;
+    margin: 0;
+  }
