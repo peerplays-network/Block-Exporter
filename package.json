@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@types/loader-utils": "^1.1.3",
     "apisauce": "^0.14.0",
     "body-parser": "^1.17.2",
     "bootstrap": "^4.1.3",
@@ -36,6 +37,7 @@
     "redux-saga": "^0.15.3",
     "redux-thunk": "^2.3.0",
     "rimraf": "^2.6.2",
+    "url-loader": "^1.1.1",
     "webpack": "^4.11.0",
     "webpack-merge": "^4.1.0"
   },
@@ -63,7 +65,7 @@
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-react": "^7.11.0",
     "faker": "^4.1.0",
-    "file-loader": "^0.11.2",
+    "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^20.0.4",
