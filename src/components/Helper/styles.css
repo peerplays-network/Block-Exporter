@@ -34,6 +34,9 @@
 
 .digital {
   font-family: LiquidCrystal;
+  font-size: 4em;
+  background: black;
+  color: #00ff66;
 }
 
 /* end font code */
