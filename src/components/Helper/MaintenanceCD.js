@@ -15,7 +15,7 @@ class MaintenanceCD extends Component {
 						</span>
 					</div>
 					<div className={`${styles['box-shadow']} ${styles['centerText']} ${styles['digital']} p-3`}>
-                        <Countdown date={Date.now() + 10000} />
+                        <Countdown date={Date.now() + 1000000} />
 					</div>
 				</div>
 			</div>
