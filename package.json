@@ -21,6 +21,8 @@
     "lodash": "^4.17.11",
     "morgan": "^1.8.2",
     "path": "^0.12.7",
+    "peerplaysjs-lib": "^0.4.20",
+    "peerplaysjs-ws": "^0.1.11",
     "prop-types": "^15.5.10",
     "raf": "^3.4.0",
     "react": "^16.5.0",
