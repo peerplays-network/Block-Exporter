@@ -12,6 +12,7 @@ const blockchainWS = require("peerplaysjs-ws");
 const blockchainLib = require("peerplaysjs-lib");
 
 const Blockchain = require("./api");
+const wsMonitor = require("./api/monitor");
 
 const BLOCKCHAIN_URL = "ws://10.20.10.45:8090/ws"
 
@@ -49,6 +50,9 @@ app.listen(port, err => {
 	// 	console.log(w);
 	// })
 
+	// blockchainWS.Apis.instance().db_api().exec( "set_subscribe_callback", [ updateListener, true ] );
+
+	wsMonitor.subscribeToNewTransactions();
   });
 });
 
