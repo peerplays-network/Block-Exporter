@@ -29,6 +29,7 @@
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.1.1",
     "react-router-redux": "^5.0.0-alpha.9",
+    "react-virtualized": "^9.20.1",
     "reactstrap": "^6.4.0",
     "redux": "^3.7.0",
     "redux-promise": "^0.6.0",
