@@ -53,6 +53,7 @@ app.listen(port, err => {
 	// blockchainWS.Apis.instance().db_api().exec( "set_subscribe_callback", [ updateListener, true ] );
 
 	wsMonitor.subscribeToNewTransactions();
+	wsMonitor.subscribeToAccount(["committee-account", "1.2.0"]);
   });
 });
 
