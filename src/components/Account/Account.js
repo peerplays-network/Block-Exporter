@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Pagination, PaginationItem, PaginationLink, button, Table } from 'reactstrap';
-
+import axios from 'axios';
 import styles from './Account.css';
 import AccountDetail from './subcomponents/AccountDetail';
 
@@ -75,6 +75,7 @@ export default class AccountSearch extends Component {
       ];
 
     this.state = {
+        data: [],
         account : '',
         temp_data: this.data,
         currentPage: 0
@@ -109,13 +110,12 @@ export default class AccountSearch extends Component {
   findAccount(accountName, data) {
     //API call to search for Account
     /*
-    fetch('https://mywebsite.com/endpoint/', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      }).then(response => {
+    axios.get('/account',{
+      params:{
+        //none since it is all account
+      }
+    })
+    .then(response => {
         this.setState({
           data: response.data.data
         });
