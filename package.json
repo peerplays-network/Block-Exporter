@@ -19,6 +19,7 @@
     "immutability-helper": "^2.7.0",
     "lodash": "^4.17.11",
     "morgan": "^1.8.2",
+    "mysql": "^2.16.0",
     "path": "^0.12.7",
     "peerplaysjs-lib": "^0.4.20",
     "peerplaysjs-ws": "^0.1.11",
