@@ -7,3 +7,7 @@
 .nav a {
   margin-right: 8px;
 }
+
+.cursor {
+  cursor: pointer;
+}

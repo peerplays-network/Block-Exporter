@@ -34,7 +34,7 @@
 
 .digital {
   font-family: LiquidCrystal;
-  font-size: 4em;
+  /* font-size: 2em; */
   font-style: italic;
   background: black;
   color: #00ff00;
