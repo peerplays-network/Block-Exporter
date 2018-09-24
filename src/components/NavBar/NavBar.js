@@ -10,8 +10,7 @@ import {
 	UncontrolledDropdown,
 	DropdownToggle,
 	DropdownMenu,
-	DropdownItem,
-	Button, } from 'reactstrap';
+	DropdownItem,} from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
 import styles from './NavBar.css';
 

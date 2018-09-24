@@ -8,6 +8,7 @@ import Panel from '../Panel/Panel';
 import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
 import {Rnd} from 'react-rnd';
+import WitnessViewer from '../WitnessViewer/WitnessViewer';
 
 class Welcome extends Component {
 	constructor() {
