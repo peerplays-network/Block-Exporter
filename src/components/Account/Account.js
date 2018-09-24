@@ -92,9 +92,7 @@ export default class AccountSearch extends Component {
 
   handleClick(e, index) {
     e.preventDefault();
-    this.setState({
-      currentPage: index
-    });
+    this.setState({ currentPage: index  });
   }
 
   onAccountEnter(e) {
@@ -104,9 +102,8 @@ export default class AccountSearch extends Component {
 
   searchAccount(e) {
     if (e) e.preventDefault();
-    this.findAccount(this.state.account, this.data);//function to get account name
+    this.findAccount(this.state.account, this.data);
     e.currentTarget.reset();
-    //this.setState({ account: '' });
   }
 
   findAccount(accountName, data) {
@@ -126,16 +123,15 @@ export default class AccountSearch extends Component {
       .catch(error => {console.log('error is fetching account data', error);});
     */
     var temp_data = [];
+      //if the data.id matches accountName add to data
+      for (var account in data) {
+        if (data[account].id == accountName)
+          temp_data.push(data[account]);
 
-    //if the data.id matches accountName add to data
-    for (var account in data) {
-      if (data[account].id == accountName)
-        temp_data.push(data[account]);
-    }
-    if (temp_data.length > 0)
-      this.setState({ temp_data: temp_data });
-    else
-      this.setState({ temp_data: data });
+      }
+      if (temp_data.length <= 0)
+        temp_data = data;
+    this.setState({ temp_data: temp_data });
   }
 
   render() {
