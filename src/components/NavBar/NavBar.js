@@ -33,7 +33,12 @@ export default class NavBar extends React.Component {
 	render() {
 		const slideMenu = () => {
 			const menu = document.querySelector('.sliding-menu');
-			menu.style.right = '0';
+			
+			if(menu.style.left === '-100%')
+				menu.style.left = '0%';
+			else
+				menu.style.left = '-100%';
+
 		};
 		return (
 			<div>
@@ -58,7 +63,7 @@ export default class NavBar extends React.Component {
 						</UncontrolledDropdown>
 						<NavItem navbar>
 							<NavLink>
-								<i className={`${styles['cursor']} fas fa-toolbox fa-1x`}></i>
+								<i onClick={slideMenu.bind(this)} className={`${styles['cursor']} fas fa-toolbox fa-1x`}></i>
 							</NavLink>
 						</NavItem>
 						
