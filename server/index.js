@@ -45,17 +45,46 @@ app.listen(port, err => {
 	} 
   console.log('App is listening on', port); 
 
-  Blockchain.connect(BLOCKCHAIN_URL).then((r) => {
+  Blockchain.connect(BLOCKCHAIN_URL).then(async (r) => {
 	// connected -- do stuff 
 
-	
-	// example API call:
-	Blockchain.getWitnessObjsById(['1.6.1', '1.6.2']).then((w) => {
-		console.log(w);
-	})
 
+
+		// Blockchain.getAccountNamesRecursively('', 1000).then((y) => {
+		// 	console.log(y);
+		// })
+
+		// let n = await Blockchain.getAccountByName(['alpha']);
+		// console.log(n);
+
+
+		// let r2 = await Blockchain.getAccountNamesRecursively('', 1000);
+		// let nameAry = [];
+		// for (const name of r2) {
+		// 	// console.log(name[0])
+		// 	nameAry.push(name[0]);
+		// }
+
+		// console.log(nameAry);
+
+
+		let r3 = await Blockchain.getFullAccounts(['alpha', 'com0', 'com1']);
+		
+		r3.forEach((data, index) => {
+			// console.log(data[1]);
+			const { id } = data[1].account
+			console.log(id);
+		});
+
+	
+	// Blockchain.getWitnessObjsById(['1.6.1', '1.6.2']).then((w) => {
+	// 	console.log(w);
+	// })
+
+	// let witnessAry;
 	// Blockchain.getWitnessesRecursively('', 1000).then((r) => {
-	// 	console.log(r);
+	// 	witnessAry = r;
+	// 	console.log(witnessAry);
 	// })
 
 	// blockchainWS.Apis.instance().db_api().exec( "set_subscribe_callback", [ updateListener, true ] );
@@ -63,29 +92,32 @@ app.listen(port, err => {
 	// wsMonitor.subscribeToNewTransactions();
 	// wsMonitor.subscribeToAccount(["committee-account", "1.2.0"]);
 
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-	  });
+	// const connection = mysql.createConnection({
+	// 	host     : db.HOST,
+	// 	user     : db.USER,
+	// 	password : db.PASSWORD,
+	// 	database : db.DATABASE
+	//   });
 
-	  connection.connect(function(err) {
-		if (err) {
-		  console.error('error connecting: ' + err.stack);
-		  return;
-		}
+	//   connection.connect(function(err) {
+	// 	if (err) {
+	// 	  console.error('error connecting: ' + err.stack);
+	// 	  return;
+	// 	}
 
 	  
-		console.log('connected as id ' + connection.threadId);
-	  });
-	  sql = 'SELECT * FROM explorer.accounts'
-	  connection.query(sql, function (err, result) {
-		if (err) throw err;
-		console.log("Result: " + result);
-	  });
+	// 	console.log('connected as id ' + connection.threadId);
+	// 	});
+		
+	//   sql = 'SELECT * FROM explorer.accounts'
+	//   connection.query(sql, function (err, result) {
+	// 	if (err) throw err;
+	// 	console.log("Result: " + result);
+	//   });
 	  
-  });
+	});
+	
+
 });
 
 module.exports = app;
