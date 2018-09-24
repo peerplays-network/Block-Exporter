@@ -6,6 +6,7 @@
 
 import React, { Component } from 'react';
 import styles from './styles.css';
+import { Button } from 'reactstrap';
 
 class Panel extends Component {
 	render() {
@@ -15,12 +16,10 @@ class Panel extends Component {
 					<div className="card-header pr-1">
 						<span>
 							<h5 className="card-title float-left">{this.props.headerText}</h5>
-							<button type="button" className="close" aria-label="Close">
-  								<span aria-hidden="true">&times;</span>
-							</button>
+							<Button type="button" className="close" onClick={this.props.onClose(this.props.componentId)}> <span aria-hidden="true">&times;</span> </Button>
 						</span>
 					</div>
-					<div className={`${styles['box-shadow']} p-0`}>
+					<div className={`${styles['box-shadow']} p-1`}>
 						{this.props.children}
 					</div>
 				</div>
