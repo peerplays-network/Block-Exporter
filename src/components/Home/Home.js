@@ -3,7 +3,6 @@
 */
 
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
 import Panel from '../Panel/Panel';
 import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
@@ -13,7 +12,8 @@ import WitnessViewer from '../WitnessViewer/WitnessViewer';
 class Welcome extends Component {
 	constructor() {
 		super();
-		this.state = {components: [{name: 'Transition Feed', image: 'placeholder.img', size: 'medium', visible: false, id: 0}, {name: 'Witness Feed', image: 'placeholder.img', size: 'medium', visible: false, id: 1}]};
+		this.state = {components: [{name: 'Transition Feed', image: 'placeholder.img', size: 'medium', visible: false, id: 0},
+			{name: 'Witness Feed', image: 'placeholder.img', size: 'medium', visible: false, id: 1}]};
 	}
 
 	onClosePanel(id) {
@@ -34,6 +34,17 @@ class Welcome extends Component {
 		stateCopy.components[id].visible = true;
 		this.setState({stateCopy});
 		this.componentClicked(id);
+	}
+
+	renderComponent(id) {
+		switch(id) {
+			case 0:
+				return (<div><h3>hey</h3></div>);
+			case 1:
+				return <WitnessViewer />;
+			default:
+				return;
+		}
 	}
 
 	getPanelSize(size) {
@@ -66,8 +77,7 @@ class Welcome extends Component {
 										{
 											<Panel headerText={component.name} style={{  margin: '24px auto', width: this.getPanelSize(component.size) }} onClose={() => this.onClosePanel.bind(this, component.id)}>
 												<div className={`${styles['data-react']}`}>
-													<h3>Test</h3>
-													<Button>Bootstrap Button</Button>
+													{this.renderComponent(component.id)}
 												</div>
 											</Panel> 
 										}		      
