@@ -15,3 +15,24 @@
 .listAccounts ul {
   line-height: 0.5
 }
+
+.pagination-wrapper {
+  overflow-x:auto;
+}
+
+.pagination {
+  justify-content: center;
+  margin:30px;
+}
+
+.data-slice {
+  margin-top: 50px;
+}
+
+.submit {
+  border-radius: 5px;
+}
+
+body {
+  text-align: center;
+}

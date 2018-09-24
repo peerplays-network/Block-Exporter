@@ -17,7 +17,6 @@ const AccountDetail = props => {
     <ul>{ vote.vote } { vote.symbol }</ul>
   );
 
-  console.log(props);
   return(
           <tr>
             <th>{ props.detail.id }</th>

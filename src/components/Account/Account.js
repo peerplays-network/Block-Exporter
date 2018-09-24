@@ -1,37 +1,100 @@
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
-import { Column, Table } from 'react-virtualized'
-import styles from './account.css';
-import ListAccounts from './subcomponents/ListAccounts';
+import { Pagination, PaginationItem, PaginationLink, button, Table } from 'reactstrap';
+
+import styles from './Account.css';
+import AccountDetail from './subcomponents/AccountDetail';
 
 export default class AccountSearch extends Component {
 
   constructor(e) {
     super(e);
+    this.data = [
+        {id: 'bts-conradrei1', votes: [], proposals: [], referrer_name: 'committee-account', balances: [{
+          "asset_type": "1.3.0",
+          "symbol": "PPY",
+          "owner": "1.2.6752",
+          "balance": 21000026121,
+          "id": "2.5.6444"
+        }]},
+        {id: 'gold-blocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
+          "asset_type": "1.3.0",
+          "symbol": "PPY",
+          "owner": "1.2.9833",
+          "balance": 11683915631,
+          "id": "2.5.8735"
+        }]},
+        {id: 'gold-blohcks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
+          "asset_type": "1.3.0",
+          "symbol": "PPY",
+          "owner": "1.2.9833",
+          "balance": 11683915631,
+          "id": "2.5.8735"
+        }]},
+        {id: 'gold-bljghkocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
+          "asset_type": "1.3.0",
+          "symbol": "PPY",
+          "owner": "1.2.9833",
+          "balance": 11683915631,
+          "id": "2.5.8735"
+        }]},
+        {id: 'gold-bklocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
+          "asset_type": "1.3.0",
+          "symbol": "PPY",
+          "owner": "1.2.9833",
+          "balance": 11683915631,
+          "id": "2.5.8735"
+        }]},
+        {id: 'golhd-blocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
+          "asset_type": "1.3.0",
+          "symbol": "PPY",
+          "owner": "1.2.9833",
+          "balance": 11683365631,
+          "id": "2.5.8735"
+        }]},
+        {id: 'gold-blkocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
+          "asset_type": "1.3.0",
+          "symbol": "PPY",
+          "owner": "1.2.9833",
+          "balance": 116823543,
+          "id": "2.5.8735"
+        }]},
+        {id: 'goldjh-blocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
+          "asset_type": "1.3.0",
+          "symbol": "PPY",
+          "owner": "1.2.9833",
+          "balance": 11682354631,
+          "id": "2.5.8735"
+        }]},
+        {id: 'gold-hjkblocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
+          "asset_type": "1.3.0",
+          "symbol": "PPY",
+          "owner": "1.2.9833",
+          "balance": 115631,
+          "id": "2.5.8735"
+        }]}
+      ];
 
     this.state = {
         account : '',
-        data: [
-          {id: 'bts-conradrei1', votes: [], proposals: [], referrer_name: 'committee-account', balances: [{
-            "asset_type": "1.3.0",
-            "symbol": "PPY",
-            "owner": "1.2.6752",
-            "balance": 21000026121,
-            "id": "2.5.6444"
-          }]},
-          {id: 'gold-blocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
-            "asset_type": "1.3.0",
-            "symbol": "PPY",
-            "owner": "1.2.9833",
-            "balance": 11683915631,
-            "id": "2.5.8735"
-          }]}
-        ],
-        temp_data: [],
+        temp_data: this.data,
+        currentPage: 0
     };
+    //pagination info
+    this.pageSize = 5;
+    this.pagesCount = Math.ceil(this.data.length / this.pageSize);
+
+
+
     this.onAccountEnter = this.onAccountEnter.bind(this)
     this.searchAccount = this.searchAccount.bind(this);
     this.findAccount = this.findAccount.bind(this);
+  }
+
+  handleClick(e, index) {
+    e.preventDefault();
+    this.setState({
+      currentPage: index
+    });
   }
 
   onAccountEnter(e) {
@@ -41,7 +104,7 @@ export default class AccountSearch extends Component {
 
   searchAccount(e) {
     if (e) e.preventDefault();
-    this.findAccount(this.state.account, this.state.data);//function to get account name
+    this.findAccount(this.state.account, this.data);//function to get account name
     e.currentTarget.reset();
     //this.setState({ account: '' });
   }
@@ -62,33 +125,79 @@ export default class AccountSearch extends Component {
       })
       .catch(error => {console.log('error is fetching account data', error);});
     */
-    console.log('account to search is', accountName);
+    var temp_data = [];
+
     //if the data.id matches accountName add to data
     for (var account in data) {
       if (data[account].id == accountName)
-        console.log('account is ', data[account]);
-      else
-        data.splice(account, 1);
+        temp_data.push(data[account]);
     }
-    this.setState({ temp_data: data });
+    if (temp_data.length > 0)
+      this.setState({ temp_data: temp_data });
+    else
+      this.setState({ temp_data: data });
   }
 
   render() {
+    const { currentPage } = this.state;
+
     return(
-      <div>
         <div>
+        <div className="pagination-wrapper">
           <form onSubmit={ this.searchAccount }>
-            <input
-              type="text"
-              value={this.state.account}
-              onChange={this.onAccountEnter}
-              placeholder="Account"
-            />
-            <input type="submit" value="Search Account" />
-          </form>
-          <ListAccounts name={ this.state.account } data={ this.state.temp_data }/>
+              <input
+                type="text"
+                value={this.state.account}
+                onChange={this.onAccountEnter}
+                placeholder="Account"
+              />
+              <input type="submit" value="Search Account" />
+            </form>
+            <Pagination aria-label="Page navigation example">
+                <PaginationItem disabled={currentPage <= 0}>
+                  <PaginationLink
+                    onClick={e => this.handleClick(e, currentPage - 1)}
+                    previous href="#"
+                  />
+                </PaginationItem>
+                    {[...Array(this.pagesCount)].map((page, i) =>
+                      <PaginationItem active={i === currentPage} key={i}>
+                        <PaginationLink onClick={e => this.handleClick(e, i)} href="#">
+                          {i + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    )}
+                <PaginationItem disabled={currentPage >= this.pagesCount - 1}>
+                  <PaginationLink
+                    onClick={e => this.handleClick(e, currentPage + 1)}
+                    next href="#"
+                  />
+                </PaginationItem>
+            </Pagination>
         </div>
-      </div>
+
+          <Table>
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Balances</th>
+                    <th>Proposals</th>
+                    <th>Votes</th>
+                    <th>Referrer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.temp_data
+                    .slice(
+                      currentPage * this.pageSize,
+                      (currentPage + 1) * this.pageSize
+                    ).map((account, i) =>
+                      <AccountDetail detail={ account } key={i}/>
+                  )}
+                </tbody>
+          </Table>
+
+        </div>
     );
   }
 
