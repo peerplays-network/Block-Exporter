@@ -12,8 +12,8 @@ import WitnessViewer from '../WitnessViewer/WitnessViewer';
 class Welcome extends Component {
 	constructor() {
 		super();
-		this.state = {components: [{name: 'Transition Feed', image: 'placeholder.img', size: 'medium', visible: false, id: 0},
-			{name: 'Witness Feed', image: 'placeholder.img', size: 'medium', visible: false, id: 1}]};
+		this.state = {components: [{name: 'Transition Feed', img: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 0},
+			{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 1}]};
 	}
 
 	onClosePanel(id) {
@@ -87,7 +87,7 @@ class Welcome extends Component {
 					}
 				</div>
 				<div>
-					<SidePanel components={this.state.components} visible={this.componentClicked.bind(this)} changeSize={this.changePanelSize.bind(this)}/>	
+					<SidePanel components={this.state.components} changeSize={this.changePanelSize.bind(this)}/>	
 				</div>
 			</div>
 		);
