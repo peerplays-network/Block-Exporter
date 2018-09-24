@@ -1,14 +1,9 @@
 const blockchainWS = require('peerplaysjs-ws');
 const blockchainLib = require('peerplaysjs-lib');
 
-/* Callback for subscribe(), this can be used to test */
+/* Test Callback */
 function updateListener(object) {
-	console.log('\x1b[32m block update:\n', object);
-}
-
-/* Callback for subscribeToNewTransactions(), this can be used to test */
-function updateTransactionListener(object) {
-	console.log('\x1b[33m transaction:\n', object);
+	console.log('\x1b[update:\n', object);
 }
 
 const wsMonitor = {
