@@ -50,27 +50,6 @@ export default class AccountSearch extends Component {
           "owner": "1.2.9833",
           "balance": 11683365631,
           "id": "2.5.8735"
-        }]},
-        {id: 'gold-blkocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
-          "asset_type": "1.3.0",
-          "symbol": "PPY",
-          "owner": "1.2.9833",
-          "balance": 116823543,
-          "id": "2.5.8735"
-        }]},
-        {id: 'goldjh-blocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
-          "asset_type": "1.3.0",
-          "symbol": "PPY",
-          "owner": "1.2.9833",
-          "balance": 11682354631,
-          "id": "2.5.8735"
-        }]},
-        {id: 'gold-hjkblocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
-          "asset_type": "1.3.0",
-          "symbol": "PPY",
-          "owner": "1.2.9833",
-          "balance": 115631,
-          "id": "2.5.8735"
         }]}
       ];
 

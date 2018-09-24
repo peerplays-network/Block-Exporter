@@ -8,12 +8,14 @@ import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
 import {Rnd} from 'react-rnd';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
+import AccountSearch from '../Account/Account';
 
 class Welcome extends Component {
 	constructor() {
 		super();
 		this.state = {components: [{name: 'Transition Feed', img: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 0},
-			{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 1}]};
+			{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 1},
+			{name: 'Account Feed', img: 'https://via.placeholder.com/50x50', size:'large', visible: false, id:2}]};
 	}
 
 	onClosePanel(id) {
@@ -42,6 +44,8 @@ class Welcome extends Component {
 				return (<div><h3>hey</h3></div>);
 			case 1:
 				return <WitnessViewer />;
+			case 2:
+				return <AccountSearch />;
 			default:
 				return;
 		}
