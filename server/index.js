@@ -11,8 +11,11 @@ const config = require('../webpack.config');
 const blockchainWS = require("peerplaysjs-ws");
 const blockchainLib = require("peerplaysjs-lib");
 
+const mysql = require('mysql');
+
 const Blockchain = require("./api");
 const wsMonitor = require("./api/monitor");
+const db = require("./database/constants");
 
 const BLOCKCHAIN_URL = "ws://10.20.10.45:8090/ws"
 
@@ -45,15 +48,43 @@ app.listen(port, err => {
   Blockchain.connect(BLOCKCHAIN_URL).then((r) => {
 	// connected -- do stuff 
 
+	
 	// example API call:
-	// Blockchain.getWitnessObjById(['1.6.1', '1.6.2']).then((w) => {
-	// 	console.log(w);
+	Blockchain.getWitnessObjsById(['1.6.1', '1.6.2']).then((w) => {
+		console.log(w);
+	})
+
+	// Blockchain.getWitnessesRecursively('', 1000).then((r) => {
+	// 	console.log(r);
 	// })
 
 	// blockchainWS.Apis.instance().db_api().exec( "set_subscribe_callback", [ updateListener, true ] );
 
-	wsMonitor.subscribeToNewTransactions();
-	wsMonitor.subscribeToAccount(["committee-account", "1.2.0"]);
+	// wsMonitor.subscribeToNewTransactions();
+	// wsMonitor.subscribeToAccount(["committee-account", "1.2.0"]);
+
+	const connection = mysql.createConnection({
+		host     : db.HOST,
+		user     : db.USER,
+		password : db.PASSWORD,
+		database : db.DATABASE
+	  });
+
+	  connection.connect(function(err) {
+		if (err) {
+		  console.error('error connecting: ' + err.stack);
+		  return;
+		}
+
+	  
+		console.log('connected as id ' + connection.threadId);
+	  });
+	  sql = 'SELECT * FROM explorer.accounts'
+	  connection.query(sql, function (err, result) {
+		if (err) throw err;
+		console.log("Result: " + result);
+	  });
+	  
   });
 });
 
