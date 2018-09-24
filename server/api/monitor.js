@@ -8,7 +8,7 @@ function updateListener(object) {
 
 const wsMonitor = {
 
-	/* Global subscribe function, displays all block updates. This function will provide a continuou stream of info 
+	/* Global subscribe function, displays all block updates. This function will provide a continuous stream of info 
     cb: callback function to execute onUpdate
     */
 	subscribe: (cb) => {
