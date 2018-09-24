@@ -1,0 +1,8 @@
+.box-shadow {
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);
+
+}
+
+.closeButton:hover {
+	opacity: 0.5;
+}
