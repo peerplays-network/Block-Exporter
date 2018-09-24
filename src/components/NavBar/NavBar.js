@@ -33,12 +33,7 @@ export default class NavBar extends React.Component {
 	render() {
 		const slideMenu = () => {
 			const menu = document.querySelector('.sliding-menu');
-			
-			if(menu.style.left === '-100%')
-				menu.style.left = '0%';
-			else
-				menu.style.left = '-100%';
-
+			menu.style.left === '-100%' ? menu.style.left = '0%' : menu.style.left = '-100%';
 		};
 		return (
 			<div>
@@ -48,7 +43,7 @@ export default class NavBar extends React.Component {
 							<DropdownToggle nav >
 								<i className="fas fa-bars fa-1x"></i>
 							</DropdownToggle>
-							<DropdownMenu left>
+							<DropdownMenu >
 								<DropdownItem>
 									Option 1
 								</DropdownItem>

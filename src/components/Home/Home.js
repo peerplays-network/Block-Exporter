@@ -1,6 +1,10 @@
+/*current implementation will be refactored to not include a giant state array of fake components :).
+* 
+*/
+
 import React, { Component } from 'react';
 import { Button } from 'reactstrap';
-import Panel from '../Helper/Panel';
+import Panel from '../Panel/Panel';
 import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
 import {Rnd} from 'react-rnd';
