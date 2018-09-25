@@ -13,9 +13,9 @@ import WitnessViewer from '../WitnessViewer/WitnessViewer';
 class Welcome extends Component {
 	constructor() {
 		super();
-		this.state = {components: [{name: 'Transition Feed', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 0},
-								   {name: 'Witness Feed', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 1},
-								   {name: 'Maintenance Countdown', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 2}
+		this.state = {components: [{name: 'Transition Feed', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 0},
+								   {name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', currentSize: '', visible: false, id: 1},
+								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 2}
 								  ]
 					 };
 	}
@@ -34,7 +34,7 @@ class Welcome extends Component {
 
 	changePanelSize(id, size) {
 		const stateCopy = Object.assign({}, this.state);
-		stateCopy.components[id].size = size;
+		stateCopy.components[id].currentSize = size;
 		stateCopy.components[id].visible = true;
 		this.setState({stateCopy});
 		this.componentClicked(id);
@@ -47,7 +47,7 @@ class Welcome extends Component {
 			case 1:
 				return <WitnessViewer />;
 			case 2:
-				return <MaintenanceCD size={{'font-size': (component.size === 'small') ? '2em' : '4em'}} />;
+				return <MaintenanceCD size={{'fontSize': (component.size === 'small') ? '2em' : '4em'}} />;
 			default:
 				return;
 		}
@@ -81,7 +81,7 @@ class Welcome extends Component {
 									}}
 								> 
 									<Panel headerText={component.name} 
-										style={{ margin: '24px auto', width: this.getPanelSize(component.size) }} 
+										style={{ margin: '24px auto', width: this.getPanelSize(component.currentSize) }} 
 										onClose={() => this.onClosePanel.bind(this, component.id)}>
 										<div className={`${styles['data-react']}`}>
 											{this.renderComponent(component)}
