@@ -1,8 +1,7 @@
 /*Used in Account*/
 import React,  { Component } from 'react';
-import AccountSearch from './Account';
 
-class AccountDetail extends AccountSearch {
+class AccountDetail extends Component {
 
   render() {
     const foundBalances = this.props.detail.balances;
@@ -21,13 +20,13 @@ class AccountDetail extends AccountSearch {
     );
 
     return (
-        <tr>
-          <th>{ this.props.detail.id }</th>
-          <th>{ balanceList }</th>
-          <th>{ proposalList }</th>
-          <th>{ voteList }</th>
-          <th>{ this.props.detail.referrer_name }</th>
-        </tr>
+      <tr>
+        <th>{ this.props.detail.id }</th>
+        <th>{ balanceList }</th>
+        <th>{ proposalList }</th>
+        <th>{ voteList }</th>
+        <th>{ this.props.detail.referrer_name }</th>
+      </tr>
     );
   }
 
