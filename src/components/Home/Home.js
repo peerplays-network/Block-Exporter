@@ -47,7 +47,7 @@ class Welcome extends Component {
 			case 1:
 				return <WitnessViewer />;
 			case 2:
-				return <MaintenanceCD size={{'font-size': (component.size === 'small') ? '2em' : '4em'}} />
+				return <MaintenanceCD size={{'font-size': (component.size === 'small') ? '2em' : '4em'}} />;
 			default:
 				return;
 		}
@@ -94,7 +94,6 @@ class Welcome extends Component {
 				</div>
 				<div>
 					<SidePanel components={this.state.components} 
-							   visible={this.componentClicked.bind(this)} 
 							   changeSize={this.changePanelSize.bind(this)}/>	
 				</div>
 			</div>
