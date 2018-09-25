@@ -22,7 +22,7 @@ export default class SidePanelItem extends Component {
 							</div>
 						</div>
 						<div className="col-4">
-							<span className={`${styles['dot']}`}></span>
+							{this.props.img ? <img className={`${styles['side-image']}`} src={this.props.img} alt=""/>  : <span className={`${styles['dot']}`}></span>}
 						</div>
 					</div>
 				</td>

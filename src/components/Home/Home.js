@@ -3,7 +3,6 @@
 */
 
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
 import Panel from '../Panel/Panel';
 import MaintenanceCD from '../Panel/MaintenanceCD';
 import SidePanel from '../SidePanel/SidePanel';
@@ -14,9 +13,9 @@ import WitnessViewer from '../WitnessViewer/WitnessViewer';
 class Welcome extends Component {
 	constructor() {
 		super();
-		this.state = {components: [{name: 'Transition Feed', image: 'placeholder.img', size: 'medium', visible: false, id: 0},
-								   {name: 'Witness Feed', image: 'placeholder.img', size: 'medium', visible: false, id: 1},
-								   {name: 'Maintenance Countdown', image: 'placeholder.img', size: 'medium', visible: false, id: 2}
+		this.state = {components: [{name: 'Transition Feed', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 0},
+								   {name: 'Witness Feed', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 1},
+								   {name: 'Maintenance Countdown', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 2}
 								  ]
 					 };
 	}
@@ -41,6 +40,19 @@ class Welcome extends Component {
 		this.componentClicked(id);
 	}
 
+	renderComponent(component) {
+		switch(component.id) {
+			case 0:
+				return (<div><h3>hey</h3></div>);
+			case 1:
+				return <WitnessViewer />;
+			case 2:
+				return <MaintenanceCD size={{'font-size': (component.size === 'small') ? '2em' : '4em'}} />
+			default:
+				return;
+		}
+	}
+
 	getPanelSize(size) {
 		switch(size) {
 			case 'small':
@@ -51,32 +63,6 @@ class Welcome extends Component {
 				return '600px';
 			default:
 				return;
-		}
-	}
-	
-	displayComponent(selected) {
-		switch(selected.name) {
-			case 'Maintenance Countdown':
-				return (
-					<MaintenanceCD 
-						headerText={selected.name}
-						style={{ margin: '12px auto', 
-								 width: this.getPanelSize(selected.size) }} 
-						onClose={this.onClosePanel.bind(this)}
-						size={{'font-size': (selected.size === 'small') ? '2em' : '4em'}}
-					/>
-				);
-			default:
-				return (
-					<Panel headerText={selected.name} 
-						style={{ margin: '24px auto', width: this.getPanelSize(selected.size) }} 
-						onClose={() => this.onClosePanel.bind(this, selected.id)}>
-						<div className={`${styles['data-react']}`}>
-							<h3>Test</h3>
-							<Button>Bootstrap Button</Button>
-						</div>
-					</Panel>
-				);
 		}
 	}
 
@@ -94,7 +80,13 @@ class Welcome extends Component {
 										y: 200,
 									}}
 								> 
-									{this.displayComponent(component)}      
+									<Panel headerText={component.name} 
+										style={{ margin: '24px auto', width: this.getPanelSize(component.size) }} 
+										onClose={() => this.onClosePanel.bind(this, component.id)}>
+										<div className={`${styles['data-react']}`}>
+											{this.renderComponent(component)}
+										</div>
+									</Panel>      
 								</Rnd>
 							) : null
 						);
@@ -109,14 +101,5 @@ class Welcome extends Component {
 		);
 	}
 }
-
-/*
-<MaintenanceCD 
-	headerText={'Maintenance Countdown'} 
-	width={'400px'} 
-	style={{ margin: '24px auto', width: '400px' }} 
-	onClose={this.onClosePanel.bind(this)} 
-/>
-*/
 
 export default Welcome;
