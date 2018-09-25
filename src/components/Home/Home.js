@@ -7,6 +7,7 @@ import Panel from '../Panel/Panel';
 import MaintenanceCD from '../MaintenanceCD/MaintenanceCD';
 import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
+import GridLayout from 'react-grid-layout';
 import {Rnd} from 'react-rnd';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
 
@@ -51,6 +52,14 @@ class Welcome extends Component {
 			default:
 				return;
 		}
+	}
+
+	dragStop(id, d) {
+		const stateCopy = Object.assign({}, this.state);
+		stateCopy.components[id].x = d.x;
+		stateCopy.components[id].y = d.y;
+		console.log(stateCopy);
+		this.setState({stateCopy});
 	}
 
 	getPanelSize(size) {
