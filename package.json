@@ -33,6 +33,7 @@
     "react-rnd": "^9.0.2",
     "react-router-dom": "^4.1.1",
     "react-router-redux": "^5.0.0-alpha.9",
+    "react-virtualized": "^9.20.1",
     "reactstrap": "^6.4.0",
     "redux": "^3.7.0",
     "redux-promise": "^0.6.0",
@@ -105,5 +106,12 @@
     "transform": {
       "^.+\\.js$": "babel-jest"
     }
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/exeblock/exe-explorer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/exeblock/exe-explorer#readme"
 }

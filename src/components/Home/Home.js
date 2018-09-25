@@ -9,13 +9,15 @@ import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
 import {Rnd} from 'react-rnd';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
+import AccountSearch from '../Account/Account';
 
 class Welcome extends Component {
 	constructor() {
 		super();
-		this.state = {components: [{name: 'Transition Feed', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 0},
-								   {name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', currentSize: '', visible: false, id: 1},
-								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 2}
+
+		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', currentSize: '', visible: false, id: 0},
+								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 1},
+								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:2}
 								  ]
 					 };
 	}
@@ -43,11 +45,11 @@ class Welcome extends Component {
 	renderComponent(component) {
 		switch(component.id) {
 			case 0:
-				return (<div><h3>hey</h3></div>);
-			case 1:
 				return <WitnessViewer />;
-			case 2:
+			case 1:
 				return <MaintenanceCD size={{'fontSize': (component.size === 'small') ? '2em' : '4em'}} />;
+			case 2:
+				return <AccountSearch />;
 			default:
 				return;
 		}
@@ -75,6 +77,7 @@ class Welcome extends Component {
 							component.visible ? (
 								
 								<Rnd
+									key={component.id}
 									default={{
 										x: 400,
 										y: 200,
