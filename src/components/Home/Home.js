@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import Panel from '../Panel/Panel';
-import MaintenanceCD from '../Panel/MaintenanceCD';
+import MaintenanceCD from '../MaintenanceCD/MaintenanceCD';
 import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
 import {Rnd} from 'react-rnd';
