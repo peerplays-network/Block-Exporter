@@ -9,13 +9,15 @@ import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
 import {Rnd} from 'react-rnd';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
+import AccountSearch from '../Account/Account';
 
 class Welcome extends Component {
 	constructor() {
 		super();
 		this.state = {components: [{name: 'Transition Feed', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 0},
 								   {name: 'Witness Feed', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 1},
-								   {name: 'Maintenance Countdown', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 2}
+								   {name: 'Maintenance Countdown', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 2},
+								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', size:'large', visible: false, id:3}
 								  ]
 					 };
 	}
@@ -48,6 +50,8 @@ class Welcome extends Component {
 				return <WitnessViewer />;
 			case 2:
 				return <MaintenanceCD size={{'font-size': (component.size === 'small') ? '2em' : '4em'}} />;
+			case 3:
+				return <AccountSearch />;
 			default:
 				return;
 		}
