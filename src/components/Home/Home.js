@@ -10,13 +10,15 @@ import styles from './styles.css';
 import GridLayout from 'react-grid-layout';
 import {Rnd} from 'react-rnd';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
+import AccountSearch from '../Account/Account';
 
 class Welcome extends Component {
 	constructor() {
 		super();
-		this.state = {components: [{name: 'Transition Feed', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 0},
-								   {name: 'Witness Feed', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 1},
-								   {name: 'Maintenance Countdown', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 2}
+
+		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', currentSize: '', visible: false, id: 0},
+								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 1},
+								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:2}
 								  ]
 					 };
 	}
@@ -35,7 +37,7 @@ class Welcome extends Component {
 
 	changePanelSize(id, size) {
 		const stateCopy = Object.assign({}, this.state);
-		stateCopy.components[id].size = size;
+		stateCopy.components[id].currentSize = size;
 		stateCopy.components[id].visible = true;
 		this.setState({stateCopy});
 		this.componentClicked(id);
@@ -44,11 +46,11 @@ class Welcome extends Component {
 	renderComponent(component) {
 		switch(component.id) {
 			case 0:
-				return (<div><h3>hey</h3></div>);
-			case 1:
 				return <WitnessViewer />;
+			case 1:
+				return <MaintenanceCD size={{'fontSize': (component.size === 'small') ? '2em' : '4em'}} />;
 			case 2:
-				return <MaintenanceCD size={{'font-size': (component.size === 'small') ? '2em' : '4em'}} />;
+				return <AccountSearch />;
 			default:
 				return;
 		}
@@ -84,13 +86,14 @@ class Welcome extends Component {
 							component.visible ? (
 								
 								<Rnd
+									key={component.id}
 									default={{
 										x: 400,
 										y: 200,
 									}}
 								> 
 									<Panel headerText={component.name} 
-										style={{ margin: '24px auto', width: this.getPanelSize(component.size) }} 
+										style={{ margin: '24px auto', width: this.getPanelSize(component.currentSize) }} 
 										onClose={() => this.onClosePanel.bind(this, component.id)}>
 										<div className={`${styles['data-react']}`}>
 											{this.renderComponent(component)}
