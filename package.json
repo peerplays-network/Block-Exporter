@@ -103,5 +103,12 @@
     "transform": {
       "^.+\\.js$": "babel-jest"
     }
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/exeblock/exe-explorer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/exeblock/exe-explorer#readme"
 }
