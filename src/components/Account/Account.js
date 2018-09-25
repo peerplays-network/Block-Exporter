@@ -1,8 +1,9 @@
+/* Account page includes pagination */
 import React, { Component } from 'react';
-import { Pagination, PaginationItem, PaginationLink, button, Table } from 'reactstrap';
+import { Pagination, PaginationItem, PaginationLink, Table } from 'reactstrap';
 import axios from 'axios';
 import styles from './Account.css';
-import AccountDetail from './subcomponents/AccountDetail';
+import AccountDetail from './AccountDetail';
 
 export default class AccountSearch extends Component {
 
