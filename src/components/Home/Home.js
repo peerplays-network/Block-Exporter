@@ -17,7 +17,7 @@ class Welcome extends Component {
 		this.state = {components: [{name: 'Transition Feed', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 0},
 								   {name: 'Witness Feed', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 1},
 								   {name: 'Maintenance Countdown', image: 'https://via.placeholder.com/50x50', size: 'medium', visible: false, id: 2},
-								   {name: 'Account Feed', img: 'https://via.placeholder.com/50x50', size:'large', visible: false, id:3}
+								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', size:'large', visible: false, id:3}
 								  ]
 					 };
 	}
