@@ -89,18 +89,16 @@ export default class AccountSearch extends Component {
 			params:{
 				//none since it is all account
 			}
-		})
-		.then(response => {
-				this.setState({
-					data: response.data.data
-				});
-			})
-			.catch(error => {console.log('error is fetching account data', error);});
+		}).then(response => {
+			this.setState({
+				data: response.data.data
+			});
+		}).catch(error => {console.log('error is fetching account data', error);});
 		*/
 		var temp_data = [];
 		//if the data.id matches accountName add to data
 		for (var account in data) {
-			if (data[account].id === accountName)
+			if (data[account].id.indexOf(accountName) >= 0 ) 
 				temp_data.push(data[account]);
 		}
 		if (temp_data.length <= 0)
