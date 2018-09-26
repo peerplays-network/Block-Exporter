@@ -1,41 +1,33 @@
 import React, { Component } from 'react';
-import WitnessRow from './WitnessRow';
+import TransactionRow from './TransactionRow';
 //State will be removed once data feed is established
 
 class TransactionDisplay extends Component {
 	constructor() {
 		super();
-		this.state = {witnessData: [{rank: 1, name: 'Mark', votes: 23122, misses: 156, lastBlock: 7823786}, 
-									{rank: 2, name: 'Paul', votes: 83721, misses: 821, lastBlock: 8767091}
-								   ]};
+		this.state = {transactionData: [{account: 'codepuncher57', action: 'cancels staking action', time: 8, memo: '', transactionID: 0x39e2b580}, 
+										{account: 'speculationman', action: 'wants 200 eXe for 0.43 BTC', time: 8, memo: '', transactionID: 0x52d11dee},
+										{account: 'trenchcoattester', action: 'sent 128 eXe to debughero', time: 8, memo: 'payment for killer work', transactionID: 0x0339afbb},
+										{account: 'pebkacspecialist', action: 'cancels trade order', time: 8, memo: '', transactionID: 0x2fef3d58},
+										{account: 'exewatcher', action: 'recieved 5 eXe for producing a block', time: 9, memo: 'Witness Reward', transactionID: 0xf2c1f6a6},
+										{account: 'codepuncher57', action: 'stakes 407 eXe', time: 9, memo: '', transactionID: 0x9b3e0a9b},
+								   	   ]};
 	}
 	
 	render() {
 		return (
 			<div>
-				<table className="table">
-					<thead className="thead-light">
-						<tr>
-							<th scope="col">Head Block Number</th>
-							<th scope="col">Head Block Age</th>
-							<th scope="col">Chain Id</th>
-							<th scope="col">Misses</th>
-							<th scope="col">Last Block</th>
-						</tr>
-					</thead>
-					<tbody>
-						{this.state.witnessData.map(witness => {
-							return <WitnessRow
-								key={witness.rank} 
-								rank={witness.rank}
-								witness={witness.name}
-								votes={witness.votes}
-								misses={witness.misses}
-								lastBlock={witness.lastBlock}
-							/>;
-						})}
-					</tbody>
-				</table>
+
+				{this.state.transactionData.map(transaction => {
+					return <TransactionRow
+						account={transaction.account} 
+						action={transaction.action}
+						time={transaction.time}
+						memo={transaction.memo}
+						transactionID={transaction.transactionID}
+					/>;
+				})}
+
 			</div>
 		);
 	}

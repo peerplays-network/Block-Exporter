@@ -8,6 +8,7 @@ import MaintenanceCD from '../MaintenanceCD/MaintenanceCD';
 import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
 import {Rnd} from 'react-rnd';
+import TransactionDisplay from '../Transactions/TransactionDisplay';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
 import AccountSearch from '../Account/Account';
 
@@ -17,7 +18,8 @@ class Welcome extends Component {
 
 		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', currentSize: '', visible: false, id: 0},
 								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 1},
-								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:2}
+								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:2},
+								   {name: 'Current Transactions', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:3}
 								  ]
 					 };
 	}
@@ -50,6 +52,8 @@ class Welcome extends Component {
 				return <MaintenanceCD size={{'fontSize': (component.currentSize === 'small') ? '2em' : '4em'}} />;
 			case 2:
 				return <AccountSearch />;
+			case 3:
+				return <TransactionDisplay />
 			default:
 				return;
 		}
