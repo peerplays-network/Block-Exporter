@@ -8,8 +8,8 @@ class TransactionRow extends Component {
             <div>
                 {this.props.account} &nbsp;
                 {this.props.action} &nbsp;
-                {this.props.time} &nbsp;
                 {this.props.memo} &nbsp;
+                {this.props.time} &nbsp;
                 {this.props.transactionID}
             </div>
 		);
