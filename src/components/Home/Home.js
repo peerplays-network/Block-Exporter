@@ -7,18 +7,18 @@ import Panel from '../Panel/Panel';
 import MaintenanceCD from '../MaintenanceCD/MaintenanceCD';
 import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
-import GridLayout from 'react-grid-layout';
-import {Rnd} from 'react-rnd';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
 import AccountSearch from '../Account/Account';
+import { Responsive, WidthProvider as widthProvider } from 'react-grid-layout';
+const ResponsiveReactGridLayout = widthProvider(Responsive);
 
 class Welcome extends Component {
 	constructor() {
 		super();
 
-		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', currentSize: '', visible: false, id: 0},
-								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 1},
-								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:2}
+		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', currentSize: '', visible: false, id: 0, layout:{x: 0, y: 0, w: 400, h: 2}},
+								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 1, layout:{x: 1, y: 0, w: 200, h: 2}},
+								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:2, layout:{ x: 4, y: 0, w: 600, h: 2}}
 								  ]
 					 };
 	}
@@ -78,31 +78,47 @@ class Welcome extends Component {
 	}
 
 	render() {
+		const layout = [
+			{i: '0', x: 0, y: 0, w: 1, h: 2},
+			{i: '1', x: 1, y: 0, w: 3, h: 2},
+			{i: '2', x: 4, y: 0, w: 1, h: 2}
+		  ];
+		  /*
+		  	<Panel headerText={"witness viewer"} 
+				style={{ margin: '24px auto', width: "400px" }} 
+				onClose={() => this.onClosePanel.bind(this, 0)}>
+				<div className={`${styles['data-react']}`}>
+					<WitnessViewer />
+				</div>
+			</Panel>
+		  */
 		return (
 			<div>
 				<div>
-					{this.state.components.map(component => { 
-						return (
-							component.visible ? (
-								
-								<Rnd
-									key={component.id}
-									default={{
-										x: 400,
-										y: 200,
-									}}
-								> 
-									<Panel headerText={component.name} 
-										style={{ margin: '24px auto', width: this.getPanelSize(component.currentSize) }} 
-										onClose={() => this.onClosePanel.bind(this, component.id)}>
-										<div className={`${styles['data-react']}`}>
-											{this.renderComponent(component)}
-										</div>
-									</Panel>      
-								</Rnd>
-							) : null
-						);
-					})}
+					<ResponsiveReactGridLayout className="layout"
+						layout={layout}
+						breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
+						cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}} autoSize={true}
+						compactType={'horizontal'}
+						useCSSTransforms={true}>
+
+						{this.state.components.map(component => { 
+							return (
+								component.visible ? (
+									<div key={component.id} data-grid={component.layout}> 
+										<Panel headerText={component.name} 
+											style={{ margin: '24px auto', width: this.getPanelSize(component.currentSize) }} 
+											onClose={() => this.onClosePanel.bind(this, component.id)}>
+											<div className={`${styles['data-react']}`}>
+												{this.renderComponent(component)}
+											</div>
+										</Panel>
+									</div>
+								) : <div key={Math.random()}> </div>
+							);
+						})
+						}
+					</ResponsiveReactGridLayout>
 				</div>
 				<div>
 					<SidePanel components={this.state.components} 
