@@ -20,6 +20,7 @@ class SidePanel extends Component {
 								changeSize={this.props.changeSize}
 								id={item.id}
 								key={item.id}
+								minSize={item.minSize}
 							/>;
 						})}
 					</tbody>

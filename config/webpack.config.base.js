@@ -28,6 +28,14 @@ config.module = {
 			exclude: /node_modules/,
 			use: ['babel-loader'],
 			include: paths.app.src
+		},
+		{   /* fonts */
+			test: /\.(otf)?$/,
+			use: [{
+				loader: 'file-loader',
+				options: {}
+			}],
+			include: paths.app.src
 		}
 	]
 };

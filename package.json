@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@types/loader-utils": "^1.1.3",
     "apisauce": "^0.14.0",
     "body-parser": "^1.17.2",
     "bootstrap": "^4.1.3",
@@ -32,12 +33,14 @@
     "react-rnd": "^9.0.2",
     "react-router-dom": "^4.1.1",
     "react-router-redux": "^5.0.0-alpha.9",
+    "react-virtualized": "^9.20.1",
     "reactstrap": "^6.4.0",
     "redux": "^3.7.0",
     "redux-promise": "^0.6.0",
     "redux-saga": "^0.15.3",
     "redux-thunk": "^2.3.0",
     "rimraf": "^2.6.2",
+    "url-loader": "^1.1.1",
     "webpack": "^4.11.0",
     "webpack-merge": "^4.1.0"
   },
@@ -65,7 +68,7 @@
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-react": "^7.11.0",
     "faker": "^4.1.0",
-    "file-loader": "^0.11.2",
+    "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^20.0.4",
@@ -73,6 +76,7 @@
     "postcss-import": "^10.0.0",
     "postcss-loader": "^2.0.6",
     "progress-bar-webpack-plugin": "^1.11.0",
+    "react-countdown-now": "^1.3.0",
     "react-test-renderer": "^16.4.0",
     "redux-logger": "^3.0.6",
     "regenerator-runtime": "^0.12.1",
@@ -102,5 +106,12 @@
     "transform": {
       "^.+\\.js$": "babel-jest"
     }
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/exeblock/exe-explorer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/exeblock/exe-explorer#readme"
 }
