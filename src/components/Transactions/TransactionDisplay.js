@@ -18,10 +18,10 @@ class TransactionDisplay extends Component {
         // assume time is in milliseconds for now
 		if (time < 1000) {
 			return "less than a second ago...";
-		} else if (1000 <= time < 60000) {
-			return Math.floor(time/1000) + " seconds ago...";
+		} else if ((1000 <= time) && (time < 60000)) {
+			return Math.floor(time/1000) + " second(s) ago...";
 		} else {
-			return Math.floor(time/60000) + " minutes ago...";
+			return Math.floor(time/60000) + " minute(s) ago...";
 		}
     }
 	
