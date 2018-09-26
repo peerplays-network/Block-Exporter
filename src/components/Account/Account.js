@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 //import axios from 'axios'; //remove comment when API is completed
 import AccountDetail from './AccountDetail';
 import PaginationCall from './PaginationCall';
+import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 
 export default class AccountSearch extends Component {
 	constructor(e) {
@@ -112,8 +113,10 @@ export default class AccountSearch extends Component {
 			<div>
 				<div className="pagination-wrapper">
 					<form onSubmit={this.searchAccount}>
-						<input type="text" value={this.state.account} onChange={this.onAccountEnter} placeholder="Account" />
-						<input type="submit" value="Search Account" />
+						<InputGroup>
+							<Input type="text" value={this.state.account} onChange={this.onAccountEnter} placeholder="Account" />
+							<InputGroupAddon addonType="append"><Button>Search Account</Button></InputGroupAddon>
+						</InputGroup>
 					</form>
 					<PaginationCall currentPage={currentPage} handleClick={this.handleClick} pagesCount={this.pagesCount} />
 				</div>

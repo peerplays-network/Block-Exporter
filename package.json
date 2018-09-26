@@ -20,6 +20,7 @@
     "immutability-helper": "^2.7.0",
     "lodash": "^4.17.11",
     "morgan": "^1.8.2",
+    "node-sass": "^4.9.3",
     "path": "^0.12.7",
     "peerplaysjs-lib": "^0.4.20",
     "peerplaysjs-ws": "^0.1.11",
@@ -40,6 +41,7 @@
     "redux-saga": "^0.15.3",
     "redux-thunk": "^2.3.0",
     "rimraf": "^2.6.2",
+    "sass-loader": "^7.1.0",
     "url-loader": "^1.1.1",
     "webpack": "^4.11.0",
     "webpack-merge": "^4.1.0"
