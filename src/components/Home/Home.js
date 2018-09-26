@@ -47,7 +47,7 @@ class Welcome extends Component {
 			case 0:
 				return <WitnessViewer />;
 			case 1:
-				return <MaintenanceCD size={{'fontSize': (component.size === 'small') ? '2em' : '4em'}} />;
+				return <MaintenanceCD size={{'fontSize': (component.currentSize === 'small') ? '2em' : '4em'}} />;
 			case 2:
 				return <AccountSearch />;
 			default:
