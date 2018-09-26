@@ -9,20 +9,21 @@ import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
 import AccountSearch from '../Account/Account';
-import { Responsive, WidthProvider as widthProvider } from 'react-grid-layout';
-const ResponsiveReactGridLayout = widthProvider(Responsive);
+import GridLayout, {WidthProvider as widthProvider} from 'react-grid-layout';
+const Grid = widthProvider(GridLayout);
 
 class Welcome extends Component {
 	constructor() {
 		super();
 
-		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', currentSize: '', visible: false, id: 0, layout:{x: 0, y: 0, w: 400, h: 2}},
-								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 1, layout:{x: 1, y: 0, w: 200, h: 2}},
-								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:2, layout:{ x: 4, y: 0, w: 600, h: 2}}
-								  ]
+		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', currentSize: '', visible: false, id: 0},
+								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 1},
+								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id: 2}
+								  ], 
+								  layout : [ {i: '0', x: 0, y: 0, w: 3, h: 7}, {i: '1', x: 0, y: 0, w: 4, h: 23}, {i: '2', x: 0, y: 0, w: 3, h: 3}]	
 					 };
 	}
-
+	//medium width: 3
 	onClosePanel(id) {
     	const stateCopy = Object.assign({}, this.state);
 		stateCopy.components[id].visible = false;
@@ -78,11 +79,6 @@ class Welcome extends Component {
 	}
 
 	render() {
-		const layout = [
-			{i: '0', x: 0, y: 0, w: 1, h: 2},
-			{i: '1', x: 1, y: 0, w: 3, h: 2},
-			{i: '2', x: 4, y: 0, w: 1, h: 2}
-		  ];
 		  /*
 		  	<Panel headerText={"witness viewer"} 
 				style={{ margin: '24px auto', width: "400px" }} 
@@ -95,12 +91,42 @@ class Welcome extends Component {
 		return (
 			<div>
 				<div>
-					<ResponsiveReactGridLayout className="layout"
-						layout={layout}
-						breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-						cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}} autoSize={true}
-						compactType={'horizontal'}
-						useCSSTransforms={true}>
+					<Grid className="layout" layout={this.state.layout} cols={12} compactType={'none'} 
+						rowHeight={0} preventCollision={true} isResizable={false}>
+						 {this.state.components.map(component => { 
+							return (
+								component.visible ? ( 
+									<div key={component.id} style={{borderStyle: 'dashed'}}>
+										<Panel headerText={component.name} 
+											style={{ margin: '24px auto', width: this.getPanelSize(component.currentSize) }} 
+											onClose={() => this.onClosePanel.bind(this, component.id)}>
+											<div key={component.id} className={`${styles['data-react']}`}>
+												{this.renderComponent(component)}
+											</div>
+										</Panel>
+									</div>
+								) : <div key={component.id}> </div>
+							);
+						})
+						 }
+						{/*this.state.components.map(component => { 
+							return (
+								component.visible ? ( 
+									<div key={component.id}>
+										<Panel headerText={component.name} 
+											style={{ margin: '24px auto', width: this.getPanelSize(component.currentSize) }} 
+											onClose={() => this.onClosePanel.bind(this, component.id)}>
+											<div key={component.id} className={`${styles['data-react']}`}>
+												{this.renderComponent(component)}
+											</div>
+										</Panel>
+									</div>
+								) : <div key={Math.random()}> </div>
+							);
+						})*/}	
+					</Grid>
+					{/*<GridLayout className="layout"
+						layout={layout} cols={12} rowHeight={30} width={1200}>
 
 						{this.state.components.map(component => { 
 							return (
@@ -118,7 +144,7 @@ class Welcome extends Component {
 							);
 						})
 						}
-					</ResponsiveReactGridLayout>
+					</GridLayout>*/}
 				</div>
 				<div>
 					<SidePanel components={this.state.components} 
