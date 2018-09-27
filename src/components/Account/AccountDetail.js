@@ -1,5 +1,7 @@
 /*Used in Account*/
 import React,  { Component } from 'react';
+import { NavLink } from 'reactstrap';
+import { NavLink as RRNavLink } from 'react-router-dom';
 
 class AccountDetail extends Component {
 	render() {
@@ -20,7 +22,7 @@ class AccountDetail extends Component {
 
 		return (
 			<tr>
-				<td>{ this.props.detail.id }</td>
+				<td><NavLink tag={RRNavLink} to="/accountAllDetail/" account={this.props.detail.id} >{ this.props.detail.id }</NavLink></td>
 				<td>{ balanceList }</td>
 				<td>{ proposalList }</td>
 				<td>{ voteList }</td>

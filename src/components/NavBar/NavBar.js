@@ -70,7 +70,7 @@ export default class NavBar extends React.Component {
 								<NavLink tag={RRNavLink} to="/test/">Test</NavLink>
 							</NavItem>
 							<NavItem>
-								<NavLink tag={RRNavLink} to="/account/">Account</NavLink>
+								<NavLink tag={RRNavLink} to="/accountLarge/">Account</NavLink>
 							</NavItem>
 						</Nav>
 					</Collapse>
