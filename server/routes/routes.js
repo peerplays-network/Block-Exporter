@@ -26,7 +26,6 @@ router.get('/accounts/:name', function (req, res) {
 			console.error('error connecting to DB: ' + err.stack);
 			return;
 		}
-		console.log('Connected to DB: id ' + connection.threadId);
 	});
 
 	// Perform Query
@@ -57,7 +56,6 @@ router.get('/accounts', function (req, res) {
 			console.error('error connecting to DB: ' + err.stack);
 			return;
 		}
-		console.log('Connected to DB: id ' + connection.threadId);
 	});
 
 	// Perform Query
