@@ -18,9 +18,9 @@ class SidePanel extends Component {
 								name={item.name} 
 								img={item.img}
 								changeSize={this.props.changeSize}
-								visible={this.props.visible}
 								id={item.id}
 								key={item.id}
+								minSize={item.minSize}
 							/>;
 						})}
 					</tbody>

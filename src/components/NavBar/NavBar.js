@@ -10,7 +10,7 @@ import {
 	UncontrolledDropdown,
 	DropdownToggle,
 	DropdownMenu,
-	DropdownItem,} from 'reactstrap';
+	DropdownItem} from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
 import styles from './NavBar.css';
 
@@ -68,6 +68,9 @@ export default class NavBar extends React.Component {
 						<Nav className="ml-auto" navbar>
 							<NavItem>
 								<NavLink tag={RRNavLink} to="/test/">Test</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink tag={RRNavLink} to="/account/">Account</NavLink>
 							</NavItem>
 						</Nav>
 					</Collapse>

@@ -3,25 +3,25 @@
 */
 
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
 import Panel from '../Panel/Panel';
+import MaintenanceCD from '../MaintenanceCD/MaintenanceCD';
 import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
 import {Rnd} from 'react-rnd';
+import TransactionDisplay from '../Transactions/TransactionDisplay';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
-import axios from 'axios';
-
+import AccountSearch from '../Account/Account';
 
 class Welcome extends Component {
 	constructor() {
 		super();
-		this.state = {components: [{name: 'Transition Feed', image: 'placeholder.img', size: 'medium', visible: false, id: 0}, {name: 'Witness Feed', image: 'placeholder.img', size: 'medium', visible: false, id: 1}]};
-		axios.get('/')
-  .then(function (response) {
-    // handle success
-	console.log(response.status);
-    console.log(response.data);	
-  })
+
+		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', currentSize: '', visible: false, id: 0},
+								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 1},
+								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:2},
+								   {name: 'Current Transactions', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:3}
+								  ]
+					 };
 	}
 
 	onClosePanel(id) {
@@ -38,54 +38,71 @@ class Welcome extends Component {
 
 	changePanelSize(id, size) {
 		const stateCopy = Object.assign({}, this.state);
-		stateCopy.components[id].size = size;
+		stateCopy.components[id].currentSize = size;
 		stateCopy.components[id].visible = true;
 		this.setState({stateCopy});
 		this.componentClicked(id);
 	}
 
-	getPanelSize(size) {
-		switch(size) {
+	renderComponent(component) {
+		switch(component.id) {
+			case 0:
+				return <WitnessViewer />;
+			case 1:
+				return <MaintenanceCD size={{'fontSize': (component.currentSize === 'small') ? '2em' : '4em'}} />;
+			case 2:
+				return <AccountSearch />;
+			case 3:
+				return <TransactionDisplay />
+			default:
+				return;
+		}
+	}
+
+	getPanelSize(comp) {
+		switch(comp.currentSize) {
 			case 'small':
 				return '200px';
 			case 'medium':
 				return '400px';
 			case 'large':
-				return '600px';
+				if (comp.id === 3) {return '800px'} // transaction viewer
+				else {return '600px';}
 			default:
 				return;
 		}
 	}
-	
+
 	render() {
 		return (
 			<div>
 				<div>
-					{
-						this.state.components.map(component => { 
-							return (
-								component.visible ? (
-									<Rnd
-										default={{
-											x: 400,
-											y: 200,
-										}}
-									> 
-										{
-											<Panel headerText={component.name} style={{  margin: '24px auto', width: this.getPanelSize(component.size) }} onClose={() => this.onClosePanel.bind(this, component.id)}>
-												<div className={`${styles['data-react']}`}>
-													<h3>Test</h3>
-													<Button>Bootstrap Button</Button>
-												</div>
-											</Panel> 
-										}		      
-									</Rnd>) : null
-							);
-						})
-					}
+					{this.state.components.map(component => { 
+						return (
+							component.visible ? (
+								
+								<Rnd
+									key={component.id}
+									default={{
+										x: 400,
+										y: 200,
+									}}
+								> 
+									<Panel headerText={component.name} 
+										style={{ margin: '24px auto', width: this.getPanelSize(component) }} 
+										onClose={() => this.onClosePanel.bind(this, component.id)}>
+										<div className={`${styles['data-react']}`}>
+											{this.renderComponent(component)}
+										</div>
+									</Panel>      
+								</Rnd>
+							) : null
+						);
+					})}
 				</div>
 				<div>
-					<SidePanel components={this.state.components} visible={this.componentClicked.bind(this)} changeSize={this.changePanelSize.bind(this)}/>	
+					<SidePanel components={this.state.components} 
+							   changeSize={this.changePanelSize.bind(this)}/>	
 				</div>
 			</div>
 		);
