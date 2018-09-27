@@ -16,23 +16,17 @@ class Welcome extends Component {
 	constructor() {
 		super();
 
-		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', currentSize: '', visible: false, id: 0},
-								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 1},
-								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id: 2}
+		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', visible: false, id: 0},
+								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', visible: false, id: 1},
+								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', visible: false, id: 2}
 								  ], 
-								  layout : [ {i: '0', x: 0, y: 0, w: 3, h: 20}, {i: '1', x: 0, y: 0, w: 3, h: 20}, {i: '2', x: 0, y: 0, w: 3, h: 20}]	
+								  layout : [ {i: '0', x: 3, y: 0, w: 4, h: 20}, {i: '1', x: 3, y: 31, w: 2, h: 20}, {i: '2', x: 7.5, y: 0, w: 6, h: 20}]	
 					 };
 	}
-	//medium width: 3
+
 	onClosePanel(id) {
     	const stateCopy = Object.assign({}, this.state);
 		stateCopy.components[id].visible = false;
-		this.setState({stateCopy});
-	}
-	
-	componentClicked(id) {
-		const stateCopy = Object.assign({}, this.state);
-		stateCopy.components[id].visible = true;
 		this.setState({stateCopy});
 	}
 
@@ -41,15 +35,15 @@ class Welcome extends Component {
 		const stringId = id.toString();
 		switch(size) {
 			case 'small' :
-				stateCopy.layout[id] = {i: stringId, x: 0, y: 0, w: 3, h: 20};
+				stateCopy.layout[id].w = 2.5;
 				console.log('small');
 				break;
 			case 'medium' :
-				stateCopy.layout[id] = {i: stringId, x: 0, y: 0, w: 6, h: 20};
+				stateCopy.layout[id].w = 3.5;
 				console.log('medium');
 				break;
 			case 'large' :
-				stateCopy.layout[id] = {i: stringId, x: 0, y: 0, w: 9, h: 20};
+				stateCopy.layout[id].w = 4.5;
 				console.log('large');
 				break;
 			default:
@@ -57,9 +51,7 @@ class Welcome extends Component {
 				return;
 		}
 
-		stateCopy.components[id].currentSize = size;
 		stateCopy.components[id].visible = true;
-		console.log('setting: ', stateCopy.layout);
 		this.setState({stateCopy});
 	}
 
@@ -76,7 +68,17 @@ class Welcome extends Component {
 		}
 	}
 
-	updateGrid(id) {
+	layoutChange(layout, oldItem, newItem, placeholder, e, element) {
+		console.log('hey',layout)
+	}
+
+	updateCoordinates(layout, oldItem, newItem, placeholder, e, element) {
+		const stateCopy = Object.assign({}, this.state);
+		const id = Number(oldItem.i);
+
+		stateCopy.layout[id] = {i: id.toString(), x: newItem.x, y: newItem.y, w: newItem.w, h: newItem.h};
+		console.log('updated coordinates: ', stateCopy.layout[id]);
+		this.setState({stateCopy});
 
 	}
 
@@ -86,8 +88,9 @@ class Welcome extends Component {
 		return (
 			<div>
 				<div>
-					<Grid className="layout" layout={newLayout} cols={12} compactType={'none'} 
-						rowHeight={0} preventCollision={true} onDragStop={() => {console.log('dragging')}}> 
+					<Grid className="layout" layout={newLayout} cols={12} compactType={null}
+						rowHeight={1}
+						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
 						 {this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
