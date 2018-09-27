@@ -9,11 +9,19 @@ import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
 import {Rnd} from 'react-rnd';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
+import axios from 'axios';
+
 
 class Welcome extends Component {
 	constructor() {
 		super();
 		this.state = {components: [{name: 'Transition Feed', image: 'placeholder.img', size: 'medium', visible: false, id: 0}, {name: 'Witness Feed', image: 'placeholder.img', size: 'medium', visible: false, id: 1}]};
+		axios.get('/')
+  .then(function (response) {
+    // handle success
+	console.log(response.status);
+    console.log(response.data);	
+  })
 	}
 
 	onClosePanel(id) {
