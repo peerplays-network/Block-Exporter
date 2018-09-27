@@ -12,7 +12,7 @@ class Panel extends Component {
 	render() {
 		return (
 			<div>
-				<div className={`${styles['center']} card border-dark mb-3`} style={this.props.style}>
+				<div className={`${styles['center']} card border-dark`} style={this.props.style}>
 					<div className="card-header pr-1">
 						<span>
 							<h5 className="card-title float-left">{this.props.headerText}</h5>

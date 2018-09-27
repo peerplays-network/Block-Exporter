@@ -20,7 +20,7 @@ class Welcome extends Component {
 								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 1},
 								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id: 2}
 								  ], 
-								  layout : [ {i: '0', x: 0, y: 0, w: 3, h: 7}, {i: '1', x: 0, y: 0, w: 4, h: 23}, {i: '2', x: 0, y: 0, w: 3, h: 3}]	
+								  layout : [ {i: '0', x: 0, y: 0, w: 3, h: 20}, {i: '1', x: 0, y: 0, w: 3, h: 20}, {i: '2', x: 0, y: 0, w: 3, h: 20}]	
 					 };
 	}
 	//medium width: 3
@@ -38,6 +38,25 @@ class Welcome extends Component {
 
 	changePanelSize(id, size) {
 		const stateCopy = Object.assign({}, this.state);
+		const stringId = id.toString();
+		switch(size) {
+			case 'small' :
+				stateCopy.layout[id] = {i: stringId, x: 0, y: 0, w: 3, h: 20};
+				console.log('small');
+				break;
+			case 'medium' :
+				stateCopy.layout[id] = {i: stringId, x: 0, y: 0, w: 6, h: 20};
+				console.log('medium');
+				break;
+			case 'large' :
+				stateCopy.layout[id] = {i: stringId, x: 0, y: 0, w: 9, h: 20};
+				console.log('large');
+				break;
+			default:
+			console.log('default');
+				return;
+		}
+		debugger;
 		stateCopy.components[id].currentSize = size;
 		stateCopy.components[id].visible = true;
 		this.setState({stateCopy});
@@ -65,10 +84,10 @@ class Welcome extends Component {
 		this.setState({stateCopy});
 	}
 
-	getPanelSize(size) {
+	setPanelSize(size) {
 		switch(size) {
 			case 'small':
-				return '200px';
+				this.setState({})
 			case 'medium':
 				return '400px';
 			case 'large':
@@ -92,13 +111,12 @@ class Welcome extends Component {
 			<div>
 				<div>
 					<Grid className="layout" layout={this.state.layout} cols={12} compactType={'none'} 
-						rowHeight={0} preventCollision={true} isResizable={false}>
+						rowHeight={0} preventCollision={true}>
 						 {this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
 									<div key={component.id} style={{borderStyle: 'dashed'}}>
-										<Panel headerText={component.name} 
-											style={{ margin: '24px auto', width: this.getPanelSize(component.currentSize) }} 
+										<Panel headerText={component.name}  
 											onClose={() => this.onClosePanel.bind(this, component.id)}>
 											<div key={component.id} className={`${styles['data-react']}`}>
 												{this.renderComponent(component)}
