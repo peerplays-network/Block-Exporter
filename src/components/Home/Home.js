@@ -59,14 +59,15 @@ class Welcome extends Component {
 		}
 	}
 
-	getPanelSize(size) {
-		switch(size) {
+	getPanelSize(comp) {
+		switch(comp.currentSize) {
 			case 'small':
 				return '200px';
 			case 'medium':
 				return '400px';
 			case 'large':
-				return '600px';
+				if (comp.id === 3) {return '800px'} // transaction viewer
+				else {return '600px';}
 			default:
 				return;
 		}
@@ -88,7 +89,7 @@ class Welcome extends Component {
 									}}
 								> 
 									<Panel headerText={component.name} 
-										style={{ margin: '24px auto', width: this.getPanelSize(component.currentSize) }} 
+										style={{ margin: '24px auto', width: this.getPanelSize(component) }} 
 										onClose={() => this.onClosePanel.bind(this, component.id)}>
 										<div className={`${styles['data-react']}`}>
 											{this.renderComponent(component)}
