@@ -36,6 +36,37 @@ const api = {
 		});
 	},
 
+
+	/* Obtain account objects from account name
+    acc: An array of account name(s)
+
+    returns: Array of account object(s)
+    */
+	getAccountByName: acc => {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().db_api().exec('lookup_account_names', [acc]).then(w => {
+				resolve(w);
+			});
+		});
+	},
+
+
+	/* Obtain account objects from account name OR id
+    acc: An array of account name(s) or account ID(s) (1.2.x)
+
+    returns: Array of account object(s)
+    */
+
+	getFullAccounts: acc => {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().db_api().exec('get_full_accounts', [acc, true]).then(w => {
+				resolve(w);
+			});
+		});
+	},
+
+
+
 	/* Recursively obtain all user names/ids on the blockchain
     startChar: Last user, for recursion. If calling this manually, startChar should ALWAYS be set to ''
     limit: Bitshares limits each call to 1000
@@ -47,7 +78,7 @@ const api = {
 			startChar, limit
 		]).then(accounts => {
 			if (accounts.length > 1) {
-				console.log('Hit API limit, recursively calling function... ');
+				console.log('Recursively calling function... ');
 
 				if (startChar !== '') {
 					accounts.splice(0, 1);
@@ -55,7 +86,7 @@ const api = {
 
 				Array.prototype.push.apply(accList, accounts);
 				startChar = accounts[accounts.length - 1][0];
-				return api.getAccountsRecursively(startChar, limit);
+				return api.getAccountNamesRecursively(startChar, limit);
 			} else {
 				// We're done
 				return accList;
@@ -90,7 +121,7 @@ const api = {
 			startChar, limit
 		]).then(accounts => {
 			if (accounts.length > 1) {
-				console.log('Hit API limit, recursively calling function... ');
+				console.log('Recursively calling function... ');
 
 				if (startChar !== '') {
 					accounts.splice(0, 1);
