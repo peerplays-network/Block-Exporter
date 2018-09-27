@@ -11,10 +11,13 @@ const config = require('../webpack.config');
 const blockchainWS = require("peerplaysjs-ws");
 const blockchainLib = require("peerplaysjs-lib");
 
+const mysql = require('mysql');
+
 const Blockchain = require("./api");
 const wsMonitor = require("./api/monitor");
+const db = require("./database/constants");
 
-const BLOCKCHAIN_URL = "ws://10.20.10.45:8090/ws"
+const BLOCKCHAIN_URL = "wss://qa.5050labs.fun:8091/ws"
 
 const app = express();
 const compiler = webpack(config);
@@ -22,11 +25,90 @@ const router = express.Router();
 const port = process.env.PORT || 5000;
 
 
+// ===== CONFIG =====
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api', router);
-require('./routes')(router);
 
+// ===== ROUTES =====
+const routes = require("./routes/routes");
+app.use("/api", routes);
+
+
+
+// ===== FUNCTIONS =====
+
+/* Takes in a MYSQL connection and attempts to sync the database with the blockchain 
+	This function should be used sparingly, as it performs a full sync.
+*/
+
+async function syncDatabase(connection) {
+
+	let accountNames = await Blockchain.getAccountNamesRecursively('', 1000);
+	let nameAry = [];
+	for (const name of accountNames) {
+		// console.log(name[0])
+		if (!db.RESTRICTED.includes(name[0])) {
+			// console.log(name[0]);
+			nameAry.push(name[0]);
+		}
+	}
+
+	let r3 = await Blockchain.getFullAccounts(nameAry);
+
+	r3.forEach((data, index) => {
+		if (data && data[1].account) {
+
+		data = data[1].account;
+
+			const account_name = data.name;
+			const membership_expiration_date = data.membership_expiration_date;
+			const referrer = data.referrer;
+			const owner_key = data.owner.key_auths[0][0];
+			const active_key = data.active.key_auths[0][0];
+			const memo_key = data.options.memo_key;
+			const account_id = data.id;
+
+			// console.log(account_name);
+			// console.log(membership_expiration_date);
+			// console.log(referrer);
+			// console.log(owner_key);
+			// console.log(active_key);
+			// console.log(memo_key);
+			// console.log(account_id);
+
+			sql = `SELECT * FROM explorer.accounts WHERE account_name = '${account_name}'`
+			connection.query(sql, function (err, result) {
+			  if (err) {
+				  throw err;
+			  }
+			//   console.log("Result: " + JSON.stringify(result));
+
+			  if (result.length < 1) { // Insert data
+			sql = `INSERT INTO accounts (account_name, membership_expiration, referrer, owner_key, active_key, memo_key, member_since, account_id)
+			VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '2017-11-13 23:32:12', '${account_id}')`;
+
+				connection.query(sql, function(err, result) {
+					console.log("Result: " + JSON.stringify(result));
+
+					if (err) {
+						throw err;
+					}
+
+				})
+			  }
+			});
+
+
+		}
+
+	});
+  }
+
+
+
+
+// ===== SERVER STARTUP =====
 if (process.env.NODE_ENV !== 'production') {
 	require('./config/dev.js')(app);
 } else {
@@ -42,19 +124,29 @@ app.listen(port, err => {
 	} 
   console.log('App is listening on', port); 
 
-  Blockchain.connect(BLOCKCHAIN_URL).then((r) => {
-	// connected -- do stuff 
-
-	// example API call:
-	// Blockchain.getWitnessObjById(['1.6.1', '1.6.2']).then((w) => {
-	// 	console.log(w);
-	// })
-
-	// blockchainWS.Apis.instance().db_api().exec( "set_subscribe_callback", [ updateListener, true ] );
-
-	wsMonitor.subscribeToNewTransactions();
-	wsMonitor.subscribeToAccount(["committee-account", "1.2.0"]);
+  const connection = mysql.createConnection({
+	host     : db.HOST,
+	user     : db.USER,
+	password : db.PASSWORD,
+	database : db.DATABASE
   });
+
+connection.connect(function(err) {
+	if (err) {
+	console.error('error connecting to DB: ' + err.stack);
+	return;
+}
+  
+	console.log('Connected to DB: id ' + connection.threadId);
+	});
+
+  Blockchain.connect(BLOCKCHAIN_URL).then((r) => {
+	// syncDatabase(connection);
+
+	connection.end();
+});
+	
+
 });
 
 module.exports = app;
