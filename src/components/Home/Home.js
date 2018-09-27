@@ -53,14 +53,14 @@ class Welcome extends Component {
 				console.log('large');
 				break;
 			default:
-			console.log('default');
+				console.log('default');
 				return;
 		}
-		debugger;
+
 		stateCopy.components[id].currentSize = size;
 		stateCopy.components[id].visible = true;
+		console.log('setting: ', stateCopy.layout);
 		this.setState({stateCopy});
-		this.componentClicked(id);
 	}
 
 	renderComponent(component) {
@@ -76,42 +76,18 @@ class Welcome extends Component {
 		}
 	}
 
-	dragStop(id, d) {
-		const stateCopy = Object.assign({}, this.state);
-		stateCopy.components[id].x = d.x;
-		stateCopy.components[id].y = d.y;
-		console.log(stateCopy);
-		this.setState({stateCopy});
-	}
+	updateGrid(id) {
 
-	setPanelSize(size) {
-		switch(size) {
-			case 'small':
-				this.setState({})
-			case 'medium':
-				return '400px';
-			case 'large':
-				return '600px';
-			default:
-				return;
-		}
 	}
 
 	render() {
-		  /*
-		  	<Panel headerText={"witness viewer"} 
-				style={{ margin: '24px auto', width: "400px" }} 
-				onClose={() => this.onClosePanel.bind(this, 0)}>
-				<div className={`${styles['data-react']}`}>
-					<WitnessViewer />
-				</div>
-			</Panel>
-		  */
+		const newLayout = JSON.parse(JSON.stringify(this.state.layout));
+
 		return (
 			<div>
 				<div>
-					<Grid className="layout" layout={this.state.layout} cols={12} compactType={'none'} 
-						rowHeight={0} preventCollision={true}>
+					<Grid className="layout" layout={newLayout} cols={12} compactType={'none'} 
+						rowHeight={0} preventCollision={true} onDragStop={() => {console.log('dragging')}}> 
 						 {this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
@@ -123,46 +99,11 @@ class Welcome extends Component {
 											</div>
 										</Panel>
 									</div>
-								) : <div key={component.id}> </div>
+								) : <div key={component.id} data-grid={this.state.layout[component.id]}> </div>
 							);
 						})
 						 }
-						{/*this.state.components.map(component => { 
-							return (
-								component.visible ? ( 
-									<div key={component.id}>
-										<Panel headerText={component.name} 
-											style={{ margin: '24px auto', width: this.getPanelSize(component.currentSize) }} 
-											onClose={() => this.onClosePanel.bind(this, component.id)}>
-											<div key={component.id} className={`${styles['data-react']}`}>
-												{this.renderComponent(component)}
-											</div>
-										</Panel>
-									</div>
-								) : <div key={Math.random()}> </div>
-							);
-						})*/}	
 					</Grid>
-					{/*<GridLayout className="layout"
-						layout={layout} cols={12} rowHeight={30} width={1200}>
-
-						{this.state.components.map(component => { 
-							return (
-								component.visible ? (
-									<div key={component.id} data-grid={component.layout}> 
-										<Panel headerText={component.name} 
-											style={{ margin: '24px auto', width: this.getPanelSize(component.currentSize) }} 
-											onClose={() => this.onClosePanel.bind(this, component.id)}>
-											<div className={`${styles['data-react']}`}>
-												{this.renderComponent(component)}
-											</div>
-										</Panel>
-									</div>
-								) : <div key={Math.random()}> </div>
-							);
-						})
-						}
-					</GridLayout>*/}
 				</div>
 				<div>
 					<SidePanel components={this.state.components} 
