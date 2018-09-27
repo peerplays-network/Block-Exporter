@@ -20,7 +20,7 @@ class Welcome extends Component {
 								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', visible: false, id: 1},
 								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', visible: false, id: 2}
 								  ], 
-								  layout : [ {i: '0', x: 3, y: 0, w: 4, h: 20}, {i: '1', x: 3, y: 31, w: 2, h: 20}, {i: '2', x: 7.5, y: 0, w: 6, h: 20}]	
+								  layout : [ {i: '0', x: 3, y: 0, w: 2.5, h: 20, minW: 3.5}, {i: '1', x: 3, y: 31, w: 3.5, h: 20}, {i: '2', x: 7.5, y: 0, w: 4.5, h: 20, minW: 4.5}]	
 					 };
 	}
 
@@ -36,18 +36,14 @@ class Welcome extends Component {
 		switch(size) {
 			case 'small' :
 				stateCopy.layout[id].w = 2.5;
-				console.log('small');
 				break;
 			case 'medium' :
 				stateCopy.layout[id].w = 3.5;
-				console.log('medium');
 				break;
 			case 'large' :
 				stateCopy.layout[id].w = 4.5;
-				console.log('large');
 				break;
 			default:
-				console.log('default');
 				return;
 		}
 
@@ -68,18 +64,13 @@ class Welcome extends Component {
 		}
 	}
 
-	layoutChange(layout, oldItem, newItem, placeholder, e, element) {
-		console.log('hey',layout)
-	}
-
 	updateCoordinates(layout, oldItem, newItem, placeholder, e, element) {
 		const stateCopy = Object.assign({}, this.state);
 		const id = Number(oldItem.i);
 
-		stateCopy.layout[id] = {i: id.toString(), x: newItem.x, y: newItem.y, w: newItem.w, h: newItem.h};
+		stateCopy.layout[id] = {i: id.toString(), x: newItem.x, y: newItem.y, w: newItem.w, h: (element.offsetHeight/10), minW: oldItem.minW};
 		console.log('updated coordinates: ', stateCopy.layout[id]);
 		this.setState({stateCopy});
-
 	}
 
 	render() {
@@ -89,7 +80,7 @@ class Welcome extends Component {
 			<div>
 				<div>
 					<Grid className="layout" layout={newLayout} cols={12} compactType={null}
-						rowHeight={1}
+						rowHeight={1} draggableCancel=".btn"
 						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
 						 {this.state.components.map(component => { 
 							return (
