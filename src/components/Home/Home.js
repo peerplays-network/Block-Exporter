@@ -6,8 +6,8 @@ import styles from './styles.css';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
 import AccountSearch from '../Account/Account';
 import GridLayout, {WidthProvider as widthProvider} from 'react-grid-layout';
-// import 'react-grid-layout/css/styles.css';
-// import 'react-resizable/css/styles.css' ;
+import 'react-grid-layout/css/styles.css'; 
+import 'react-resizable/css/styles.css' ;
 
 const Grid = widthProvider(GridLayout);
 
@@ -94,21 +94,21 @@ class Welcome extends Component {
 		return (
 			<div>
 				<div>
-					<Grid className="layout" layout={newLayout} cols={12} compactType={null} 
+					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={12} compactType={null} 
 						rowHeight={1} draggableCancel=".btn" onLayoutChange={(layout) => this.updateHeight(layout)}
 						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
 						 {this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
-									<div key={component.id} style={{borderStyle: 'dashed'}}>
+									<div className={`${styles['react-grid-item']}`} key={component.id} style={{borderStyle: 'dashed'}}>
 										<Panel headerText={component.name}  
 											onClose={() => this.onClosePanel.bind(this, component.id)}>
-											<div key={component.id} className={`${styles['data-react']}`}>
+											<div >
 												{this.renderComponent(component)}
 											</div>
 										</Panel>
 									</div>
-								) : <div key={component.id} data-grid={this.state.layout[component.id]}> </div>
+								) : <div key={component.id}> </div>
 							);
 						})
 						 }
