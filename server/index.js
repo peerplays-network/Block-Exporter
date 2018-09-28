@@ -44,65 +44,72 @@ app.use("/api", routes);
 
 async function syncDatabase(connection) {
 
-	let accountNames = await Blockchain.getAccountNamesRecursively('', 1000);
-	let nameAry = [];
-	for (const name of accountNames) {
-		// console.log(name[0])
-		if (!db.RESTRICTED.includes(name[0])) {
-			// console.log(name[0]);
-			nameAry.push(name[0]);
-		}
+	// let accountNames = await Blockchain.getAccountNamesRecursively('', 1000);
+	// let nameAry = [];
+	// for (const name of accountNames) {
+	// 	// console.log(name[0])
+	// 	if (!db.RESTRICTED.includes(name[0])) {
+	// 		// console.log(name[0]);
+	// 		nameAry.push(name[0]);
+	// 	}
+	// }
+
+	// let r1 = await Blockchain.getFullAccounts(nameAry);
+
+	// r1.forEach((data, index) => {
+	// 	if (data && data[1].account) {
+
+	// 	data = data[1].account;
+
+	// 		const account_name = data.name;
+	// 		const membership_expiration_date = data.membership_expiration_date;
+	// 		const referrer = data.referrer;
+	// 		const owner_key = data.owner.key_auths[0][0];
+	// 		const active_key = data.active.key_auths[0][0];
+	// 		const memo_key = data.options.memo_key;
+	// 		const account_id = data.id;
+
+	// 		// console.log(account_name);
+	// 		// console.log(membership_expiration_date);
+	// 		// console.log(referrer);
+	// 		// console.log(owner_key);
+	// 		// console.log(active_key);
+	// 		// console.log(memo_key);
+	// 		// console.log(account_id);
+
+	// 		sql = `SELECT * FROM explorer.accounts WHERE account_name = '${account_name}'`
+	// 		connection.query(sql, function (err, result) {
+	// 		  if (err) {
+	// 			  throw err;
+	// 		  }
+	// 		//   console.log("Result: " + JSON.stringify(result));
+
+	// 		  if (result.length < 1) { // Insert data
+	// 		sql = `INSERT INTO accounts (account_name, membership_expiration, referrer, owner_key, active_key, memo_key, member_since, account_id)
+	// 		VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '2017-11-13 23:32:12', '${account_id}')`;
+
+	// 			connection.query(sql, function(err, result) {
+	// 				console.log("Result: " + JSON.stringify(result));
+
+	// 				if (err) {
+	// 					throw err;
+	// 				}
+
+	// 			})
+	// 		  }
+	// 		});
+	// 	}
+	// });
+
+	let witnessNames = await Blockchain.getWitnessesRecursively('', 1000);
+	// console.log(witnessNames);
+	let witnessAry = [];
+	for (const witness of witnessNames) {
+		witnessAry.push(witness[1]);
 	}
 
-	let r3 = await Blockchain.getFullAccounts(nameAry);
-
-	r3.forEach((data, index) => {
-		if (data && data[1].account) {
-
-		data = data[1].account;
-
-			const account_name = data.name;
-			const membership_expiration_date = data.membership_expiration_date;
-			const referrer = data.referrer;
-			const owner_key = data.owner.key_auths[0][0];
-			const active_key = data.active.key_auths[0][0];
-			const memo_key = data.options.memo_key;
-			const account_id = data.id;
-
-			// console.log(account_name);
-			// console.log(membership_expiration_date);
-			// console.log(referrer);
-			// console.log(owner_key);
-			// console.log(active_key);
-			// console.log(memo_key);
-			// console.log(account_id);
-
-			sql = `SELECT * FROM explorer.accounts WHERE account_name = '${account_name}'`
-			connection.query(sql, function (err, result) {
-			  if (err) {
-				  throw err;
-			  }
-			//   console.log("Result: " + JSON.stringify(result));
-
-			  if (result.length < 1) { // Insert data
-			sql = `INSERT INTO accounts (account_name, membership_expiration, referrer, owner_key, active_key, memo_key, member_since, account_id)
-			VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '2017-11-13 23:32:12', '${account_id}')`;
-
-				connection.query(sql, function(err, result) {
-					console.log("Result: " + JSON.stringify(result));
-
-					if (err) {
-						throw err;
-					}
-
-				})
-			  }
-			});
-
-
-		}
-
-	});
+	const r2 = await Blockchain.getWitnessObjsById(witnessAry);
+	console.log(r2);
   }
 
 
@@ -141,7 +148,7 @@ connection.connect(function(err) {
 	});
 
   Blockchain.connect(BLOCKCHAIN_URL).then((r) => {
-	// syncDatabase(connection);
+	syncDatabase(connection);
 
 	connection.end();
 });
