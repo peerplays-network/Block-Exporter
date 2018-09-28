@@ -108,8 +108,6 @@ async function syncDatabase(connection) {
 	const r2 = await Blockchain.getWitnessObjsById(witnessAry);
 
 	r2.forEach((data, index) => {
-		console.log(data);
-
 		// build witness object
 		const account_id = witnessNames[index][1];
 		const account_name = witnessNames[index][0];
