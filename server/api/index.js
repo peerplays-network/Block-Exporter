@@ -1,5 +1,6 @@
 const blockchainWS = require('peerplaysjs-ws');
-const blockchainLib = require('peerplaysjs-lib');
+const Exeblock = require('peerplaysjs-lib');
+const ChainStore = Exeblock.ChainStore;
 
 const accList = [];
 const witnessList = [];
@@ -13,15 +14,78 @@ const api = {
     */
 	connect: BLOCKCHAIN_URL => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance(BLOCKCHAIN_URL, true).init_promise.then((res) => {
-				console.log('\x1b[32m', '\n Connection established to ' + BLOCKCHAIN_URL);
-				resolve();
+			this.api = blockchainWS.Apis.instance(BLOCKCHAIN_URL, true);
+			this.api.init_promise.then((res) => {
+				ChainStore
+					.init()
+					.then(() => {
+				  console.log(`Exeplorer Server> Connected to ${BLOCKCHAIN_URL}`);
+				  resolve();
+					});
+				
+				// resolve();
 			}).catch(e => {
 				console.error('\x1b[31m', '\n Connection FAILED to ' + BLOCKCHAIN_URL);
 				reject(e);
 			});
 		});
 	},
+
+	/* Start listening for new blocks
+	connection: A valid MYSQL connection
+
+	*/
+
+	startMonitor: (connection) => {
+		console.log('Exeplorer Server> Monitoring for new blocks!');
+		ChainStore.subscribe(() => api.updateDatabase(connection));
+	  },
+
+	/* Update the DB
+
+	*/
+
+	updateDatabase: (connection) => {
+		api.getObject('2.1.0', (error, dynamicGlobal) => {
+			console.log(`Pushed: ${JSON.stringify(dynamicGlobal)}`);
+			const sql = `INSERT INTO explorer.variables (var_name, value) VALUES('next_maintenance_time', '${dynamicGlobal.next_maintenance_time}') ON DUPLICATE KEY UPDATE    
+			var_name='next_maintenance_time', value='${dynamicGlobal.next_maintenance_time}'`
+
+			connection.query(sql, function (err, result) {
+				if (err) {
+					throw err;
+				}
+				console.log("Result: " + JSON.stringify(result));
+		});
+
+		});
+
+		// Dynamic global object
+
+
+
+	  },
+
+	  /* Get a single object from the blockchain
+
+	  */
+	getObject: (assetId, callback) => {
+		if (typeof assetId === 'function') {
+		  callback = assetId;
+		  assetId = null;
+		} 
+	 
+		if (!assetId) {
+		  return callback(new Error('Missing asset id.'));
+		}
+	
+		this.api.db_api()
+		  .exec('get_objects', [[assetId]])
+		  .then((blockObject) => {
+			// Return the first object that matches the query
+				return callback(null, blockObject[0]);
+		  });
+	  },
     
 	/* Obtain account objects from account IDs
     acc: An array of account ID(s) (1.2.x)

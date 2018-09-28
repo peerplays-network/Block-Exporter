@@ -180,6 +180,7 @@ connection.connect(function(err) {
 
   Blockchain.connect(BLOCKCHAIN_URL).then((r) => {
 	// syncDatabase(connection);
+	Blockchain.startMonitor(connection);
 
 	// connection.end();
 });
