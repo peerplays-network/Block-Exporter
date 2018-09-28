@@ -47,23 +47,18 @@ const api = {
 
 	updateDatabase: (connection) => {
 		api.getObject('2.1.0', (error, dynamicGlobal) => {
-			console.log(`Pushed: ${JSON.stringify(dynamicGlobal)}`);
-			const sql = `INSERT INTO explorer.variables (var_name, value) VALUES('next_maintenance_time', '${dynamicGlobal.next_maintenance_time}') ON DUPLICATE KEY UPDATE    
-			var_name='next_maintenance_time', value='${dynamicGlobal.next_maintenance_time}'`
+			const sql = `INSERT INTO explorer.variables (var_name, value) VALUES ('next_maintenance_time', '${dynamicGlobal.next_maintenance_time}')
+			ON DUPLICATE KEY UPDATE var_name='next_maintenance_time', value='${dynamicGlobal.next_maintenance_time}'`;
 
 			connection.query(sql, function (err, result) {
 				if (err) {
 					throw err;
 				}
-				console.log("Result: " + JSON.stringify(result));
-		});
-
+				// console.log('Result: ' + JSON.stringify(result));
+			});
 		});
 
 		// Dynamic global object
-
-
-
 	  },
 
 	  /* Get a single object from the blockchain
