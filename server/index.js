@@ -47,16 +47,14 @@ async function syncDatabase(connection) {
 	let accountNames = await Blockchain.getAccountNamesRecursively('', 1000);
 	let nameAry = [];
 	for (const name of accountNames) {
-		// console.log(name[0])
 		if (!db.RESTRICTED.includes(name[0])) {
-			// console.log(name[0]);
 			nameAry.push(name[0]);
 		}
 	}
 
-	let r3 = await Blockchain.getFullAccounts(nameAry);
+	let r1 = await Blockchain.getFullAccounts(nameAry);
 
-	r3.forEach((data, index) => {
+	r1.forEach((data, index) => {
 		if (data && data[1].account) {
 
 		data = data[1].account;
@@ -98,15 +96,55 @@ async function syncDatabase(connection) {
 				})
 			  }
 			});
+		}
+	});
 
+	let witnessNames = await Blockchain.getWitnessesRecursively('', 1000);
+	let witnessAry = [];
+	for (const witness of witnessNames) {
+		witnessAry.push(witness[1]); // 0 = name, 1 = id
+	}
 
+	const r2 = await Blockchain.getWitnessObjsById(witnessAry);
+
+	r2.forEach((data, index) => {
+		// build witness object
+		const account_id = witnessNames[index][1];
+		const account_name = witnessNames[index][0];
+		const witness = data.witness_account;
+		// const witness_since = ""
+		const total_votes = data.total_votes;
+		const url = data.url;
+		// const is_active = 
+		const total_missed = data.total_missed;
+
+		sql = `SELECT * FROM explorer.witnesses WHERE account_name = '${account_name}'`
+		connection.query(sql, function (err, result) {
+		if (err) {
+			throw err;
+		}
+		// console.log("Result: " + JSON.stringify(result));
+
+		if (result.length < 1) { // Insert witness data
+			sql = `INSERT INTO witnesses (account_id, account_name, witness, witness_since, total_votes, total_missed, url, is_active)
+			VALUES ('${account_id}', '${account_name}', '${witness}', '2017-11-13 23:32:12', '${total_votes}', '${total_missed}', '${url}', '${1}');`
 		}
 
+		connection.query(sql, function (err, result) {
+			if (err) {
+				throw err;
+			}
+			console.log("Result: " + JSON.stringify(result));
 	});
-  }
+
+	})
+	
 
 
+  });
 
+
+}
 
 // ===== SERVER STARTUP =====
 if (process.env.NODE_ENV !== 'production') {
@@ -143,7 +181,7 @@ connection.connect(function(err) {
   Blockchain.connect(BLOCKCHAIN_URL).then((r) => {
 	// syncDatabase(connection);
 
-	connection.end();
+	// connection.end();
 });
 	
 
