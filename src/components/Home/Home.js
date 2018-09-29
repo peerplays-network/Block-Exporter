@@ -3,11 +3,8 @@ import Panel from '../Panel/Panel';
 import MaintenanceCD from '../MaintenanceCD/MaintenanceCD';
 import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
-<<<<<<< HEAD
-=======
 import {Rnd} from 'react-rnd';
 import TransactionDisplay from '../Transactions/TransactionDisplay';
->>>>>>> development
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
 import AccountSearch from '../Account/Account';
 import GridLayout, {WidthProvider as widthProvider} from 'react-grid-layout';
@@ -20,19 +17,12 @@ class Welcome extends Component {
 	constructor() {
 		super();
 
-<<<<<<< HEAD
 		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', visible: false, id: 0, gridPlacement: {i: '0', x: 3, y: 0, w: 2.5, h: 20}},
 								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', visible: false, id: 1, gridPlacement: {i: '1', x: 3, y: 31, w: 3.5, h: 20}},
-								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', visible: false, id: 2, gridPlacement: {i: '2', x: 7.5, y: 0, w: 4.5, h: 20}}
+								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', visible: false, id: 2, gridPlacement: {i: '2', x: 7.5, y: 0, w: 4.5, h: 20}},
+								   {name: 'Current Transactions', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:3, gridPlacement: {i: '3', x: 7.5, y: 0, w: 4.5, h: 20}}
 								  ], 
 								  layout : []	
-=======
-		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', currentSize: '', visible: false, id: 0},
-								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', currentSize: '', visible: false, id: 1},
-								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:2},
-								   {name: 'Current Transactions', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:3}
-								  ]
->>>>>>> development
 					 };
 	}
 
@@ -86,7 +76,6 @@ class Welcome extends Component {
 		}
 	}
 
-<<<<<<< HEAD
 	updateCoordinates(layout, oldItem, newItem, placeholder, e, element) {
 		/*this is called when an element is dragged. the components gridLayout is first updated to the new coordinates 
 		*(this is vital for resizing as the widget is destroyed and re-created), and then the layout receives the components new coordinates 
@@ -98,20 +87,6 @@ class Welcome extends Component {
 		stateCopy.layout[layoutIndex] = stateCopy.components[id].gridPlacement;
 
 		this.setState({stateCopy});
-=======
-	getPanelSize(comp) {
-		switch(comp.currentSize) {
-			case 'small':
-				return '200px';
-			case 'medium':
-				return '400px';
-			case 'large':
-				if (comp.id === 3) {return '800px'} // transaction viewer
-				else {return '600px';}
-			default:
-				return;
-		}
->>>>>>> development
 	}
 
 	render() {
@@ -120,7 +95,6 @@ class Welcome extends Component {
 		return (
 			<div>
 				<div>
-<<<<<<< HEAD
 					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={12} compactType={null} 
 						rowHeight={1} draggableCancel=".panel-body" autoSize={false} isResizable={false}
 						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
@@ -140,30 +114,6 @@ class Welcome extends Component {
 						})
 						 }
 					</Grid>
-=======
-					{this.state.components.map(component => { 
-						return (
-							component.visible ? (
-								
-								<Rnd
-									key={component.id}
-									default={{
-										x: 400,
-										y: 200,
-									}}
-								> 
-									<Panel headerText={component.name} 
-										style={{ margin: '24px auto', width: this.getPanelSize(component) }} 
-										onClose={() => this.onClosePanel.bind(this, component.id)}>
-										<div className={`${styles['data-react']}`}>
-											{this.renderComponent(component)}
-										</div>
-									</Panel>      
-								</Rnd>
-							) : null
-						);
-					})}
->>>>>>> development
 				</div>
 				<div>
 					<SidePanel components={this.state.components} 
