@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 //import axios from 'axios'; //remove comment when API is completed
 import AccountDetail from './AccountDetail';
 import PaginationCall from './PaginationCall';
+import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 
 export default class AccountSearch extends Component {
 	constructor(e) {
@@ -89,18 +90,16 @@ export default class AccountSearch extends Component {
 			params:{
 				//none since it is all account
 			}
-		})
-		.then(response => {
-				this.setState({
-					data: response.data.data
-				});
-			})
-			.catch(error => {console.log('error is fetching account data', error);});
+		}).then(response => {
+			this.setState({
+				data: response.data.data
+			});
+		}).catch(error => {console.log('error is fetching account data', error);});
 		*/
 		var temp_data = [];
 		//if the data.id matches accountName add to data
 		for (var account in data) {
-			if (data[account].id === accountName)
+			if (data[account].id.indexOf(accountName) >= 0 ) 
 				temp_data.push(data[account]);
 		}
 		if (temp_data.length <= 0)
@@ -114,8 +113,10 @@ export default class AccountSearch extends Component {
 			<div>
 				<div className="pagination-wrapper">
 					<form onSubmit={this.searchAccount}>
-						<input type="text" value={this.state.account} onChange={this.onAccountEnter} placeholder="Account" />
-						<input type="submit" value="Search Account" />
+						<InputGroup>
+							<Input type="text" value={this.state.account} onChange={this.onAccountEnter} placeholder="Account" />
+							<InputGroupAddon addonType="append"><Button>Search Account</Button></InputGroupAddon>
+						</InputGroup>
 					</form>
 					<PaginationCall currentPage={currentPage} handleClick={this.handleClick} pagesCount={this.pagesCount} />
 				</div>

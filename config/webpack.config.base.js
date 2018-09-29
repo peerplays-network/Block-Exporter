@@ -29,14 +29,21 @@ config.module = {
 			use: ['babel-loader'],
 			include: paths.app.src
 		},
-		{   /* fonts */
-			test: /\.(otf)?$/,
-			use: [{
-				loader: 'file-loader',
-				options: {}
-			}],
+		{
+			test: /\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+			loader: 'file-loader?name=fonts/[name].[ext]',
 			include: paths.app.src
-		}
+		  },
+		{
+            test: /\.scss$/,
+            use: [
+                "style-loader", 
+                "css-loader", 
+                "sass-loader" 
+			],
+			include: paths.app.src
+        },
+
 	]
 };
 
