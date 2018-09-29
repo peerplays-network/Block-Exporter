@@ -37,7 +37,7 @@ class Welcome extends Component {
 		* then the layout entry is overwritten by the new state object, otherwise it is pushed into the layout array
 		*/
 		const stateCopy = Object.assign({}, this.state);
-		
+
 		switch(size) {
 			case 'small' :
 				stateCopy.components[id].gridPlacement.w = 2.5;
@@ -78,24 +78,20 @@ class Welcome extends Component {
 		const stateCopy = Object.assign({}, this.state);
 		const id = Number(oldItem.i);
 		const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
-		debugger;
-		stateCopy.components[id].gridPlacement = {i: id.toString(), x: newItem.x, y: newItem.y, w: newItem.w, h: newItem.h};
+		stateCopy.components[id].gridPlacement = {i: id.toString(), x: newItem.x, y: newItem.y, w: newItem.w, h: Math.ceil((element.scrollHeight-10)/(10))};
 		stateCopy.layout[layoutIndex] = stateCopy.components[id].gridPlacement;
-		this.setState({stateCopy});
-	}
 
-	updateHeight(layout) {
-		//debugger;
+		this.setState({stateCopy});
 	}
 
 	render() {
 		const newLayout = JSON.parse(JSON.stringify(this.state.layout));
-		console.log('layout: ',newLayout)
+
 		return (
 			<div>
 				<div>
 					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={12} compactType={null} 
-						rowHeight={1} draggableCancel=".btn" onLayoutChange={(layout) => this.updateHeight(layout)}
+						rowHeight={1} draggableCancel=".panel-body" autoSize={false} isResizable={false}
 						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
 						 {this.state.components.map(component => { 
 							return (
@@ -103,7 +99,7 @@ class Welcome extends Component {
 									<div className={`${styles['react-grid-item']}`} key={component.id} style={{borderStyle: 'dashed'}}>
 										<Panel headerText={component.name}  
 											onClose={() => this.onClosePanel.bind(this, component.id)}>
-											<div >
+											<div style={{overflow: 'auto'}}>
 												{this.renderComponent(component)}
 											</div>
 										</Panel>

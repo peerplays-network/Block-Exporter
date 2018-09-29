@@ -19,7 +19,7 @@ class Panel extends Component {
 							<Button type="button" className="close" onClick={this.props.onClose(this.props.componentId)}> <span aria-hidden="true">&times;</span> </Button>
 						</span>
 					</div>
-					<div className={`${styles['box-shadow']} p-1`}>
+					<div className={`${styles['box-shadow']} p-1 panel-body`}>
 						{this.props.children}
 					</div>
 				</div>
