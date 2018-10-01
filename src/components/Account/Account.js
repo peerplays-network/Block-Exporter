@@ -40,6 +40,8 @@ export default class AccountSearch extends Component {
 
 	componentDidMount() {
 		this.findData();
+		const gridHeight=43;
+		this.props.calculateComponentHeight(this.props.id, gridHeight);
 	  }
 
 	handleClick(e, index) {
