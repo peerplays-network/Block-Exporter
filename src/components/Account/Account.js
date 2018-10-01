@@ -1,6 +1,6 @@
 /* Account page includes pagination */
 import React, { Component } from 'react';
-//import axios from 'axios'; //remove comment when API is completed
+import axios from 'axios'; //remove comment when API is completed
 import AccountDetail from './AccountDetail';
 import PaginationCall from './PaginationCall';
 import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
@@ -8,51 +8,7 @@ import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 export default class AccountSearch extends Component {
 	constructor(e) {
 		super(e);
-		this.data = [
-			{id: 'bts-conradrei1', votes: [{'owner':'2342', 'vote':'12'}, {'owner':'23234', 'vote':'123'}], proposals: [], referrer_name: 'committee-account', balances: [{
-				'asset_type': '1.3.0',
-				'symbol': 'PPY',
-				'owner': '1.2.6752',
-				'balance': 21000026121,
-				'id': '2.5.6444'
-			}]},
-			{id: 'gold-blocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
-				'asset_type': '1.3.0',
-				'symbol': 'PPY',
-				'owner': '1.2.9833',
-				'balance': 11683915631,
-				'id': '2.5.8735'
-			}]},
-			{id: 'gold-blohcks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
-				'asset_type': '1.3.0',
-				'symbol': 'PPY',
-				'owner': '1.2.9833',
-				'balance': 11683915631,
-				'id': '2.5.8735'
-			}]},
-			{id: 'gold-bljghkocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
-				'asset_type': '1.3.0',
-				'symbol': 'PPY',
-				'owner': '1.2.9833',
-				'balance': 11683915631,
-				'id': '2.5.8735'
-			}]},
-			{id: 'gold-bklocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
-				'asset_type': '1.3.0',
-				'symbol': 'PPY',
-				'owner': '1.2.9833',
-				'balance': 11683915631,
-				'id': '2.5.8735'
-			}]},
-			{id: 'golhd-blocks', votes: [], proposals: [], referrer_name: 'peerplays-faucet', balances: [{
-				'asset_type': '1.3.0',
-				'symbol': 'PPY',
-				'owner': '1.2.9833',
-				'balance': 11683365631,
-				'id': '2.5.8735'
-			}]}
-		];
-
+		this.data=[];
 		this.state = {
 			data: [],
 			account : '',
@@ -66,7 +22,27 @@ export default class AccountSearch extends Component {
 		this.searchAccount = this.searchAccount.bind(this);
 		this.findAccount = this.findAccount.bind(this);
 		this.handleClick = this.handleClick.bind(this);
+		this.findData = this.findData.bind(this);
+		this.refreshPagination = this.refreshPagination.bind(this);
 	}
+
+	refreshPagination () {this.pagesCount = Math.ceil(this.data.length / this.pageSize);}
+
+	findData(e) {
+		//API call to search for Account
+		axios.get('api/accounts/', {
+		}).then(response => {
+			this.setState({ data: response.data });
+			this.data = response.data;
+			this.findAccount(this.state.account, this.state.data);
+		}).catch(error => {console.log('error is fetching account data', error);});
+	}
+
+	componentDidMount() {
+		this.findData();
+		const gridHeight=43;
+		this.props.calculateComponentHeight(this.props.id, gridHeight);
+	  }
 
 	handleClick(e, index) {
 		e.preventDefault();
@@ -79,38 +55,29 @@ export default class AccountSearch extends Component {
 
 	searchAccount(e) {
 		if (e) e.preventDefault();
-		this.findAccount(this.state.account, this.data);
+		this.findAccount(this.state.account, this.state.data);
 		e.currentTarget.reset();
 	}
 
 	findAccount(accountName, data) {
-		//API call to search for Account
-		/*
-		axios.get('/account',{
-			params:{
-				//none since it is all account
-			}
-		}).then(response => {
-			this.setState({
-				data: response.data.data
-			});
-		}).catch(error => {console.log('error is fetching account data', error);});
-		*/
 		var temp_data = [];
 		//if the data.id matches accountName add to data
 		for (var account in data) {
-			if (data[account].id.indexOf(accountName) >= 0 ) 
+			if (data[account].account_name.indexOf(accountName) >= 0 ) 
 				temp_data.push(data[account]);
 		}
 		if (temp_data.length <= 0)
 			temp_data = data;
 		this.setState({ temp_data: temp_data });
+		this.data = temp_data;
+		this.refreshPagination();
 	}
 
 	render() {
 		const { currentPage } = this.state;
+
 		return(
-			<div>
+			<div className="table-responsive">
 				<div className="pagination-wrapper">
 					<form onSubmit={this.searchAccount}>
 						<InputGroup>
@@ -123,10 +90,8 @@ export default class AccountSearch extends Component {
 				<table className="table">
 					<thead className="thead-light">
 						<tr>
-							<th>User ID</th>
-							<th>Balances</th>
-							<th>Proposals</th>
-							<th>Votes</th>
+							<th>Account Name</th>
+							<th>Account ID</th>
 							<th>Referrer</th>
 						</tr>
 					</thead>

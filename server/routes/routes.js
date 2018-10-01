@@ -166,6 +166,37 @@ router.get('/witnesses', function (req, res) {
 });
 
 
+// Variables API: GET variables
+router.get('/variables', function (req, res) {
+	console.log('GET request made to /variables');
+
+	const connection = mysql.createConnection({
+		host     : db.HOST,
+		user     : db.USER,
+		password : db.PASSWORD,
+		database : db.DATABASE
+		  });
+
+		  // Establish connection
+		  connection.connect(function(err) {
+		if (err) {
+			console.error('error connecting to DB: ' + err.stack);
+			return;
+		}
+	});
+
+	// Perform Query
+	connection.query('SELECT * FROM explorer.variables', function (err, rows, fields) {
+		if (err) throw err;
+		  
+		res.send(rows);
+		  });
+
+	// Close connection
+	connection.end();
+});
+
+
 
 
 module.exports = router;
