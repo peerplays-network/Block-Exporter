@@ -13,6 +13,15 @@ class PaginationCall extends Component {
 		}
 	}
 
+	withinOne(i) {
+		if (i === 0 || i === this.props.currentPage || i+1 === this.props.currentPage || i-1 ===this.props.currentPage) {
+			return <PaginationLink onClick={e => this.changeHandler(e, i)} href="#"> {i + 1} </PaginationLink>;
+		}
+		else{
+			return '';
+		}
+	}
+
 	render() {
 		return (
 			<Pagination aria-label="Page navigation example">
@@ -24,9 +33,7 @@ class PaginationCall extends Component {
 				</PaginationItem>
 				{[...Array(this.props.pagesCount)].map((page, i) =>
 					<PaginationItem active={i === this.props.currentPage} key={i}>
-						<PaginationLink onClick={e => this.changeHandler(e, i)} href="#">
-							{i + 1}
-						</PaginationLink>
+						{ this.withinOne(i) }
 					</PaginationItem>
 				)}
 				<PaginationItem disabled={this.props.currentPage >= this.props.pagesCount - 1}>
