@@ -3,16 +3,30 @@
 * All elements put between <Panel> </Panel> will be rendered by this.props.children
 * Please add anything that is missing! This is not necessarily a completed component
 */
-
+//max-height: 400px;
+//overflow: auto;
 import React, { Component } from 'react';
 import styles from './styles.css';
 import { Button } from 'reactstrap';
 
 class Panel extends Component {
+	calculateHeight() {
+		switch(this.props.size) {
+			case 'small':
+				return '300px';
+			case 'medium':
+				return '400px';
+			case 'large':
+				return '500px';
+			default :
+				return '300px';
+		}
+	}
+	
 	render() {
 		return (
 			<div>
-				<div className={`${styles['center']} card border-dark`} style={this.props.style}>
+				<div className="card border-dark" style={{maxHeight: `${this.calculateHeight()}`}}>
 					<div className="card-header pr-1">
 						<span>
 							<h5 className="card-title float-left">{this.props.headerText}</h5>

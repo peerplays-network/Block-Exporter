@@ -20,6 +20,8 @@ class WitnessViewer extends Component {
 
 	componentDidMount() {
 		this.fetchData();
+		const gridHeight=40;
+		this.props.calculateComponentHeight(this.props.id, gridHeight);
 	}
 	
 	render() {

@@ -14,12 +14,12 @@ class Welcome extends Component {
 	constructor() {
 		super();
 
-		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'medium', visible: false, id: 0, gridPlacement: {i: '0', x: 3, y: 0, w: 2.5, h: 20}},
-								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', visible: false, id: 1, gridPlacement: {i: '1', x: 3, y: 31, w: 3.5, h: 20}},
-								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', visible: false, id: 2, gridPlacement: {i: '2', x: 7.5, y: 0, w: 4.5, h: 20}},
-								   {name: 'Current Transactions', image: 'https://via.placeholder.com/50x50', minSize:'large', currentSize: '', visible: false, id:3, gridPlacement: {i: '3', x: 7.5, y: 0, w: 4.5, h: 20}}
+		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: '', visible: false, id: 0, gridPlacement: {i: '0', x: 3, y: 0, w: 2.5, h: 20}},
+								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: '', visible: false, id: 1, gridPlacement: {i: '1', x: 3, y: 31, w: 3.5, h: 20}},
+								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: 7.5, y: 0, w: 4.5, h: 20}},
+								   {name: 'Current Transactions', image: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id:3, gridPlacement: {i: '3', x: 7.5, y: 0, w: 4.5, h: 20}}
 								  ], 
-								  layout : []	
+								  layout : [],
 					 };
 	}
 
@@ -40,13 +40,16 @@ class Welcome extends Component {
 
 		switch(size) {
 			case 'small' :
-				stateCopy.components[id].gridPlacement.w = 2.5;
+				stateCopy.components[id].gridPlacement.w = 18;
+				stateCopy.components[id].size = 'small';
 				break;
 			case 'medium' :
-				stateCopy.components[id].gridPlacement.w = 3.5;
+				stateCopy.components[id].gridPlacement.w = 21;
+				stateCopy.components[id].size = 'medium';
 				break;
 			case 'large' :
-				stateCopy.components[id].gridPlacement.w = 4.5;
+				stateCopy.components[id].gridPlacement.w = 24;
+				stateCopy.components[id].size = 'large';
 				break;
 			default:
 				return;
@@ -61,13 +64,13 @@ class Welcome extends Component {
 	renderComponent(component) {
 		switch(component.id) {
 			case 0:
-				return <WitnessViewer />;
+				return <WitnessViewer id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)}/>;
 			case 1:
-				return <MaintenanceCD size={{'fontSize': (component.currentSize === 'small') ? '2em' : '4em'}} />;
+				return <MaintenanceCD id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)} size={{'fontSize': (component.currentSize === 'small') ? '2em' : '4em'}} />;
 			case 2:
-				return <AccountSearch />;
+				return <AccountSearch id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)} />;
 			case 3:
-				return <TransactionDisplay />;
+				return <TransactionDisplay id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)} />;
 			default:
 				return;
 		}
@@ -80,9 +83,18 @@ class Welcome extends Component {
 		const stateCopy = Object.assign({}, this.state);
 		const id = Number(oldItem.i);
 		const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
-		stateCopy.components[id].gridPlacement = {i: id.toString(), x: newItem.x, y: newItem.y, w: newItem.w, h: Math.ceil((element.scrollHeight-10)/(10))};
+		stateCopy.components[id].gridPlacement = {i: id.toString(), x: newItem.x, y: newItem.y, w: newItem.w, h: newItem.h};
 		stateCopy.layout[layoutIndex] = stateCopy.components[id].gridPlacement;
 
+		this.setState({stateCopy});
+	}
+
+	calculateComponentHeight(id, height) {
+		//since the grid layout does not have an auto height, each component sets their own height, and calls this function once mounted
+		const stateCopy = Object.assign({}, this.state);
+		debugger;
+		const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
+		stateCopy.layout[layoutIndex].h = height;
 		this.setState({stateCopy});
 	}
 
@@ -95,14 +107,14 @@ class Welcome extends Component {
 		return (
 			<div>
 				<div>
-					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={12} compactType={null} 
-						rowHeight={1} draggableCancel=".panel-body" autoSize={false} isResizable={false}
-						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
+					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={null} 
+						rowHeight={10} draggableCancel=".panel-body" autoSize={false} isResizable={false} 
+						preventCollision={true} margin={[0, 0]} containerPadding={[0, 0]} onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
 						 {this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
-									<div className={`${styles['react-grid-item']}`} key={component.id}>
-										<Panel headerText={component.name}  
+									<div className={`${styles['react-grid-item']}`} key={component.id} style={{borderStyle: 'dotted'}}>
+										<Panel headerText={component.name} size={component.size} 
 											onClose={() => this.onClosePanel.bind(this, component.id)}>
 											<div style={{overflow: 'auto'}}>
 												{this.renderComponent(component)}

@@ -3,6 +3,11 @@ import Countdown from 'react-countdown-now';
 import styles from './styles.css';
 
 class MaintenanceCD extends Component {
+	componentDidMount() {
+		const gridHeight=20;
+		this.props.calculateComponentHeight(this.props.id, gridHeight);
+	}
+	
 	render() {
 		return (
 			<div className={`${styles['box-shadow']} ${styles['centerText']} ${styles['digital']} p-3`} style={this.props.size}>
