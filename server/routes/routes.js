@@ -9,6 +9,41 @@ router.get('/healthcheck', function (req, res) {
 });
 
 
+// BlockAPI API: GET blocks range
+router.get('/blocks', function (req, res) {
+
+	const start = req.query.start;
+	const end = req.query.end;
+
+	console.log(`GET request made to /blocks ${start} to ${end}`);
+
+
+	const connection = mysql.createConnection({
+		host     : db.HOST,
+		user     : db.USER,
+		password : db.PASSWORD,
+		database : db.DATABASE
+		  });
+
+		  // Establish connection
+		  connection.connect(function(err) {
+		if (err) {
+			console.error('error connecting to DB: ' + err.stack);
+			return;
+		}
+	});
+
+	// Perform Query
+	connection.query(`SELECT * FROM explorer.blocks WHERE block_number >= ${start} AND block_number <= ${end};`, function (err, rows, fields) {
+		if (err) throw err;
+		  
+		res.send(rows);
+		  });
+
+	// Close connection
+	connection.end();
+});
+
 // Accounts API: GET specific account
 router.get('/accounts/:name', function (req, res) {
 	console.log(`GET request made to /accounts:${req.params.name}`);
