@@ -7,8 +7,6 @@ import TransactionDisplay from '../Transactions/TransactionDisplay';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
 import AccountSearch from '../Account/Account';
 import GridLayout, {WidthProvider as widthProvider} from 'react-grid-layout';
-import 'react-grid-layout/css/styles.css'; 
-import 'react-resizable/css/styles.css' ;
 
 const Grid = widthProvider(GridLayout);
 
