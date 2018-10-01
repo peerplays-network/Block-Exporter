@@ -30,7 +30,7 @@ export default class AccountSearch extends Component {
 
 	findData(e) {
 		//API call to search for Account
-		axios.get('http://localhost:5000/api/accounts/', {
+		axios.get('http://dev.5050labs.fun:5000/api/accounts/', {
 		}).then(response => {
 			this.setState({ data: response.data });
 			this.data = response.data;
