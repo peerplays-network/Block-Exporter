@@ -75,7 +75,7 @@ export default class AccountSearch extends Component {
 		const { currentPage } = this.state;
 
 		return(
-			<div class="table-responsive">
+			<div className="table-responsive">
 				<div className="pagination-wrapper">
 					<form onSubmit={this.searchAccount}>
 						<InputGroup>
