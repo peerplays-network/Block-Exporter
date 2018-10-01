@@ -15,7 +15,6 @@ class WitnessViewer extends Component {
 			let sortedWitnessData = response.data.sort((a, b) => (a.total_votes > b.total_votes) ? 1 : ((b.total_votes > a.total_votes) ? -1 : 0));
 			sortedWitnessData = sortedWitnessData.slice(0, 5);
 			this.setState({ witnessData: sortedWitnessData });
-			debugger;
 		}).catch(error => {console.log('error fetching account data', error);});
 	}
 
