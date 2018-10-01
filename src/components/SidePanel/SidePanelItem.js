@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import styles from './styles.css';
 
 export default class SidePanelItem extends Component {
-
 	renderButtons(props, minSize) {
 		return (
 			<Fragment>

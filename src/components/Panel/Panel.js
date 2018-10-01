@@ -12,14 +12,14 @@ class Panel extends Component {
 	render() {
 		return (
 			<div>
-				<div className={`${styles['center']} card border-dark mb-3`} style={this.props.style}>
+				<div className={`${styles['center']} card border-dark`} style={this.props.style}>
 					<div className="card-header pr-1">
 						<span>
 							<h5 className="card-title float-left">{this.props.headerText}</h5>
 							<Button type="button" className="close" onClick={this.props.onClose(this.props.componentId)}> <span aria-hidden="true">&times;</span> </Button>
 						</span>
 					</div>
-					<div className={`${styles['box-shadow']} p-1`}>
+					<div className={`${styles['box-shadow']} p-1 panel-body`}>
 						{this.props.children}
 					</div>
 				</div>

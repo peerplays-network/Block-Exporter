@@ -69,6 +69,98 @@ router.get('/accounts', function (req, res) {
 	connection.end();
 });
 
+// Accounts API: GET specific witness
+router.get('/accounts/:name', function (req, res) {
+	console.log(`GET request made to /accounts:${req.params.name}`);
+
+	const connection = mysql.createConnection({
+		host     : db.HOST,
+		user     : db.USER,
+		password : db.PASSWORD,
+		database : db.DATABASE
+		  });
+
+		  // Establish connection
+		  connection.connect(function(err) {
+		if (err) {
+			console.error('error connecting to DB: ' + err.stack);
+			return;
+		}
+	});
+
+	// Perform Query
+	connection.query(`SELECT * FROM explorer.accounts WHERE account_name = '${req.params.name}'`, function (err, rows, fields) {
+		if (err) throw err;
+		  
+		res.send(rows);
+		  });
+
+	// Close connection
+	connection.end();
+});
+
+
+// Witness API: GET witnesses
+router.get('/witnesses', function (req, res) {
+	console.log('GET request made to /witnesses');
+
+	const connection = mysql.createConnection({
+		host     : db.HOST,
+		user     : db.USER,
+		password : db.PASSWORD,
+		database : db.DATABASE
+		  });
+
+		  // Establish connection
+		  connection.connect(function(err) {
+		if (err) {
+			console.error('error connecting to DB: ' + err.stack);
+			return;
+		}
+	});
+
+	// Perform Query
+	connection.query('SELECT * FROM explorer.witnesses', function (err, rows, fields) {
+		if (err) throw err;
+		  
+		res.send(rows);
+		  });
+
+	// Close connection
+	connection.end();
+});
+
+
+// Variables API: GET variables
+router.get('/variables', function (req, res) {
+	console.log('GET request made to /variables');
+
+	const connection = mysql.createConnection({
+		host     : db.HOST,
+		user     : db.USER,
+		password : db.PASSWORD,
+		database : db.DATABASE
+		  });
+
+		  // Establish connection
+		  connection.connect(function(err) {
+		if (err) {
+			console.error('error connecting to DB: ' + err.stack);
+			return;
+		}
+	});
+
+	// Perform Query
+	connection.query('SELECT * FROM explorer.variables', function (err, rows, fields) {
+		if (err) throw err;
+		  
+		res.send(rows);
+		  });
+
+	// Close connection
+	connection.end();
+});
+
 
 
 
