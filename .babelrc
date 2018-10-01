@@ -12,5 +12,5 @@
       "plugins": ["transform-es2015-modules-commonjs"]
     }
   },
-  "plugins": ["react-hot-loader/babel", "transform-es2015-classes"]
+  "plugins": ["react-hot-loader/babel", "transform-es2015-arrow-functions"]
 }
