@@ -69,7 +69,7 @@ class Welcome extends Component {
 			case 2:
 				return <AccountSearch />;
 			case 3:
-				return <TransactionDisplay />
+				return <TransactionDisplay />;
 			default:
 				return;
 		}

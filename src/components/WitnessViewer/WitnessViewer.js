@@ -1,11 +1,26 @@
 import React, { Component } from 'react';
 import WitnessRow from './WitnessRow';
-//State will be removed once data feed is established
+import axios from 'axios'; 
 
 class WitnessViewer extends Component {
 	constructor() {
 		super();
-		this.state = {witnessData: [{rank: 1, name: 'Mark', votes: 23122, misses: 156, lastBlock: 7823786}, {rank: 2, name: 'Paul', votes: 83721, misses: 821, lastBlock: 8767091}]};
+		this.state = {witnessData: []};
+	}
+
+	fetchData() {
+		//API call to search for Account
+		axios.get('api/witnesses/', {
+		}).then(response => {
+			let sortedWitnessData = response.data.sort((a, b) => (a.total_votes > b.total_votes) ? 1 : ((b.total_votes > a.total_votes) ? -1 : 0));
+			sortedWitnessData = sortedWitnessData.slice(0, 5);
+			this.setState({ witnessData: sortedWitnessData });
+			debugger;
+		}).catch(error => {console.log('error fetching account data', error);});
+	}
+
+	componentDidMount() {
+		this.fetchData();
 	}
 	
 	render() {
@@ -18,18 +33,18 @@ class WitnessViewer extends Component {
 							<th scope="col">Witness</th>
 							<th scope="col">Votes</th>
 							<th scope="col">Misses</th>
-							<th scope="col">Last Block</th>
+							<th scope="col">URL</th>
 						</tr>
 					</thead>
 					<tbody>
-						{this.state.witnessData.map(witness => {
+						{this.state.witnessData.map((witness, index) => {
 							return <WitnessRow
-								key={witness.rank} 
-								rank={witness.rank}
-								witness={witness.name}
-								votes={witness.votes}
-								misses={witness.misses}
-								lastBlock={witness.lastBlock}
+								key={witness.id}
+								rank={index+1}
+								witness={witness.account_name}
+								votes={witness.total_votes}
+								misses={witness.total_missed}
+								lastBlock={witness.url}
 							/>;
 						})}
 					</tbody>
