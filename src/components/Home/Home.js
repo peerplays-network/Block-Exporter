@@ -3,7 +3,6 @@ import Panel from '../Panel/Panel';
 import MaintenanceCD from '../MaintenanceCD/MaintenanceCD';
 import SidePanel from '../SidePanel/SidePanel';
 import styles from './styles.css';
-import {Rnd} from 'react-rnd';
 import TransactionDisplay from '../Transactions/TransactionDisplay';
 import WitnessViewer from '../WitnessViewer/WitnessViewer';
 import AccountSearch from '../Account/Account';
@@ -90,6 +89,9 @@ class Welcome extends Component {
 	}
 
 	render() {
+		/*had to add this as a workaround in order for the layout to update itself, as the Grid component only updates when a new grid object
+		is passed to it.
+		*/
 		const newLayout = JSON.parse(JSON.stringify(this.state.layout));
 
 		return (
@@ -101,7 +103,7 @@ class Welcome extends Component {
 						 {this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
-									<div className={`${styles['react-grid-item']}`} key={component.id} style={{borderStyle: 'dashed'}}>
+									<div className={`${styles['react-grid-item']}`} key={component.id}>
 										<Panel headerText={component.name}  
 											onClose={() => this.onClosePanel.bind(this, component.id)}>
 											<div style={{overflow: 'auto'}}>
