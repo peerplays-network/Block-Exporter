@@ -83,6 +83,7 @@ class WitnessViewer extends Component {
 	
 	render() {
 		console.log('witness data: ', this.state.witnessData);
+		console.log('witness data: ', this.props.size);
 		return (
 			<div>
 				{this.props.size === 'small' ? 
