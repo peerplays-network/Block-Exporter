@@ -75,7 +75,7 @@ export default class AccountSearch extends Component {
 		const { currentPage } = this.state;
 
 		return(
-			<div>
+			<div class="table-responsive">
 				<div className="pagination-wrapper">
 					<form onSubmit={this.searchAccount}>
 						<InputGroup>
@@ -88,10 +88,8 @@ export default class AccountSearch extends Component {
 				<table className="table">
 					<thead className="thead-light">
 						<tr>
-							<th>User ID</th>
-							<th>Balances</th>
-							<th>Proposals</th>
-							<th>Votes</th>
+							<th>Account Name</th>
+							<th>Account ID</th>
 							<th>Referrer</th>
 						</tr>
 					</thead>

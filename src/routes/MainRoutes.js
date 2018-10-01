@@ -5,7 +5,7 @@ import Root from '../components/Root';
 import Home from '../components/Home';
 import Test from '../components/Test';
 import Account from '../components/Account';
-import AccountAllDetail from '../components/AccountLarge/AccountAllDetail';
+import AccountAllDetail from '../components/Account/AccountAllDetail';
 
 export default (
 	<div>
