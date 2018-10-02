@@ -213,6 +213,18 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 		});
 	},
 
+	
+	/* Retrieve global properties
+
+    */
+	getGlobalProperties: () => {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().db_api().exec('get_global_properties', []).then(w => {
+				resolve(w);
+			});
+		});
+	},
+
 
 	/* Obtain account objects from account name
     acc: An array of account name(s)
