@@ -36,9 +36,9 @@ app.use("/api", routes);
 
 
 
-// ===== FUNCTIONS =====
+// ===== SYNC FUNCTIONS =====
 
-/* Takes in a MYSQL connection and attempts to sync the database with the blockchain 
+/* Takes in a MYSQL connection and attempts to sync the database non-block tables with the blockchain 
 	This function should be used sparingly, as it performs a full sync.
 */
 
@@ -142,9 +142,9 @@ async function syncDatabase(connection) {
 
 
   });
-
-
 }
+
+
 
 // ===== SERVER STARTUP =====
 if (process.env.NODE_ENV !== 'production') {
@@ -179,9 +179,30 @@ connection.connect(function(err) {
 	});
 
   Blockchain.connect(BLOCKCHAIN_URL).then((r) => {
-	// syncDatabase(connection);
-	Blockchain.startMonitor(connection);
 
+	// We should get the latest block in the DB and then populate upwards
+
+	// let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
+	// connection.query(sql, function (err, result) {
+	// 	if (result[0]) {
+	// 		result = result[0].block_number;
+
+	// 	} else {
+	// 		result = 0;
+	// 	}
+
+	// 	if (err) {
+	// 		throw err;
+	// 	}
+	// 	console.log('\x1b[36m Exeplorer Server> Starting from block #: ' + result+1)
+	// 	Blockchain.populateBlocks(connection, result+1, '');
+		
+	// });
+	
+
+	// syncDatabase(connection);
+	// Blockchain.startMonitor(connection);
+	// syncBlocks(connection);
 	// connection.end();
 });
 	

@@ -5,6 +5,9 @@ const ChainStore = Exeblock.ChainStore;
 const accList = [];
 const witnessList = [];
 
+// This file holds the API that facilitates the Server to Blockchain connection.
+// This is NOT intended to be used by the client.
+
 const api = {
 
 	/* Create a server -> blockchain connection 
@@ -31,6 +34,72 @@ const api = {
 		});
 	},
 
+
+	/* Sync blocks table recursively
+
+	WARNING: this is expensive and should only be used for initial sync
+
+	connection: MYSQL connection
+	start: start index
+	sql: used for recursion, should be empty if calling manually
+
+    */
+	populateBlocks: (connection, start, sql) => {
+		if (!start) {
+			start = 1;
+		}
+
+		blockchainWS.Apis.instance().db_api().exec('get_block', [start]).then(block => {
+			// When a block is not found we assume we are up to date.
+			if (!block) {
+				console.log('Exeplorer Server> DONE inserting blocks - no block found');
+				api.startMonitor(connection);
+				  return;
+			}
+			// Build block object to be inserted
+  
+			const transaction_count = block.transactions.length;
+			const operation_count = block.extensions.length;
+			const witness = block.witness;
+			const signature = block.witness_signature;
+			const previous_block_hash = block.previous;
+			const merkle_root = block.transaction_merkle_root;
+			const timestamp = block.timestamp;
+			
+			// Create SQL Query
+			if (sql === '') {
+				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+	  VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
+			} else if (start % 2000 == 0) {
+			} else {
+				sql = sql + `, ('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
+				// console.log(sql);
+			}
+  
+			// Run Query
+			// console.log(start);
+			if (start % 2000 == 0) {
+				connection.query(sql, function (err, result) {
+					if (err) {
+						throw err;
+					}
+				  //   console.log('Result: ' + JSON.stringify(result));
+				  console.log(start);
+				});
+				// return;
+			}
+
+			if (start % 2000 == 0) {
+				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+				VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
+			}
+
+			//   start++;
+
+			  api.populateBlocks(connection, start+1, sql);
+		  });
+	},
+
 	/* Start listening for new blocks
 	connection: A valid MYSQL connection
 
@@ -42,13 +111,14 @@ const api = {
 	  },
 
 	/* Update the DB
-
+	connection: A valid MYSQL connection
 	*/
 
 	updateDatabase: (connection) => {
 		api.getObject('2.1.0', (error, dynamicGlobal) => {
-			const sql = `INSERT INTO explorer.variables (var_name, value) VALUES ('next_maintenance_time', '${dynamicGlobal.next_maintenance_time}')
-			ON DUPLICATE KEY UPDATE var_name='next_maintenance_time', value='${dynamicGlobal.next_maintenance_time}'`;
+			console.log(`Pushed: ${JSON.stringify(dynamicGlobal)}`);
+			const sql = `INSERT INTO explorer.variables (var_name, value) VALUES('next_maintenance_time', '${dynamicGlobal.next_maintenance_time}') ON DUPLICATE KEY UPDATE    
+			var_name='next_maintenance_time', value='${dynamicGlobal.next_maintenance_time}'`;
 
 			connection.query(sql, function (err, result) {
 				if (err) {
@@ -56,9 +126,57 @@ const api = {
 				}
 				// console.log('Result: ' + JSON.stringify(result));
 			});
+
+
+			// Get the latest block reference in the dynamicGlobal.
+			api.insertBlock(connection, dynamicGlobal, (error, block) => {
+				if (error) {
+				  return console.error(`Error inserting block : ${error.message}`);
+				}
+			});
 		});
 
-		// Dynamic global object
+		/* Fetch and insert block into DB
+			connection: A valid MYSQL connection
+		*/
+	  },
+
+	  insertBlock: (connection, dynamicGlobal, callback) => {
+		  const block_id = dynamicGlobal.head_block_id;
+		  const block_number = dynamicGlobal.head_block_number;
+
+		  blockchainWS.Apis.instance().db_api().exec('get_block', [block_number]).then(block => {
+		  // When a block is not found we assume we are up to date.
+		  if (!block) {
+			  console.log('Exeplorer Server> DONE inserting blocks - no block found');
+				return callback(null);
+		  }
+		  // Build block object to be inserted
+
+		  const transaction_count = block.transactions.length;
+		  const operation_count = block.extensions.length;
+		  const witness = block.witness;
+		  const signature = block.witness_signature;
+		  const previous_block_hash = block.previous;
+		  const merkle_root = block.transaction_merkle_root;
+		  const timestamp = block.timestamp;
+
+
+		  console.log(block);
+		  
+
+			  // Create SQL Query
+			  const sql = `INSERT INTO explorer.blocks (block_id, block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
+
+		  // Run Query
+		  connection.query(sql, function (err, result) {
+				if (err) {
+					throw err;
+				}
+				console.log('Result: ' + JSON.stringify(result));
+			});
+		});		  
 	  },
 
 	  /* Get a single object from the blockchain
