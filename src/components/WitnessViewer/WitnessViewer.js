@@ -7,10 +7,7 @@ import { Input, InputGroup} from 'reactstrap';
 class WitnessViewer extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {witnessData: [], searchData: [], witness: '', currentPage: 0};
-
-		this.pageSize = 3;
-		this.pagesCount = 0;
+		this.state = {witnessData: [], searchData: [], witness: '', currentPage: 0, pageSize: 3, pagesCount: 0};
 		this.gridHeight = this.props.size === 'small' ? 30 : 40;
 	}
 
@@ -19,20 +16,22 @@ class WitnessViewer extends Component {
 		this.props.calculateComponentHeight(this.props.id, this.gridHeight);
 	}
 
-	refreshPagination (data) {
-		this.pagesCount = Math.ceil(data.length / this.pageSize);
-		console.log('pages count: ', this.pagesCount);
-	}
-
 	fetchData() {
 		//API call to search for witness
 		axios.get('api/witnesses/', {
 		}).then(response => {
 			const sortedWitnessData = response.data.sort((a, b) => (a.total_votes > b.total_votes) ? 1 : ((b.total_votes > a.total_votes) ? -1 : 0));
+			sortedWitnessData.map( (el, index) => {return el.index = index+1;});
+
 			this.setState({witnessData: sortedWitnessData});
 			this.setState({searchData: sortedWitnessData});
 			this.refreshPagination(sortedWitnessData);
 		}).catch(error => {console.log('error fetching witness data', error);});
+	}
+
+	refreshPagination (data) {
+		this.setState({pagesCount: Math.ceil(data.length / this.state.pageSize) });
+		this.setState({currentPage: 0});
 	}
 
 	onWitnessEnter(e) {
@@ -61,7 +60,7 @@ class WitnessViewer extends Component {
 	}
 
 	renderBigTable() {
-		const { currentPage, witness, searchData } = this.state;
+		const { currentPage, witness, searchData, pageSize } = this.state;
 
 		return (
 			<Fragment>
@@ -69,7 +68,7 @@ class WitnessViewer extends Component {
 					<InputGroup>
 						<Input type="text" value={witness} onChange={this.onWitnessEnter.bind(this)} placeholder="Account" />
 					</InputGroup>
-					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.pagesCount} />
+					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 				</div>
 				<table className="table">
 					<thead className="thead-light">
@@ -82,10 +81,10 @@ class WitnessViewer extends Component {
 						</tr>
 					</thead>
 					<tbody>
-						{searchData.slice( currentPage * this.pageSize, (currentPage + 1) * this.pageSize).map((witness, index) => {
+						{searchData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((witness) => {
 							return <WitnessRow
 								key={witness.id}
-								rank={index+1}
+								rank={witness.index}
 								witness={witness.account_name}
 								votes={witness.total_votes}
 								misses={witness.total_missed}
@@ -117,7 +116,7 @@ class WitnessViewer extends Component {
 						{witnessData.slice(0, 5).map((witness, index) => {
 							return <WitnessRow
 								key={witness.id}
-								rank={index+1}
+								rank={witness.index}
 								witness={witness.account_name}
 								votes={witness.total_votes}
 								misses={witness.total_missed}
@@ -131,7 +130,6 @@ class WitnessViewer extends Component {
 	}
 	
 	render() {
-		console.log('searched data', this.state.searchData);
 		return (
 			<div>
 				{this.props.size === 'small' ? 
