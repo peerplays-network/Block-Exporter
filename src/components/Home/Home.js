@@ -64,13 +64,13 @@ class Welcome extends Component {
 	renderComponent(component) {
 		switch(component.id) {
 			case 0:
-				return <WitnessViewer id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)}/>;
+				return <WitnessViewer id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)} size={component.size}/>;
 			case 1:
 				return <MaintenanceCD id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)} size={{'fontSize': (component.currentSize === 'small') ? '2em' : '4em'}} />;
 			case 2:
-				return <AccountSearch id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)} />;
+				return <AccountSearch id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)} size={component.size}/>;
 			case 3:
-				return <TransactionDisplay id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)} />;
+				return <TransactionDisplay id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)} size={component.size}/>;
 			default:
 				return;
 		}
