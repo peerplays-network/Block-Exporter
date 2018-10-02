@@ -92,7 +92,6 @@ class Welcome extends Component {
 	calculateComponentHeight(id, height) {
 		//since the grid layout does not have an auto height, each component sets their own height, and calls this function once mounted
 		const stateCopy = Object.assign({}, this.state);
-		debugger;
 		const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
 		stateCopy.layout[layoutIndex].h = height;
 		this.setState({stateCopy});
