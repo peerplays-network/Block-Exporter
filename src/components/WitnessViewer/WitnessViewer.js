@@ -1,50 +1,50 @@
 import React, { Component, Fragment } from 'react';
 import WitnessRow from './WitnessRow';
 import axios from 'axios';
-import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap'; 
+import PaginationCall from '../Account/PaginationCall';
+import { Input, InputGroup} from 'reactstrap'; 
 
 class WitnessViewer extends Component {
-	constructor() {
-		super();
-		this.state = {topFiveWitnessData: [], witnessData: [], searchData: [], witness: ''};
+	constructor(props) {
+		super(props);
+		this.state = {witnessData: [], searchData: [], witness: '', currentPage: 0};
+
+		this.pageSize = 3;
+		this.pagesCount = 0;
+		this.gridHeight = this.props.size === 'small' ? 30 : 40;
 	}
 
 	componentDidMount() {
 		this.fetchData();
-		const gridHeight=40;
-		this.props.calculateComponentHeight(this.props.id, gridHeight);
+		this.props.calculateComponentHeight(this.props.id, this.gridHeight);
+	}
+
+	refreshPagination (data) {
+		this.pagesCount = Math.ceil(data.length / this.pageSize);
+		console.log('pages count: ', this.pagesCount);
 	}
 
 	fetchData() {
 		//API call to search for witness
 		axios.get('api/witnesses/', {
 		}).then(response => {
-			let sortedWitnessData = response.data.sort((a, b) => (a.total_votes > b.total_votes) ? 1 : ((b.total_votes > a.total_votes) ? -1 : 0));
+			const sortedWitnessData = response.data.sort((a, b) => (a.total_votes > b.total_votes) ? 1 : ((b.total_votes > a.total_votes) ? -1 : 0));
 			this.setState({witnessData: sortedWitnessData});
 			this.setState({searchData: sortedWitnessData});
-			sortedWitnessData = sortedWitnessData.slice(0, 5);
-			this.setState({ topFiveWitnessData: sortedWitnessData });
+			this.refreshPagination(sortedWitnessData);
 		}).catch(error => {console.log('error fetching witness data', error);});
 	}
 
 	onWitnessEnter(e) {
 		e.preventDefault();
 		this.setState({witness: e.target.value});
-
-	}
-
-	searchWitness(e) {
-		if (e) e.preventDefault();
-		this.findAccount(this.state.witness, this.state.witnessData);
-		e.currentTarget.reset();
+		this.findAccount(e.target.value, this.state.witnessData);
 	}
 
 	findAccount(witness, data) {
 		var temp_data = [];
 		//if the data.id matches witness name add to data
-		debugger;
 		for (var account in data) {
-			debugger;
 			if (data[account].account_name.indexOf(witness) >= 0 ) 
 				temp_data.push(data[account]);
 		}
@@ -52,19 +52,25 @@ class WitnessViewer extends Component {
 			temp_data = data;
 		this.setState({ searchData: temp_data });
 		//this.data = temp_data;
-		//this.refreshPagination();
+		this.refreshPagination(temp_data);
 	}
 
-	renderTable(data) {
+	changePage(e, index) {
+		e.preventDefault();
+		this.setState({ currentPage: index  });
+	}
+
+	renderBigTable() {
+		const { currentPage, witness, searchData } = this.state;
+
 		return (
 			<Fragment>
-				{this.props.size !== 'small' ? 
-					<form onSubmit={this.searchWitness.bind(this)}>
-						<InputGroup>
-							<Input type="text" value={this.state.witness} onChange={this.onWitnessEnter.bind(this)} placeholder="Account" />
-							<InputGroupAddon addonType="append"><Button>Search Account</Button></InputGroupAddon>
-						</InputGroup>
-					</form> : null}
+				<div className="pagination-wrapper"> 
+					<InputGroup>
+						<Input type="text" value={witness} onChange={this.onWitnessEnter.bind(this)} placeholder="Account" />
+					</InputGroup>
+					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.pagesCount} />
+				</div>
 				<table className="table">
 					<thead className="thead-light">
 						<tr>
@@ -76,7 +82,39 @@ class WitnessViewer extends Component {
 						</tr>
 					</thead>
 					<tbody>
-						{data.map((witness, index) => {
+						{searchData.slice( currentPage * this.pageSize, (currentPage + 1) * this.pageSize).map((witness, index) => {
+							return <WitnessRow
+								key={witness.id}
+								rank={index+1}
+								witness={witness.account_name}
+								votes={witness.total_votes}
+								misses={witness.total_missed}
+								lastBlock={witness.url}
+							/>;
+						})}
+					</tbody>
+				</table>
+			</Fragment>
+		);
+	}
+
+	renderSmallTable() {
+		const {witnessData} = this.state;
+
+		return (
+			<Fragment>
+				<table className="table">
+					<thead className="thead-light">
+						<tr>
+							<th scope="col">Rank</th>
+							<th scope="col">Witness</th>
+							<th scope="col">Votes</th>
+							<th scope="col">Misses</th>
+							<th scope="col">URL</th>
+						</tr>
+					</thead>
+					<tbody>
+						{witnessData.slice(0, 5).map((witness, index) => {
 							return <WitnessRow
 								key={witness.id}
 								rank={index+1}
@@ -93,13 +131,13 @@ class WitnessViewer extends Component {
 	}
 	
 	render() {
-		console.log('searched data',this.state.searchData);
+		console.log('searched data', this.state.searchData);
 		return (
 			<div>
 				{this.props.size === 'small' ? 
-					this.renderTable(this.state.topFiveWitnessData)
+					this.renderSmallTable()
 					:
-					this.renderTable(this.state.searchData)
+					this.renderBigTable()
 				}
 			</div>
 		);
