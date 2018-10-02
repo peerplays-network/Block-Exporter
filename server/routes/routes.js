@@ -106,7 +106,7 @@ router.get('/accounts', function (req, res) {
 
 // Accounts API: GET specific witness
 router.get('/accounts/:name', function (req, res) {
-	console.log(`GET request made to /accounts:${req.params.name}`);
+	console.log(`GET request made to /witnesses${req.params.name}`);
 
 	const connection = mysql.createConnection({
 		host     : db.HOST,
@@ -124,7 +124,7 @@ router.get('/accounts/:name', function (req, res) {
 	});
 
 	// Perform Query
-	connection.query(`SELECT * FROM explorer.accounts WHERE account_name = '${req.params.name}'`, function (err, rows, fields) {
+	connection.query(`SELECT * FROM explorer.witnesses WHERE account_name = '${req.params.name}'`, function (err, rows, fields) {
 		if (err) throw err;
 		  
 		res.send(rows);
@@ -165,6 +165,69 @@ router.get('/witnesses', function (req, res) {
 	connection.end();
 });
 
+// Operations API: Get specific OPERATION
+router.get('/operations/:id', function (req, res) {
+	console.log(`GET request made to /operations/${req.params.id}`);
+
+	const connection = mysql.createConnection({
+		host     : db.HOST,
+		user     : db.USER,
+		password : db.PASSWORD,
+		database : db.DATABASE
+		  });
+
+		  // Establish connection
+		  connection.connect(function(err) {
+		if (err) {
+			console.error('error connecting to DB: ' + err.stack);
+			return;
+		}
+	});
+
+	// Perform Query
+	connection.query(`SELECT * FROM explorer.operations WHERE id=${req.params.id}`, function (err, rows, fields) {
+		if (err) throw err;
+		// console.log(rows[0])
+		res.send(rows);
+		  });
+
+	// Close connection
+	connection.end();
+});
+
+
+
+// Operations API: Get OPERATIONS
+router.get('/operations', function (req, res) {
+	console.log('GET request made to /operations');
+
+	const connection = mysql.createConnection({
+		host     : db.HOST,
+		user     : db.USER,
+		password : db.PASSWORD,
+		database : db.DATABASE
+		  });
+
+		  // Establish connection
+		  connection.connect(function(err) {
+		if (err) {
+			console.error('error connecting to DB: ' + err.stack);
+			return;
+		}
+	});
+
+	// Perform Query
+	connection.query('SELECT * FROM explorer.operations', function (err, rows, fields) {
+		if (err) throw err;
+		console.log(rows[0])
+		res.send(rows);
+		  });
+
+	// Close connection
+	connection.end();
+});
+
+
 
 // Variables API: GET variables
 router.get('/variables', function (req, res) {
@@ -188,7 +251,7 @@ router.get('/variables', function (req, res) {
 	// Perform Query
 	connection.query('SELECT * FROM explorer.variables', function (err, rows, fields) {
 		if (err) throw err;
-		  
+		console.log(rows[0])
 		res.send(rows);
 		  });
 
