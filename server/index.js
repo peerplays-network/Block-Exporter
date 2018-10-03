@@ -31,8 +31,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // ===== ROUTES =====
-const routes = require("./routes/routes");
-app.use("/api", routes);
+const blocks = require("./routes/blocks");
+const accounts = require("./routes/accounts");
+const witnesses = require("./routes/witnesses");
+const operations = require("./routes/operations");
+
+
+app.use("/api", blocks);
+app.use("/api", accounts);
+app.use("/api", witnesses);
+app.use("/api", operations);
+
 
 
 
