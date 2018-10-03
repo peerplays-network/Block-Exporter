@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import axios from 'axios'; //remove comment when API is completed
 import AccountDetail from './AccountDetail';
 import PaginationCall from './PaginationCall';
-import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
+import { Input, InputGroup } from 'reactstrap';
 
 class AccountSearch extends Component {
 	constructor(e) {
@@ -18,17 +18,12 @@ class AccountSearch extends Component {
 		};
 		//pagination set page length
 		this.onAccountEnter = this.onAccountEnter.bind(this);
-		//this.searchAccount = this.searchAccount.bind(this);
-		//this.findAccount = this.findAccount.bind(this);
-		//this.handleClick = this.handleClick.bind(this);
-		//this.findData = this.findData.bind(this);
-		//this.refreshPagination = this.refreshPagination.bind(this);
 	}
 
 	componentDidMount() {
 		this.findData();
 		const gridHeight=43;
-		//this.props.calculateComponentHeight(this.props.id, gridHeight);
+		this.props.calculateComponentHeight(this.props.id, gridHeight);
 	}
 
 	findData(e) {
