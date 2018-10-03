@@ -3,60 +3,52 @@ import React, { Component } from 'react';
 import axios from 'axios'; //remove comment when API is completed
 import AccountDetail from './AccountDetail';
 import PaginationCall from './PaginationCall';
-import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
+import { Input, InputGroup } from 'reactstrap';
+import { normalize } from 'path';
 
-export default class AccountSearch extends Component {
+class AccountSearch extends Component {
 	constructor(e) {
 		super(e);
-		this.data=[];
 		this.state = {
 			data: [],
+			temp_data: [],
 			account : '',
-			temp_data: this.data,
-			currentPage: 0
+			currentPage: 0,
+			pageSize: 3,
+			pagesCount: 0
 		};
+		this.gridHeight = 43;
 		//pagination set page length
-		this.pageSize = 3;
-		this.pagesCount = Math.ceil(this.data.length / this.pageSize);
 		this.onAccountEnter = this.onAccountEnter.bind(this);
-		this.searchAccount = this.searchAccount.bind(this);
-		this.findAccount = this.findAccount.bind(this);
-		this.handleClick = this.handleClick.bind(this);
-		this.findData = this.findData.bind(this);
-		this.refreshPagination = this.refreshPagination.bind(this);
-	}
-
-	refreshPagination () {this.pagesCount = Math.ceil(this.data.length / this.pageSize);}
-
-	findData(e) {
-		//API call to search for Account
-		axios.get('api/accounts/', {
-		}).then(response => {
-			this.setState({ data: response.data });
-			this.data = response.data;
-			this.findAccount(this.state.account, this.state.data);
-		}).catch(error => {console.log('error is fetching account data', error);});
 	}
 
 	componentDidMount() {
 		this.findData();
-		const gridHeight=43;
-		this.props.calculateComponentHeight(this.props.id, gridHeight);
-	  }
+		if(this.props.id !== '') {
+			this.props.calculateComponentHeight(this.props.id, this.gridHeight);
+		}
+	}
 
-	handleClick(e, index) {
-		e.preventDefault();
-		this.setState({ currentPage: index  });
+	findData(e) {
+		//API call to search for Account
+		axios.get('/api/accounts/', {
+		}).then(response => {
+			this.setState({ data: response.data });
+			this.setState({ temp_data: response.data });
+			this.refreshPagination(response.data);
+			//this.findAccount(this.state.account, this.state.data);
+		}).catch(error => {console.log('error is fetching account data', error);});
+	}
+
+	refreshPagination (data) {
+		this.setState({pagesCount: Math.ceil(data.length / this.state.pageSize) });
+		this.setState({currentPage: 0});
 	}
 
 	onAccountEnter(e) {
+		e.preventDefault();
 		this.setState({ account: e.target.value });
-	}
-
-	searchAccount(e) {
-		if (e) e.preventDefault();
-		this.findAccount(this.state.account, this.state.data);
-		e.currentTarget.reset();
+		this.findAccount(e.target.value, this.state.data);
 	}
 
 	findAccount(accountName, data) {
@@ -69,23 +61,24 @@ export default class AccountSearch extends Component {
 		if (temp_data.length <= 0)
 			temp_data = data;
 		this.setState({ temp_data: temp_data });
-		this.data = temp_data;
-		this.refreshPagination();
+		this.refreshPagination(temp_data);
+	}
+
+	changePage(e, index) {
+		e.preventDefault();
+		this.setState({ currentPage: index });
 	}
 
 	render() {
-		const { currentPage } = this.state;
-
+		const { temp_data, account, currentPage, pageSize } = this.state;
+		
 		return(
 			<div className="table-responsive">
 				<div className="pagination-wrapper">
-					<form onSubmit={this.searchAccount}>
-						<InputGroup>
-							<Input type="text" value={this.state.account} onChange={this.onAccountEnter} placeholder="Account" />
-							<InputGroupAddon addonType="append"><Button>Search Account</Button></InputGroupAddon>
-						</InputGroup>
-					</form>
-					<PaginationCall currentPage={currentPage} handleClick={this.handleClick} pagesCount={this.pagesCount} />
+					<InputGroup>
+						<Input type="text" value={account} onChange={this.onAccountEnter.bind(this)} placeholder="Account" />
+					</InputGroup>
+					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 				</div>
 				<table className="table">
 					<thead className="thead-light">
@@ -96,7 +89,7 @@ export default class AccountSearch extends Component {
 						</tr>
 					</thead>
 					<tbody>
-						{this.state.temp_data.slice( currentPage * this.pageSize, (currentPage + 1) * this.pageSize).map((account, i) =>
+						{temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((account, i) =>
 							<AccountDetail detail={account} key={i}/>
 						)}
 					</tbody>
@@ -105,3 +98,9 @@ export default class AccountSearch extends Component {
 		);
 	}	
 }
+
+AccountSearch.defaultProps = {
+	id: '',
+};
+
+export default AccountSearch;
