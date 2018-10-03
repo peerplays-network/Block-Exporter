@@ -4,6 +4,7 @@ import axios from 'axios'; //remove comment when API is completed
 import AccountDetail from './AccountDetail';
 import PaginationCall from './PaginationCall';
 import { Input, InputGroup } from 'reactstrap';
+import { normalize } from 'path';
 
 class AccountSearch extends Component {
 	constructor(e) {
@@ -23,12 +24,14 @@ class AccountSearch extends Component {
 
 	componentDidMount() {
 		this.findData();
-		this.props.calculateComponentHeight(this.props.id, this.gridHeight);
+		if(this.props.id !== '') {
+			this.props.calculateComponentHeight(this.props.id, this.gridHeight);
+		}
 	}
 
 	findData(e) {
 		//API call to search for Account
-		axios.get('api/accounts/', {
+		axios.get('/api/accounts/', {
 		}).then(response => {
 			this.setState({ data: response.data });
 			this.setState({ temp_data: response.data });
@@ -68,7 +71,7 @@ class AccountSearch extends Component {
 
 	render() {
 		const { temp_data, account, currentPage, pageSize } = this.state;
-
+		
 		return(
 			<div className="table-responsive">
 				<div className="pagination-wrapper">
@@ -95,5 +98,9 @@ class AccountSearch extends Component {
 		);
 	}	
 }
+
+AccountSearch.defaultProps = {
+	id: '',
+};
 
 export default AccountSearch;
