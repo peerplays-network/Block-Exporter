@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 class PaginationCall extends Component {
-	constructor(e) {
-		super();
+	constructor(props) {
+		super(props);
 		this.changeHandler = this.changeHandler.bind(this);
 	}
 
