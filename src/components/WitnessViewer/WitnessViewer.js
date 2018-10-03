@@ -8,7 +8,7 @@ class WitnessViewer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {witnessData: [], searchData: [], witness: '', currentPage: 0, pageSize: 3, pagesCount: 0};
-		this.gridHeight = this.props.size === 'small' ? 30 : 40;
+		this.gridHeight = 40;
 	}
 
 	componentDidMount() {
@@ -59,6 +59,16 @@ class WitnessViewer extends Component {
 		this.setState({ currentPage: index  });
 	}
 
+	sortByColumn(colId) {
+		//make some API call when it is ready
+		// axios.get('api/witnesses/sort=key?direction=asc', {
+		// }).then(response => {
+		// 	const sortedWitnessData = response.data.sort((a, b) => (a.total_votes > b.total_votes) ? 1 : ((b.total_votes > a.total_votes) ? -1 : 0));
+		// 	this.setState({searchData: sortedWitnessData});
+		// 	this.refreshPagination(sortedWitnessData);
+		// }).catch(error => {console.log('error fetching witness data', error);});
+	}
+
 	renderBigTable() {
 		const { currentPage, witness, searchData, pageSize } = this.state;
 
@@ -73,11 +83,11 @@ class WitnessViewer extends Component {
 				<table className="table">
 					<thead className="thead-light">
 						<tr>
-							<th scope="col">Rank</th>
-							<th scope="col">Witness</th>
-							<th scope="col">Votes</th>
-							<th scope="col">Misses</th>
-							<th scope="col">URL</th>
+							<th onClick={this.sortByColumn.bind(this, 0)} scope="col">Rank</th>
+							<th onClick={this.sortByColumn.bind(this, 1)} scope="col">Witness</th>
+							<th onClick={this.sortByColumn.bind(this, 2)} scope="col">Votes</th>
+							<th onClick={this.sortByColumn.bind(this, 3)} scope="col">Misses</th>
+							<th onClick={this.sortByColumn.bind(this, 4)} scope="col">URL</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -105,11 +115,11 @@ class WitnessViewer extends Component {
 				<table className="table">
 					<thead className="thead-light">
 						<tr>
-							<th scope="col">Rank</th>
-							<th scope="col">Witness</th>
-							<th scope="col">Votes</th>
-							<th scope="col">Misses</th>
-							<th scope="col">URL</th>
+							<th onClick={this.sortByColumn.bind(this, 0)} scope="col">Rank</th>
+							<th onClick={this.sortByColumn.bind(this, 1)} scope="col">Witness</th>
+							<th onClick={this.sortByColumn.bind(this, 2)} scope="col">Votes</th>
+							<th onClick={this.sortByColumn.bind(this, 3)} scope="col">Misses</th>
+							<th onClick={this.sortByColumn.bind(this, 4)} scope="col">URL</th>
 						</tr>
 					</thead>
 					<tbody>
