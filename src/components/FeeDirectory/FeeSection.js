@@ -13,15 +13,11 @@ class FeeSection extends Component {
 		} = this;
 	
 		const current_fees = JSON.parse(this.props.fee.current_fees);
-		console.log(current_fees);
 		return (
-		  	<div
+		  	<div className={`${styles['operation-layout']}`}
 				style={{
-					background: isOpen ? '#fff' : '#f5f5f5',
-					border: '1px solid #666',
-					padding: '5px 10px',
-				}}
-			>
+					background: isOpen ? '#fff' : '#f5f5f5'
+				}}>
 				<div onClick={onClick.bind(this)} style={{ cursor: 'pointer' }}>
 			  		{label}
 			  		<div style={{ float: 'right' }}>
@@ -30,14 +26,7 @@ class FeeSection extends Component {
 			  		</div>
 				</div>
 				{isOpen && (
-					<div
-						style={{
-							background: '#f5f5f5',
-							border: '1px solid #666',
-							marginTop: 10,
-							padding: '10px 20px',
-						}}
-					>
+					<div className={`${styles['fee-layout']}`}>
 						{Object.keys(current_fees).map(function(key, value) {
 							return (<div>
 								<span>{key}</span>
