@@ -1,13 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import WitnessRow from './WitnessRow';
 import axios from 'axios';
+import styles from './styles.css';
 import PaginationCall from '../Account/PaginationCall';
 import { Input, InputGroup} from 'reactstrap'; 
 
 class WitnessViewer extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {witnessData: [], searchData: [], witness: '', currentPage: 0, pageSize: 3, pagesCount: 0};
+		this.state = {witnessData: [], searchData: [], witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'DESC'};
 		this.gridHeight = 40;
 	}
 
@@ -60,10 +61,11 @@ class WitnessViewer extends Component {
 	}
 
 	sortByColumn(colType) {
+		this.changeSortType();
 		/*sorts depending on the column type. Also does a lookup on the witness data which
 		  stores the initial API call made when the component is loaded and witness rank is calculated.
 		the witness rank is the appended to the data coming in from the sort API call.*/
-		axios.get(`api/witnesses?sort=${colType}&direction=DESC`, {
+		axios.get(`api/witnesses?sort=${colType}&direction=${this.state.sortType}`, {
 		}).then(response => {
 			let sortedWitnessData = response.data;
 			sortedWitnessData = sortedWitnessData.map(object => {
@@ -73,6 +75,10 @@ class WitnessViewer extends Component {
 			this.setState({searchData: sortedWitnessData});
 			this.refreshPagination(sortedWitnessData);
 		}).catch(error => {console.log('error fetching witness data', error);});
+	}
+
+	changeSortType() {
+		this.state.sortType === 'DESC' ? this.setState({sortType: 'ASC'}) : this.setState({sortType: 'DESC'});
 	}
 
 	renderBigTable() {
@@ -87,7 +93,7 @@ class WitnessViewer extends Component {
 					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 				</div>
 				<table className="table">
-					<thead className="thead-light">
+					<thead className={`${styles['clickable']} thead-light`}>
 						<tr>
 							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Rank</th>
 							<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness</th>

@@ -1,3 +1,12 @@
+/* 
+NOTE: Currently there is a dotted border line around each component. This is to show the boundaries
+of the draggable grid item, and help you define a height that is right for your component. 
+Unfortunately the grid library has no auto height, so we must define the height for each 
+component ourselves. Eventually we will have to write a class that calculates height of 
+components ourselves, but for now we are defining the height inside of each component
+and feeding it to calculateComponentHeight()
+*/
+
 import React, { Component } from 'react';
 import Panel from '../Panel/Panel';
 import MaintenanceCD from '../MaintenanceCD/MaintenanceCD';
