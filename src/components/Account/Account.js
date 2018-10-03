@@ -16,14 +16,14 @@ class AccountSearch extends Component {
 			pageSize: 3,
 			pagesCount: 0
 		};
+		this.gridHeight = 43;
 		//pagination set page length
 		this.onAccountEnter = this.onAccountEnter.bind(this);
 	}
 
 	componentDidMount() {
 		this.findData();
-		const gridHeight=43;
-		this.props.calculateComponentHeight(this.props.id, gridHeight);
+		this.props.calculateComponentHeight(this.props.id, this.gridHeight);
 	}
 
 	findData(e) {
@@ -33,7 +33,7 @@ class AccountSearch extends Component {
 			this.setState({ data: response.data });
 			this.setState({ temp_data: response.data });
 			this.refreshPagination(response.data);
-			this.findAccount(this.state.account, this.state.data);
+			//this.findAccount(this.state.account, this.state.data);
 		}).catch(error => {console.log('error is fetching account data', error);});
 	}
 
