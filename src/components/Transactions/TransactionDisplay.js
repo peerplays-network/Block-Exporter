@@ -34,13 +34,14 @@ class TransactionDisplay extends Component {
 		return (
 			<div>
 
-				{this.state.transactionData.map(transaction => {
+				{this.state.transactionData.map((transaction, i) => {
 					return <TransactionRow
 						account={transaction.account} 
 						action={transaction.action}
 						memo={transaction.memo}
 						time={this.computeTime(transaction.time)}
 						transactionID={(transaction.transactionID).toString(16)} /* must convert the hex to string to display properly */
+						key={i}
 					/>;
 				})}
 
