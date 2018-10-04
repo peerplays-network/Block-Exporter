@@ -119,7 +119,7 @@ class TransactionLarge extends Component {
 		const { currentPage, transaction, searchData, pageSize } = this.state;
 
 		return (
-			<Col sm="9">
+			<Col sm={{ size: '9', offset: 1 }} >
 				<Card>
 					<CardHeader>
 						<span>Account Name &nbsp; Action</span>
