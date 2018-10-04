@@ -1,13 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import WitnessRow from './WitnessRow';
 import axios from 'axios';
+import styles from './styles.css';
 import PaginationCall from '../Account/PaginationCall';
 import { Input, InputGroup} from 'reactstrap'; 
 
 class WitnessViewer extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {witnessData: [], searchData: [], witness: '', currentPage: 0, pageSize: 3, pagesCount: 0};
+		this.state = {witnessData: [], searchData: [], witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'DESC'};
 		this.gridHeight = 40;
 	}
 
@@ -18,10 +19,10 @@ class WitnessViewer extends Component {
 
 	fetchData() {
 		//API call to search for witness
-		axios.get('api/witnesses/', {
+		axios.get('api/witnesses?sort=total_votes&direction=DESC', {
 		}).then(response => {
-			const sortedWitnessData = response.data.sort((a, b) => (a.total_votes > b.total_votes) ? 1 : ((b.total_votes > a.total_votes) ? -1 : 0));
-			sortedWitnessData.map( (el, index) => {return el.index = index+1;});
+			const sortedWitnessData = response.data;
+			sortedWitnessData.map( (el, index) => {return el.rank = index+1;});
 
 			this.setState({witnessData: sortedWitnessData});
 			this.setState({searchData: sortedWitnessData});
@@ -59,14 +60,25 @@ class WitnessViewer extends Component {
 		this.setState({ currentPage: index  });
 	}
 
-	sortByColumn(colId) {
-		//make some API call when it is ready
-		// axios.get('api/witnesses/sort=key?direction=asc', {
-		// }).then(response => {
-		// 	const sortedWitnessData = response.data.sort((a, b) => (a.total_votes > b.total_votes) ? 1 : ((b.total_votes > a.total_votes) ? -1 : 0));
-		// 	this.setState({searchData: sortedWitnessData});
-		// 	this.refreshPagination(sortedWitnessData);
-		// }).catch(error => {console.log('error fetching witness data', error);});
+	sortByColumn(colType) {
+		this.changeSortType();
+		/*sorts depending on the column type. Also does a lookup on the witness data which
+		  stores the initial API call made when the component is loaded and witness rank is calculated.
+		the witness rank is the appended to the data coming in from the sort API call.*/
+		axios.get(`api/witnesses?sort=${colType}&direction=${this.state.sortType}`, {
+		}).then(response => {
+			let sortedWitnessData = response.data;
+			sortedWitnessData = sortedWitnessData.map(object => {
+				const rankObject = this.state.witnessData.find(el => el.id === object.id);
+				return rankObject;
+			});
+			this.setState({searchData: sortedWitnessData});
+			this.refreshPagination(sortedWitnessData);
+		}).catch(error => {console.log('error fetching witness data', error);});
+	}
+
+	changeSortType() {
+		this.state.sortType === 'DESC' ? this.setState({sortType: 'ASC'}) : this.setState({sortType: 'DESC'});
 	}
 
 	renderBigTable() {
@@ -81,20 +93,20 @@ class WitnessViewer extends Component {
 					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 				</div>
 				<table className="table">
-					<thead className="thead-light">
+					<thead className={`${styles['clickable']} thead-light`}>
 						<tr>
-							<th onClick={this.sortByColumn.bind(this, 0)} scope="col">Rank</th>
-							<th onClick={this.sortByColumn.bind(this, 1)} scope="col">Witness</th>
-							<th onClick={this.sortByColumn.bind(this, 2)} scope="col">Votes</th>
-							<th onClick={this.sortByColumn.bind(this, 3)} scope="col">Misses</th>
-							<th onClick={this.sortByColumn.bind(this, 4)} scope="col">URL</th>
+							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Rank</th>
+							<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness</th>
+							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
+							<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
+							<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
 						</tr>
 					</thead>
 					<tbody>
 						{searchData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((witness) => {
 							return <WitnessRow
 								key={witness.id}
-								rank={witness.index}
+								rank={witness.rank}
 								witness={witness.account_name}
 								votes={witness.total_votes}
 								misses={witness.total_missed}
@@ -115,18 +127,18 @@ class WitnessViewer extends Component {
 				<table className="table">
 					<thead className="thead-light">
 						<tr>
-							<th onClick={this.sortByColumn.bind(this, 0)} scope="col">Rank</th>
-							<th onClick={this.sortByColumn.bind(this, 1)} scope="col">Witness</th>
-							<th onClick={this.sortByColumn.bind(this, 2)} scope="col">Votes</th>
-							<th onClick={this.sortByColumn.bind(this, 3)} scope="col">Misses</th>
-							<th onClick={this.sortByColumn.bind(this, 4)} scope="col">URL</th>
+							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Rank</th>
+							<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness</th>
+							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
+							<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
+							<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
 						</tr>
 					</thead>
 					<tbody>
-						{witnessData.slice(0, 5).map((witness, index) => {
+						{witnessData.slice(0, 5).map((witness) => {
 							return <WitnessRow
 								key={witness.id}
-								rank={witness.index}
+								rank={witness.rank}
 								witness={witness.account_name}
 								votes={witness.total_votes}
 								misses={witness.total_missed}
