@@ -18,3 +18,15 @@
 .group{
     margin-left:35px;
 }
+.input-group-prepend{
+    background-color:lightgray;
+    border-radius:5px 0px 0px 5px; 
+    color:white;
+}
+.icon{
+    margin:10px 15px;
+}
+.input-group{
+    margin-bottom:10px; 
+    margin-top:10px;
+}
