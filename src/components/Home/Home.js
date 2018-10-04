@@ -28,7 +28,7 @@ class Welcome extends Component {
 								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: '', visible: false, id: 1, gridPlacement: {i: '1', x: 3, y: 31, w: 3.5, h: 20}},
 								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: 7.5, y: 0, w: 4.5, h: 20}},
 								   {name: 'Current Transactions', image: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id:3, gridPlacement: {i: '3', x: 7.5, y: 0, w: 4.5, h: 20}},
-								   {name: 'Fee Directory', image: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 3, y: 0, w: 4, h: 20}}
+								   {name: 'Fee Directory', image: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 3, y: 0, w: 4.5, h: 20}}
 								  ], 
 								  layout : [],
 					 };

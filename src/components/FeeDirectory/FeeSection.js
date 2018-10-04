@@ -14,16 +14,16 @@ class FeeSection extends Component {
 	
 		const current_fees = JSON.parse(this.props.fee.current_fees);
 		return (
-		  	<div className={`${styles['operation-layout']}`}
+		  	<div className={`${styles['operation-layout']} row`}
 				style={{
 					background: isOpen ? '#fff' : '#f5f5f5'
 				}}>
-				<div onClick={onClick.bind(this)} style={{ cursor: 'pointer' }}>
+				<div className="col-sm-10" onClick={onClick.bind(this)} style={{ cursor: 'pointer' }}>
 			  		{label}
-			  		<div style={{ float: 'right' }}>
-						{!isOpen && <span>&#9650;</span>}
-						{isOpen && <span>&#9660;</span>}
-			  		</div>
+				</div>
+				<div className="col-sm-1" onClick={onClick.bind(this)}>
+					{!isOpen && <span>&#9650;</span>}
+					{isOpen && <span>&#9660;</span>}
 				</div>
 				{isOpen && (
 					<div className={`${styles['fee-layout']}`}>

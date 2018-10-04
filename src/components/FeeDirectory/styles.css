@@ -8,3 +8,13 @@
     margin-top: 10px;
     padding: 10px 20px;
 }
+.group-headings{
+    position:absolute; 
+    left: 0px; 
+    top: 70px; 
+    cursor:pointer;
+    color: blue;
+}
+.group{
+    margin-left:35px;
+}
