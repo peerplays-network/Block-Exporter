@@ -5,7 +5,7 @@ class TransactionRow extends Component {
 
 	render() {
 		return (
-			<div className="container" style={{margin:'0px', padding:'0px'}}>
+			<div>
 				<div className="col-10" style={{float:'left', textAlign: 'left', margin:'0px', padding:'0px'}}>
 					<span className={`${styles['blue']}`}>{this.props.account} &nbsp;</span>
 					<span>{this.props.action} &nbsp;</span>

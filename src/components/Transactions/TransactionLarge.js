@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TransactionRow from './TransactionRow';
-import styles from '../Panel/styles.css';
+import { Card, CardBody, CardHeader, Col } from 'reactstrap';
 
 class TransactionLarge extends Component {
 	constructor() {
@@ -45,28 +45,28 @@ class TransactionLarge extends Component {
 	
 	render() {
 		return (
-			<div>
-				<div className="card-header pr-1">
-					<div className="container" style={{margin:'0px', padding:'0px'}}>
-						<span>Account Name &nbsp;</span>
-						<span>Action &nbsp;</span>
+			<Col sm="9">
+				<Card>
+					<CardHeader>
+						<span>Account Name &nbsp; Action</span>
 						<div className="col-2" style={{float:'right', textAlign: 'right', margin:'0px', padding:'0px'}}>
 							<span>TransactionID</span>	
 						</div>
-					</div>	
-				</div>
-				{this.state.transactionData.map((transaction, i) => {
-					return <TransactionRow
-						account={transaction.account} 
-						action={transaction.action}
-						memo={transaction.memo}
-						time={this.computeTime(transaction.time)}
-						transactionID={(transaction.transactionID).toString(16)} /* must convert the hex to string to display properly */
-						key ={i}
-					/>;
-				})}
-
-			</div>
+					</CardHeader>
+					<CardBody>
+						{this.state.transactionData.map((transaction, i) => {
+							return <TransactionRow
+								account={transaction.account} 
+								action={transaction.action}
+								memo={transaction.memo}
+								time={this.computeTime(transaction.time)}
+								transactionID={(transaction.transactionID).toString(16)} /* must convert the hex to string to display properly */
+								key ={i}
+							/>;
+						})}
+					</CardBody>
+				</Card>
+			</Col>
 		);
 	}
 }
