@@ -6,6 +6,7 @@ import Home from '../components/Home';
 import Test from '../components/Test';
 import Account from '../components/Account';
 import AccountAllDetail from '../components/Account/AccountAllDetail';
+import TransactionLarge from '../components/Transactions/TransactionLarge';
 
 export default (
 	<div>
@@ -15,6 +16,7 @@ export default (
 			<Route exact path="/test" component={Test} />
 			<Route exact path="/account" component={Account} />
 			<Route exact path="/accountAllDetail/*" component={AccountAllDetail} />
+			<Route exact path="/transactions" component={TransactionLarge} />
 		</Switch>
 	</div>
 );
