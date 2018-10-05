@@ -11,7 +11,6 @@ class FeeSection extends Component {
 		  onClick,
 		  props: { isOpen, label, fullPage}
 		} = this;
-		console.log(fullPage);
 		const current_fees = JSON.parse(this.props.fee.current_fees);
 		return (
 		  	<div>
