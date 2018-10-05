@@ -51,12 +51,18 @@ const api = {
 		}
 
 		blockchainWS.Apis.instance().db_api().exec('get_block', [start]).then(block => {
+			console.log(start);
 			// When a block is not found we assume we are up to date.
-			if (!block) {
+			if (!block || start === 900) {
 				console.log('Exeplorer Server> DONE inserting blocks - no block found');
 				api.startMonitor(connection);
-				  return;
+				return;
 			}
+
+
+			api.parseBlock(block, connection, 0);
+
+
 			// Build block object to be inserted
 			
 			const transaction_count = block.transactions.length;
@@ -71,7 +77,7 @@ const api = {
 			if (sql === '') {
 				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 	  VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
-			} else if (start % 1000 == 0) {
+			} else if (start % 200 == 0) {
 			} else {
 				sql = sql + `, ('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 				// console.log(sql);
@@ -79,7 +85,7 @@ const api = {
   
 			// Run Query
 			// console.log(start);
-			if (start % 1000 == 0) {
+			if (start % 200 == 0) {
 				connection.query(sql, function (err, result) {
 					if (err) {
 						throw err;
@@ -90,14 +96,13 @@ const api = {
 				// return;itne
 			}
 
-			if (start % 1000 == 0) {
+			if (start % 200 == 0) {
 				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 				VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 			}
 
-			//   start++;
-
-			  api.populateBlocks(connection, start+1, sql);
+			  start++;
+			  api.populateBlocks(connection, start, sql);
 		  });
 	},
 
@@ -167,8 +172,8 @@ const api = {
 		  const timestamp = block.timestamp;
 
 			//   console.log(block);
-		   console.log(block.transactions);
-		   console.log(block.transactions[0].operations);
+		//    console.log(block.transactions);
+		//    console.log(block.transactions[0].operations);
 		  
 
 			  // Create SQL Query
@@ -182,53 +187,81 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				}
 				console.log('Result: ' + JSON.stringify(result));
 			});
+
+			api.parseBlock(block);
 		});		  
 	  },
 
 
 	/* Parse a block and do all necessary live updates.
 	block: the block to parse
+	connection: valid SQL connection to the DB
+	live: 1=live data 0=initial sync
 
 	  */
-	parseBlock: (block, connection) => {
-		blockchainWS.Apis.instance().db_api().exec('get_block', [block]).then(b => {
-			console.log(b);
-			let parent_block;
-			let expiration;
-			let operations;
-			let operation_results;
-			let extensions;
-			let signatures;
+	parseBlock: (b, connection, live) => {
+		let parent_block;
+		let expiration;
+		let operations;
+		let operation_results;
+		let extensions;
+		let signatures;
+		const timestamp = b.timestamp;
 
-			b.transactions.map((t) => {
-				parent_block = t.ref_block_num;
-				expiration = t.expiration;
+		b.transactions.map(async (t) => {
+			parent_block = t.ref_block_num;
+			expiration = t.expiration;
 
-				// Account and Witness Data
+			// Account and Witness Data
+			if (t.operations[0][0] === 5 && live == 1) {
+				const data = t.operations[0][1];
+					
+				const account_name = data.name;
+				const referrer = data.referrer;
+				const owner_key = data.owner.key_auths[0][0];
+				const active_key = data.active.key_auths[0][0];
+				const memo_key = data.options.memo_key;
+				const member_since = timestamp;
 
-				if (t.operations[0][0] === 5) {
-					// console.log(t.operations[0][1]);
-				} else if (t.operations[0][0] === 20) {
-					// console.log(t.operations[0][0]);
-				}
-				operations = JSON.stringify(t.operations[0]);
+				const accountObj = await api.getAccountByName([account_name]);
+				const membership_expiration_date = accountObj[0].membership_expiration_date;
+				const account_id = accountObj[0].id;
+
+		
+				// console.log(accountObj[0]);
+				// console.log(t.operations[0][1]);
+				// console.log(t.operations[0][1].name);
+
+				const sql = `INSERT INTO accounts (account_name, membership_expiration, referrer, owner_key, active_key, memo_key, member_since, account_id)
+					VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '${member_since}', '${account_id}')`;
+		
+				connection.query(sql, function(err, result) {
+					console.log('Result: ' + JSON.stringify(result));
+		
+					if (err) {
+						throw err;
+					}
+				});
+			} else if (t.operations[0][0] === 20) {
+				// console.log(t.operations[0][0]);
+			}
+			operations = JSON.stringify(t.operations[0]);
 
 				
-				operation_results = JSON.stringify(t.operation_results[0]);
-				extensions = JSON.stringify(t.extensions);
-				signatures = JSON.stringify(t.signatures);
+			operation_results = JSON.stringify(t.operation_results[0]);
+			extensions = JSON.stringify(t.extensions);
+			signatures = JSON.stringify(t.signatures);
 
-				const sql = `INSERT INTO explorer.transactions (parent_block, expiration, operations, operation_results, extensions, signatures) VALUES('${parent_block}', '${expiration}', '${operations}', '${operation_results}', '${extensions}', '${signatures}') ON DUPLICATE KEY UPDATE    
+			const sql = `INSERT INTO explorer.transactions (parent_block, expiration, operations, operation_results, extensions, signatures) VALUES('${parent_block}', '${expiration}', '${operations}', '${operation_results}', '${extensions}', '${signatures}') ON DUPLICATE KEY UPDATE    
 				parent_block='${parent_block}', expiration='${expiration}', operations='${operations}', operation_results='${operation_results}', extensions='${extensions}', signatures='${signatures}'`;
-				
-				connection.query(sql, function (err, result) {
+
+			connection.query(sql, function (err, result) {
 				  if (err) {
 					  throw err;
 				  }
-				  console.log('Result: ' + JSON.stringify(result));
+				//   console.log('Result: ' + JSON.stringify(result));
 			  });
-			  });
-		  });	
+			  });	
 	  },
 
 	  /* Get a single object from the blockchain
