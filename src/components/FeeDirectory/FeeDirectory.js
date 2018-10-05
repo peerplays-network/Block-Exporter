@@ -88,7 +88,7 @@ class FeeDirectory extends Component {
 		return (
 			<div className="container" style={{height:'320px'}}>
 				{fullPage && <InputGroup className={`${styles['input-group']}`}>
-					<InputGroupAddon className={`${styles['input-group-prepend']}`}><span className={`fa fa-search ${styles['icon']}`}></span></InputGroupAddon>
+					<InputGroupAddon className={`${styles['input-group-prepend']}`} addonType="prepend"><span className={`fa fa-search ${styles['icon']}`}></span></InputGroupAddon>
 					<Input type="text" value={searchFee} onChange={this.onFeeTextChanged.bind(this)} placeholder="Operation" />
 				</InputGroup>}
 				{this.props.size==='large' && <div className="row">

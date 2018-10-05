@@ -19,9 +19,10 @@
     margin-left:35px;
 }
 .input-group-prepend{
-    background-color:lightgray;
-    border-radius:5px 0px 0px 5px; 
-    color:white;
+    background-color: #e9ecef;
+    border:1px solid #ced4da;
+    border-radius: 4px 0px 0px 4px;
+    color:#495057;
 }
 .icon{
     margin:10px 15px;
