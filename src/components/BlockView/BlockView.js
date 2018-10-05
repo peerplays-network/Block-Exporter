@@ -8,14 +8,15 @@ export default class BlockView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {blocks: [{}], currentBlock: !!this.props.currentBlock? this.props.currentBlock : 500, prevDisabled: false, nextDisabled: false};
-		this.lowerBound = 0; 
+		this.lowerBound = 0;
 		this.upperBound = 1;
 	}
 
 	componentDidMount() {
 		this.lowerBound = this.state.currentBlock-BLOCK_RANGE;
 		this.upperBound = this.state.currentBlock+BLOCK_RANGE;
-		axios.get(`api/blocks?start=${this.state.currentBlock-BLOCK_RANGE}&end=${this.state.currentBlock+BLOCK_RANGE}`, {
+		debugger;
+		axios.get(`api/blocks?start=${this.lowerBound}&end=${this.upperBound}`, {
 		}).then(response => {
 			this.setState({blocks: response.data});
 		}).catch(error => console.log('error fetching blocks'));
@@ -56,7 +57,8 @@ export default class BlockView extends Component {
 	
 	render() {
 		const {blocks, currentBlock, nextDisabled, prevDisabled} = this.state;
-		const index = blocks.findIndex(el => el.block_number === currentBlock);
+
+		const index = !!blocks ? blocks.findIndex(el => el.block_number === currentBlock) : 0;
 		return (
 			<BlockItem prevBlockClicked={this.prevBlockClicked.bind(this)} 
 				nextBlockClicked={this.nextBlockClicked.bind(this)} 
