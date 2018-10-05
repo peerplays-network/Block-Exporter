@@ -1,0 +1,54 @@
+import React, { Component } from 'react';
+import {Card, CardBody, Row, Col, Button, Table} from 'reactstrap';
+
+export default class BlockItem extends Component {
+	renderBlockTable() {
+		const {currentBlock} = this.props;
+		const time = new Date(currentBlock.timestamp).toLocaleDateString() + ' ' + new Date(currentBlock.timestamp).toLocaleTimeString();
+		return (
+			<div className="container pt-4 pb-5 mt-5"> 
+				<Card>
+					<CardBody>
+						<Row>
+							<Col md="12">
+								<h1 className="display-5 text-center mt-3"><span className="fa fa-cubes">&nbsp;</span>Block {currentBlock.block_number}</h1>
+							</Col>
+						</Row>
+						<Row className="mb-3">
+							<Col md="12">
+								<Button color="secondary" disabled={this.props.prevDisabled} onClick={this.props.prevBlockClicked}>Previous</Button>
+								<Button className="float-right" color="secondary" disabled={this.props.nextDisabled} onClick={this.props.nextBlockClicked}>Next</Button>
+							</Col>
+						</Row>
+						<Table responsive>
+							<tbody>
+								<tr>
+									<th>Transaction Count: </th>
+									<td>{currentBlock.transaction_count}</td>
+								</tr>
+								<tr>
+									<th>Operation Count: </th>
+									<td>{currentBlock.operation_count}</td>
+								</tr>
+								<tr>
+									<th>Witness Id: </th>
+									<td>{currentBlock.id}</td>
+								</tr>
+								<tr>
+									<th>Time: </th>
+									<td>{time.toString()}</td>
+								</tr>
+							</tbody>
+						</Table>
+					</CardBody>
+				</Card>
+			</div>
+		);
+	}
+
+	render() {
+		return (
+			!!this.props.currentBlock ? this.renderBlockTable() : <h1 className="text-center">Sorry this block doesn't exist :(</h1>
+		);
+	}
+}

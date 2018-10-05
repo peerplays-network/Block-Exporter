@@ -3,3 +3,22 @@
 .green {color: green;}
 .blue {color: blue;}
 .grey{color:grey}
+.box-shadow {
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+  }
+.transaction {
+    padding: '30px';
+}
+.col-2 {
+    float:'right';
+    textAlign: 'right';
+    margin:'0px'; 
+    padding:'0px';
+}
+.col-10 {
+    float:'left';
+    textAlign: 'left';
+    margin:'0px';
+    padding:'0px';
+}

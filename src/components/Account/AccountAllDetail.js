@@ -23,7 +23,7 @@ class AccountAllDetail extends Component {
 	findData(e) {
 		this.getAccount();
 		//API call to search for Account
-		axios.get('api/accounts/'+this.account, {
+		axios.get('/api/accounts/'+this.account, {
 		}).then(response => {
 			this.setState({ data: response.data });
 			console.log('', response);
@@ -31,7 +31,7 @@ class AccountAllDetail extends Component {
 	}
 
 	findTransactions() {
-		axios.get('api/transactions/'+this.account, {
+		axios.get('/api/transactions/'+this.account, {
 		}).then(response => {
 			this.setState({ transactions: response.data });
 		}).catch(error => {
