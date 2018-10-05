@@ -15,6 +15,7 @@ router.get('/blocks', function (req, res) {
 		res.status(400).send('400 Bad Request');
 		return;
 	}
+	
 
 	const start = req.query.start;
 	const end = req.query.end;
@@ -54,6 +55,12 @@ router.get('/blocks', function (req, res) {
 	// Perform Query
 	connection.query(sql, function (err, rows, fields) {
 		if (err) throw err;
+
+		if (rows.length < 1) {
+			res.status(400).send('400 NO DATA AVAILABLE - CHECK YOUR PARAMS');
+
+			return;
+		}
 		  
 		res.send(rows);
 		  });

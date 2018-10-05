@@ -17,7 +17,9 @@ const Blockchain = require("./api");
 const wsMonitor = require("./api/monitor");
 const db = require("./database/constants");
 
-const BLOCKCHAIN_URL = "ws://10.20.10.45:8090/ws"
+const BLOCKCHAIN_URL_QA = "wss://qa.5050labs.fun:8091/ws"
+const BLOCKCHAIN_URL_DEV = "ws://10.20.10.45:8090/ws"
+
 
 const app = express();
 const compiler = webpack(config);
@@ -35,12 +37,15 @@ const blocks = require("./routes/blocks");
 const accounts = require("./routes/accounts");
 const witnesses = require("./routes/witnesses");
 const operations = require("./routes/operations");
+const transactions = require("./routes/transactions");
+
 
 
 app.use("/api", blocks);
 app.use("/api", accounts);
 app.use("/api", witnesses);
 app.use("/api", operations);
+app.use("/api", transactions);
 
 
 
@@ -61,9 +66,9 @@ async function syncDatabase(connection) {
 		}
 	}
 
-	let r1 = await Blockchain.getFullAccounts(nameAry);
+	let r1 = await Blockchain.getFullAccounts(nameAry); // accounts
 
-	r1.forEach((data, index) => {
+	r1.forEach(async (data, index) => {
 		if (data && data[1].account) {
 
 		data = data[1].account;
@@ -76,6 +81,10 @@ async function syncDatabase(connection) {
 			const memo_key = data.options.memo_key;
 			const account_id = data.id;
 
+			// console.log(account_id);
+			const member_since = await Blockchain.getRegDate(account_id, '1.11.0');
+			// console.log(member_since);
+
 			sql = `SELECT * FROM explorer.accounts WHERE account_name = '${account_name}'`
 			connection.query(sql, function (err, result) {
 			  if (err) {
@@ -85,7 +94,7 @@ async function syncDatabase(connection) {
 
 			  if (result.length < 1) { // Insert data
 			sql = `INSERT INTO accounts (account_name, membership_expiration, referrer, owner_key, active_key, memo_key, member_since, account_id)
-			VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '2017-11-13 23:32:12', '${account_id}')`;
+			VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '${member_since}', '${account_id}')`;
 
 				connection.query(sql, function(err, result) {
 					console.log("Result: " + JSON.stringify(result));
@@ -106,14 +115,16 @@ async function syncDatabase(connection) {
 		witnessAry.push(witness[1]); // 0 = name, 1 = id
 	}
 
-	const r2 = await Blockchain.getWitnessObjsById(witnessAry);
+	const r2 = await Blockchain.getWitnessObjsById(witnessAry); // witnesses
 
-	r2.forEach((data, index) => {
+	// console.log(r2);
+
+	r2.forEach(async (data, index) => {
 		// build witness object
 		const account_id = witnessNames[index][1];
 		const account_name = witnessNames[index][0];
 		const witness = data.witness_account;
-		// const witness_since = ""
+		const witness_since = await Blockchain.getWitnessDate(witness, '1.11.0');
 		const total_votes = data.total_votes;
 		const url = data.url;
 		// const is_active = 
@@ -128,7 +139,7 @@ async function syncDatabase(connection) {
 
 		if (result.length < 1) { // Insert witness data
 			sql = `INSERT INTO witnesses (account_id, account_name, witness, witness_since, total_votes, total_missed, url, is_active)
-			VALUES ('${account_id}', '${account_name}', '${witness}', '2017-11-13 23:32:12', '${total_votes}', '${total_missed}', '${url}', '${1}');`
+			VALUES ('${account_id}', '${account_name}', '${witness}', '${witness_since}', '${total_votes}', '${total_missed}', '${url}', '${1}');`
 		}
 
 		connection.query(sql, function (err, result) {
@@ -142,11 +153,10 @@ async function syncDatabase(connection) {
   });
 
 
-	// UPDATE ALL FEES
-  let r3 = await Blockchain.getGlobalProperties();
+  let r3 = await Blockchain.getGlobalProperties(); 	// UPDATE ALL FEES
 
   let feeAry = [];
- r3.parameters.current_fees.parameters.map((feeObj) => {
+ 	 r3.parameters.current_fees.parameters.map((feeObj) => {
 	 console.log(feeObj);
 	 feeObj[1] = JSON.stringify(feeObj[1]);
 	 feeAry.push((feeObj));
@@ -161,7 +171,6 @@ async function syncDatabase(connection) {
 				throw err;
 			}
 	});
-
 }
 
 
@@ -198,7 +207,9 @@ connection.connect(function(err) {
 	console.log('Connected to DB: id ' + connection.threadId);
 	});
 
-  Blockchain.connect(BLOCKCHAIN_URL).then((r) => {
+  Blockchain.connect(BLOCKCHAIN_URL_DEV).then((r) => {
+
+	// syncDatabase(connection);
 
 	// let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
 	// connection.query(sql, function (err, result) {
@@ -213,15 +224,30 @@ connection.connect(function(err) {
 	// 		throw err;
 	// 	}
 	// 	console.log('\x1b[36m Exeplorer Server> Starting from block #: ' + result+1)
-	// 	Blockchain.populateBlocks(connection, result+1, '');
+	// 	Blockchain.populateBlocks(connection, result, '');
 		
 	// });
 	
 
-	// syncDatabase(connection);
+
+
+
+	// Blockchain.getRegDate('1.2.7', '1.11.0').then((r) => {
+	// 	console.log(r);
+	// })
+
+	// Blockchain.getAccountHistory('1.2.7', '1.11.0', 100, '1.11.0').then((r) => {
+	// 	console.log(r);
+	// })
+
+	// Blockchain.getWitnessByAcc('1.2.7').then((r) => {
+	// 	console.log(r);
+	// })
+
 	// Blockchain.startMonitor(connection);
-	// syncBlocks(connection);
 	// connection.end();
+
+	// Blockchain.parseBlock(19, connection, 1)
 });
 	
 
