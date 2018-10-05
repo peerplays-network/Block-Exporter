@@ -15,7 +15,6 @@ export default class BlockView extends Component {
 	componentDidMount() {
 		this.lowerBound = this.state.currentBlock-BLOCK_RANGE;
 		this.upperBound = this.state.currentBlock+BLOCK_RANGE;
-		debugger;
 		axios.get(`api/blocks?start=${this.lowerBound}&end=${this.upperBound}`, {
 		}).then(response => {
 			this.setState({blocks: response.data});
