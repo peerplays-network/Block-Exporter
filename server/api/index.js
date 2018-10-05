@@ -192,6 +192,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 	  */
 	parseBlock: (block, connection) => {
 		blockchainWS.Apis.instance().db_api().exec('get_block', [block]).then(b => {
+			console.log(b);
 			let parent_block;
 			let expiration;
 			let operations;
@@ -202,7 +203,17 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			b.transactions.map((t) => {
 				parent_block = t.ref_block_num;
 				expiration = t.expiration;
+
+				// Account and Witness Data
+
+				if (t.operations[0][0] === 5) {
+					// console.log(t.operations[0][1]);
+				} else if (t.operations[0][0] === 20) {
+					// console.log(t.operations[0][0]);
+				}
 				operations = JSON.stringify(t.operations[0]);
+
+				
 				operation_results = JSON.stringify(t.operation_results[0]);
 				extensions = JSON.stringify(t.extensions);
 				signatures = JSON.stringify(t.signatures);
