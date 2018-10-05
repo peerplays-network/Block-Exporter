@@ -18,6 +18,7 @@ class AccountAllDetail extends Component {
 		this.findData = this.findData.bind(this);
 		this.findTransactions = this.findTransactions.bind(this);
 		this.getAccount = this.getAccount.bind(this);
+		this.tabNavBuild = this.tabNavBuild.bind(this);
 	}
 
 	getAccount() {
@@ -83,7 +84,7 @@ class AccountAllDetail extends Component {
 
 	render() {
 		this.getAccount();
-
+		console.log('account and activeTab', this.account, this.state.activeTab);
 		return (
 
 			<div>
