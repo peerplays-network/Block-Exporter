@@ -53,7 +53,7 @@ router.get('/transactions', function (req, res) {
         
 		if (rows.length < 1) {
 			res.status(400).send('400 NO DATA AVAILABLE - CHECK YOUR PARAMS');
-
+			connection.end();
 			return;
 		}
 		  

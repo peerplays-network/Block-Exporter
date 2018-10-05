@@ -174,7 +174,6 @@ async function syncDatabase(connection) {
 }
 
 
-
 // ===== SERVER STARTUP =====
 if (process.env.NODE_ENV !== 'production') {
 	require('./config/dev.js')(app);
@@ -227,27 +226,6 @@ connection.connect(function(err) {
 	// 	Blockchain.populateBlocks(connection, result, '');
 		
 	// });
-	
-
-
-
-
-	// Blockchain.getRegDate('1.2.7', '1.11.0').then((r) => {
-	// 	console.log(r);
-	// })
-
-	// Blockchain.getAccountHistory('1.2.7', '1.11.0', 100, '1.11.0').then((r) => {
-	// 	console.log(r);
-	// })
-
-	// Blockchain.getWitnessByAcc('1.2.7').then((r) => {
-	// 	console.log(r);
-	// })
-
-	// Blockchain.startMonitor(connection);
-	// connection.end();
-
-	// Blockchain.parseBlock(19, connection, 1)
 });
 	
 
