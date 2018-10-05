@@ -7,6 +7,7 @@ import Test from '../components/Test';
 import Account from '../components/Account';
 import AccountAllDetail from '../components/Account/AccountAllDetail';
 import TransactionLarge from '../components/Transactions/TransactionLarge';
+import FeeDirectory from '../components/FeeDirectory/FeeDirectory';
 
 export default (
 	<div>
@@ -17,6 +18,7 @@ export default (
 			<Route exact path="/account" component={Account} />
 			<Route exact path="/accountAllDetail/*" component={AccountAllDetail} />
 			<Route exact path="/transactions" component={TransactionLarge} />
+			<Route exact path="/feeDirectory" component={FeeDirectory} />
 		</Switch>
 	</div>
 );
