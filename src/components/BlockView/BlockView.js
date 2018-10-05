@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import BlockItem from './BlockItem';
 
-const BLOCK_RANGE = 6;
+const BLOCK_RANGE = 100;
 export default class BlockView extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {blocks: [{}], currentBlock: !!this.props.currentBlock? this.props.currentBlock : 995, prevDisabled: false, nextDisabled: false};
+		this.state = {blocks: [{}], currentBlock: !!this.props.currentBlock? this.props.currentBlock : 500, prevDisabled: false, nextDisabled: false};
 		this.lowerBound = 0; 
 		this.upperBound = 1;
 	}
