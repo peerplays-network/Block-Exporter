@@ -7,28 +7,22 @@ const BLOCK_RANGE = 6;
 export default class BlockView extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {blocks: [{}], currentBlock: !!this.props.currentBlock? this.props.currentBlock : 10, prevDisabled: false, nextDisabled: false};
+		this.state = {blocks: [{}], currentBlock: !!this.props.currentBlock? this.props.currentBlock : 995, prevDisabled: false, nextDisabled: false};
 		this.lowerBound = 0; 
 		this.upperBound = 1;
 	}
 
 	componentDidMount() {
-		this.lowerBound = this.getBlockBounds(this.state.currentBlock-BLOCK_RANGE);
-		this.upperBound = this.getBlockBounds(this.state.currentBlock+BLOCK_RANGE);
+		this.lowerBound = this.state.currentBlock-BLOCK_RANGE;
+		this.upperBound = this.state.currentBlock+BLOCK_RANGE;
 		axios.get(`api/blocks?start=${this.state.currentBlock-BLOCK_RANGE}&end=${this.state.currentBlock+BLOCK_RANGE}`, {
 		}).then(response => {
 			this.setState({blocks: response.data});
 		}).catch(error => console.log('error fetching blocks'));
 	}
 
-	getBlockBounds(currentBlock) {
-		return currentBlock;
-	}
-
 	 loadNextBlocks(currentBlock) {
-		console.log('next blocks loaded');
-		debugger;
-		this.upperBound = this.getBlockBounds(this.upperBound+BLOCK_RANGE);
+		this.upperBound = this.upperBound+BLOCK_RANGE;
 		axios.get(`api/blocks?start=${this.state.currentBlock+1}&end=${this.upperBound}`, {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
@@ -36,10 +30,7 @@ export default class BlockView extends Component {
 	 }
 
 	 loadPreviousBlocks(currentBlock) {
-		console.log('previous blocks loaded');
-		debugger;
-		this.lowerBound = this.getBlockBounds(this.lowerBound-BLOCK_RANGE);
-		debugger;
+		this.lowerBound = this.lowerBound-BLOCK_RANGE;
 		axios.get(`api/blocks?start=${this.lowerBound}&end=${this.state.currentBlock-1}`, {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
@@ -48,7 +39,6 @@ export default class BlockView extends Component {
 
 	prevBlockClicked() {
 		this.setState({currentBlock: this.state.currentBlock-1});
-		debugger;
 		if(this.state.currentBlock === this.lowerBound)
 			this.loadPreviousBlocks(this.state.currentBlock);
 
@@ -57,8 +47,8 @@ export default class BlockView extends Component {
 	}
 
 	nextBlockClicked() {
-		this.setState({currentBlock: this.state.currentBlock+1});
-		this.setState({prevDisabled: false});
+		this.setState({currentBlock: this.state.currentBlock+1,
+			prevDisabled: false});
 		if(this.state.currentBlock === this.upperBound) {
 			this.loadNextBlocks(this.state.currentBlock);
 		}
@@ -67,8 +57,6 @@ export default class BlockView extends Component {
 	render() {
 		const {blocks, currentBlock, nextDisabled, prevDisabled} = this.state;
 		const index = blocks.findIndex(el => el.block_number === currentBlock);
-		console.log('index: ', index);
-		console.log('blocks: ', blocks);
 		return (
 			<BlockItem prevBlockClicked={this.prevBlockClicked.bind(this)} 
 				nextBlockClicked={this.nextBlockClicked.bind(this)} 
