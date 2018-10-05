@@ -4,7 +4,6 @@ import axios from 'axios'; //remove comment when API is completed
 import AccountDetail from './AccountDetail';
 import PaginationCall from './PaginationCall';
 import { Input, InputGroup } from 'reactstrap';
-import { normalize } from 'path';
 
 class AccountSearch extends Component {
 	constructor(e) {

@@ -8,3 +8,26 @@
     margin-top: 10px;
     padding: 10px 20px;
 }
+.group-headings{
+    position:absolute; 
+    left: 0px; 
+    top: 70px; 
+    cursor:pointer;
+    color: blue;
+}
+.group{
+    margin-left:35px;
+}
+.input-group-prepend{
+    background-color: #e9ecef;
+    border:1px solid #ced4da;
+    border-radius: 4px 0px 0px 4px;
+    color:#495057;
+}
+.icon{
+    margin:10px 15px;
+}
+.input-group{
+    margin-bottom:10px; 
+    margin-top:10px;
+}
