@@ -9,6 +9,7 @@ import AccountAllDetail from '../components/Account/AccountAllDetail';
 import BlockView from '../components/BlockView/BlockView';
 import TransactionLarge from '../components/Transactions/TransactionLarge';
 import FeeDirectory from '../components/FeeDirectory/FeeDirectory';
+import BlockList from '../components/BlockView/BlockList';
 
 export default (
 	<div>
@@ -21,6 +22,7 @@ export default (
 			<Route exact path="/transactions" component={TransactionLarge} />
 			<Route exact path="/feeDirectory" component={FeeDirectory} />
 			<Route exact path="/block-view" component={BlockView} />
+			<Route exact path="/block-list" component={BlockList} />
 		</Switch>
 	</div>
 );
