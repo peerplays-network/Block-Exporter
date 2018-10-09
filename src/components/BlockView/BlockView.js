@@ -2,9 +2,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import BlockItem from './BlockItem';
+import { connect } from 'react-redux'; 
 
 const BLOCK_RANGE = 100;
-export default class BlockView extends Component {
+class BlockView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {blocks: [{}], currentBlock: !!this.props.currentBlock? this.props.currentBlock : 500, prevDisabled: false, nextDisabled: false};
@@ -56,14 +57,23 @@ export default class BlockView extends Component {
 	
 	render() {
 		const {blocks, currentBlock, nextDisabled, prevDisabled} = this.state;
+		const {witnesses} = this.props;
 
 		const index = !!blocks ? blocks.findIndex(el => el.block_number === currentBlock) : 0;
+		const witnessName = !!witnesses && index>-1? witnesses.find(el => el.account_id === blocks[index].witness) : '';
 		return (
 			<BlockItem prevBlockClicked={this.prevBlockClicked.bind(this)} 
-				nextBlockClicked={this.nextBlockClicked.bind(this)} 
+				nextBlockClicked={this.nextBlockClicked.bind(this)}
+				witnessName={witnessName.account_name} 
 				currentBlock={blocks[index]}
 				nextDisabled={nextDisabled}
 				prevDisabled={prevDisabled}/>
 		);
 	}
 }
+
+const mapStateToProps = (state) => ({
+	witnesses: state.witnesses.witnessList
+});
+
+export default connect(mapStateToProps)(BlockView);

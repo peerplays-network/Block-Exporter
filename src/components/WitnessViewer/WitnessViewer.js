@@ -113,7 +113,6 @@ class WitnessViewer extends Component {
 
 	renderSmallTable() {
 		const {witnessData} = this.state;
-		debugger;
 		return (
 			<Fragment>
 				<table className="table">
