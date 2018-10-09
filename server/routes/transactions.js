@@ -42,7 +42,7 @@ router.get('/transactions', function (req, res) {
 			res.status(400).send('400 Bad Request - Invalid direction');
 			return;
 		} else {
-            console.log(req.query.direction);
+			console.log(req.query.direction);
 			sql = sql + ` ORDER BY parent_block ${req.query.direction}`;
 		}
 	}

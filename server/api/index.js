@@ -188,7 +188,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				console.log('Result: ' + JSON.stringify(result));
 			});
 
-			api.parseBlock(block);
+			api.parseBlock(block, connection, 1);
 		});		  
 	  },
 
