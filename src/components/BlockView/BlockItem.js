@@ -3,7 +3,7 @@ import {Card, CardBody, Row, Col, Button, Table} from 'reactstrap';
 
 export default class BlockItem extends Component {
 	renderBlockTable() {
-		const {currentBlock} = this.props;
+		const {currentBlock, witnessName} = this.props;
 		const time = new Date(currentBlock.timestamp).toLocaleDateString() + ' ' + new Date(currentBlock.timestamp).toLocaleTimeString();
 		return (
 			<div className="container pt-4 pb-5 mt-5"> 
@@ -29,6 +29,10 @@ export default class BlockItem extends Component {
 								<tr>
 									<th>Operation Count: </th>
 									<td>{currentBlock.operation_count}</td>
+								</tr>
+								<tr>
+									<th>Witness Name: </th>
+									<td>{witnessName}</td>
 								</tr>
 								<tr>
 									<th>Witness Id: </th>
