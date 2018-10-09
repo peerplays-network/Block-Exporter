@@ -58,6 +58,9 @@ export default class NavBar extends React.Component {
 								<DropdownItem>
 									<NavLink tag={RRNavLink} to="/feeDirectory">Fee Directory</NavLink>
 								</DropdownItem>
+								<DropdownItem>
+									<NavLink tag={RRNavLink} to="/directory">Site Directory</NavLink>
+								</DropdownItem>
 								<DropdownItem divider />
 								<DropdownItem>
 									Reset
