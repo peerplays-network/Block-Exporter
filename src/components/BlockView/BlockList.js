@@ -1,7 +1,8 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
-import PaginationCall from '../Account/PaginationCall';
-import {Input, Button, InputGroup, InputGroupAddon, Table} from 'reactstrap'; 
+import Pagination from 'react-paginate';
+import styles from './styles.css';
+import {Table} from 'reactstrap'; 
 
 export default class BlockList extends Component {
 	constructor(props) {
@@ -25,18 +26,13 @@ export default class BlockList extends Component {
 		}).catch(error => console.log('error fetching blocks: ', error));
 	}
 
-	changePage(e, index) {
-		e.preventDefault();
-		this.setState({currentPage: index});
+	changePage(index) {
+		debugger;
+		this.setState({currentPage: index.selected+1});
 	}
 
 	getPageLength() {
-		if(!!this.state.blocks && this.state.blocks.length > 0) {
-			console.log('blocks? ', Math.ceil(this.state.blocks[0].block_number/this.state.pageSize));
-			return 100;
-		}
-		else
-			return 1;
+		return !!this.state.blocks && this.state.blocks.length > 0 ? Math.ceil(this.state.blocks[0].block_number/this.state.pageSize) : 1;
 	}
 
 	render() {
@@ -72,7 +68,20 @@ export default class BlockList extends Component {
 								})}
 							</tbody>
 						</Table>
-						<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.getPageLength()} />
+						{/* <PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.getPageLength()} /> */}
+						<Pagination
+							breakClassName={`${styles['pagination']}`}
+							breakLabel={<a className="page-link">...</a>}
+							pageClassName={`${styles['pagination']}`}
+							previousClassName={`${styles['pagination']}`}
+							nextClassName={`${styles['pagination']}`}
+							pageLinkClassName="page-link"
+							previousLinkClassName="page-link"
+							nextLinkClassName="page-link"
+							pageCount={this.getPageLength()}
+							pageRangeDisplayed={2}
+							onPageChange={this.changePage.bind(this)}
+          				/>
 					</div>
 				</div>
 			</div>
