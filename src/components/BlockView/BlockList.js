@@ -1,29 +1,48 @@
 import React, { Component, Fragment } from 'react';
 import axios from 'axios';
 import PaginationCall from '../Account/PaginationCall';
-import {Input, InputGroup, Table} from 'reactstrap'; 
+import {Input, Button, InputGroup, InputGroupAddon, Table} from 'reactstrap'; 
 
 export default class BlockList extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			blocks: []
+			blocks: [], lower: 0, upper: 1, currentPage: 1, pageSize: 20
 		};
 	}
 
 	componentDidMount() {
-		let blocks = [];
+		let lower=0;
+		let upper=1;
 		axios.get('api/blocks/last', {
 		}).then(response => {
-			return axios.get(`api/blocks?start=${response.data.block_number-100}&end=${response.data.block_number}`);//api/blocks?start=450&end=550
-			//this.setState({blocks: response.data[0]});
+			lower=response.data[0].block_number-100;
+			upper=response.data[0].block_number;
+			return axios.get(`api/blocks?start=${lower}&end=${upper}`);//api/blocks?start=450&end=550
 		}).then(response => {
-			this.setState({blocks: response.data[0]});
+			this.setState({blocks: response.data.reverse(), lower, upper});
 		}).catch(error => console.log('error fetching blocks: ', error));
 	}
 
+	changePage(e, index) {
+		e.preventDefault();
+		this.setState({currentPage: index});
+	}
+
+	getPageLength() {
+		if(!!this.state.blocks && this.state.blocks.length > 0) {
+			console.log('blocks? ', Math.ceil(this.state.blocks[0].block_number/this.state.pageSize));
+			return 100;
+		}
+		else
+			return 1;
+	}
+
 	render() {
+		console.log('data: ', this.state);
+		const {blocks, currentPage, pageSize} = this.state;
+		console.log('page #', blocks.length/pageSize);
 		return (
 			<div className="container pt-4 pb-5 mt-5">
 				<div className="card mt-3">
@@ -31,20 +50,29 @@ export default class BlockList extends Component {
 						<h1 className="display-5 text-center mt-3"><span className="fa fa-cubes">&nbsp;</span> Browse Blocks</h1>
 						<Table responsive>
 							<thead className="text-center">
-								<th>Block Number</th>
-								<th>Block Number</th>
-								<th>Block Number</th>
-								<th>Block Number</th>
+								<tr>
+									<th>Height</th>
+									<th>Time</th>
+									<th>Witness</th>
+									<th>Transactions</th>
+									<th>Operations</th>
+								</tr>
 							</thead>
 							<tbody className="text-center">
-								<tr>
-									<td>test1</td>
-									<td>test1</td>
-									<td>test1</td>
-									<td>test1</td>
-								</tr>
+								{blocks.slice(currentPage * pageSize, (currentPage + 1) * pageSize).map((block) => {
+									return(
+										<tr key={block.id}>
+											<td>{block.block_number}</td>
+											<td>{new Date(block.timestamp).toLocaleTimeString()}</td>
+											<td>{block.witness}</td>
+											<td>{block.transaction_count}</td>
+											<td>{block.operation_count}</td>
+										</tr>
+									);
+								})}
 							</tbody>
 						</Table>
+						<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.getPageLength()} />
 					</div>
 				</div>
 			</div>
