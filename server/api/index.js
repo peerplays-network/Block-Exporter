@@ -148,7 +148,7 @@ const api = {
 
 		/* Fetch and insert block into DB
 			connection: A valid MYSQL connection
-			dynamicGlobaL: the block obj
+			dynamicGlobal: the block obj
 		*/
 	  },
 
@@ -371,7 +371,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 		});
 	},
     
-	/* Get an accountâ€™s balances in various assets
+	/* Get an account’s balances in various assets
     name: Account name
     assets: An array of asset(s) type IDs
 
