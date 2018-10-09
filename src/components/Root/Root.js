@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
 
-import NavBar from '../NavBar';
+import ReduxWrapper from '../ReduxWrapper/ReduxWrapper';
 
 // import styles from './Root.css';
 import '../../assets/css/index.css';
 
-export class Root extends Component {
+export default class Root extends Component {
 	render() {
 		return (
 			<div>
-				<NavBar />
+				<ReduxWrapper />
 			</div>
 		);
 	}
 }
-
-export default Root;

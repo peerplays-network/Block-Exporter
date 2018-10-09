@@ -1,5 +1,7 @@
+const moment = require('moment');
 const blockchainWS = require('peerplaysjs-ws');
 const Exeblock = require('peerplaysjs-lib');
+const db = require('../database/constants');
 const ChainStore = Exeblock.ChainStore;
 
 const accList = [];
@@ -34,7 +36,6 @@ const api = {
 		});
 	},
 
-
 	/* Sync blocks table recursively
 
 	WARNING: this is expensive and should only be used for initial sync
@@ -50,14 +51,20 @@ const api = {
 		}
 
 		blockchainWS.Apis.instance().db_api().exec('get_block', [start]).then(block => {
+			console.log(start);
 			// When a block is not found we assume we are up to date.
-			if (!block) {
+			if (!block || start === 900) {
 				console.log('Exeplorer Server> DONE inserting blocks - no block found');
 				api.startMonitor(connection);
-				  return;
+				return;
 			}
+
+
+			api.parseBlock(block, connection, 0);
+
+
 			// Build block object to be inserted
-  
+			
 			const transaction_count = block.transactions.length;
 			const operation_count = block.extensions.length;
 			const witness = block.witness;
@@ -70,7 +77,7 @@ const api = {
 			if (sql === '') {
 				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 	  VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
-			} else if (start % 2000 == 0) {
+			} else if (start % 200 == 0) {
 			} else {
 				sql = sql + `, ('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 				// console.log(sql);
@@ -78,7 +85,7 @@ const api = {
   
 			// Run Query
 			// console.log(start);
-			if (start % 2000 == 0) {
+			if (start % 200 == 0) {
 				connection.query(sql, function (err, result) {
 					if (err) {
 						throw err;
@@ -86,17 +93,16 @@ const api = {
 				  //   console.log('Result: ' + JSON.stringify(result));
 				  console.log(start);
 				});
-				// return;
+				// return;itne
 			}
 
-			if (start % 2000 == 0) {
+			if (start % 200 == 0) {
 				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 				VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 			}
 
-			//   start++;
-
-			  api.populateBlocks(connection, start+1, sql);
+			  start++;
+			  api.populateBlocks(connection, start, sql);
 		  });
 	},
 
@@ -110,15 +116,19 @@ const api = {
 		ChainStore.subscribe(() => api.updateDatabase(connection));
 	  },
 
-	/* Update the DB
+	/* Update the DB with data from the monitor
 	connection: A valid MYSQL connection
 	*/
 
 	updateDatabase: (connection) => {
 		api.getObject('2.1.0', (error, dynamicGlobal) => {
-			console.log(`Pushed: ${JSON.stringify(dynamicGlobal)}`);
+			// console.log(dynamicGlobal);
+
+
+
 			const sql = `INSERT INTO explorer.variables (var_name, value) VALUES('next_maintenance_time', '${dynamicGlobal.next_maintenance_time}') ON DUPLICATE KEY UPDATE    
 			var_name='next_maintenance_time', value='${dynamicGlobal.next_maintenance_time}'`;
+
 
 			connection.query(sql, function (err, result) {
 				if (err) {
@@ -161,8 +171,9 @@ const api = {
 		  const merkle_root = block.transaction_merkle_root;
 		  const timestamp = block.timestamp;
 
-
-		  console.log(block);
+			//   console.log(block);
+		//    console.log(block.transactions);
+		//    console.log(block.transactions[0].operations);
 		  
 
 			  // Create SQL Query
@@ -176,7 +187,81 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				}
 				console.log('Result: ' + JSON.stringify(result));
 			});
+
+			api.parseBlock(block);
 		});		  
+	  },
+
+
+	/* Parse a block and do all necessary live updates.
+	block: the block to parse
+	connection: valid SQL connection to the DB
+	live: 1=live data 0=initial sync
+
+	  */
+	parseBlock: (b, connection, live) => {
+		let parent_block;
+		let expiration;
+		let operations;
+		let operation_results;
+		let extensions;
+		let signatures;
+		const timestamp = b.timestamp;
+
+		b.transactions.map(async (t) => {
+			parent_block = t.ref_block_num;
+			expiration = t.expiration;
+
+			// Account and Witness Data
+			if (t.operations[0][0] === 5 && live == 1) {
+				const data = t.operations[0][1];
+					
+				const account_name = data.name;
+				const referrer = data.referrer;
+				const owner_key = data.owner.key_auths[0][0];
+				const active_key = data.active.key_auths[0][0];
+				const memo_key = data.options.memo_key;
+				const member_since = timestamp;
+
+				const accountObj = await api.getAccountByName([account_name]);
+				const membership_expiration_date = accountObj[0].membership_expiration_date;
+				const account_id = accountObj[0].id;
+
+		
+				// console.log(accountObj[0]);
+				// console.log(t.operations[0][1]);
+				// console.log(t.operations[0][1].name);
+
+				const sql = `INSERT INTO accounts (account_name, membership_expiration, referrer, owner_key, active_key, memo_key, member_since, account_id)
+					VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '${member_since}', '${account_id}')`;
+		
+				connection.query(sql, function(err, result) {
+					console.log('Result: ' + JSON.stringify(result));
+		
+					if (err) {
+						throw err;
+					}
+				});
+			} else if (t.operations[0][0] === 20) {
+				// console.log(t.operations[0][0]);
+			}
+			operations = JSON.stringify(t.operations[0]);
+
+				
+			operation_results = JSON.stringify(t.operation_results[0]);
+			extensions = JSON.stringify(t.extensions);
+			signatures = JSON.stringify(t.signatures);
+
+			const sql = `INSERT INTO explorer.transactions (parent_block, expiration, operations, operation_results, extensions, signatures) VALUES('${parent_block}', '${expiration}', '${operations}', '${operation_results}', '${extensions}', '${signatures}') ON DUPLICATE KEY UPDATE    
+				parent_block='${parent_block}', expiration='${expiration}', operations='${operations}', operation_results='${operation_results}', extensions='${extensions}', signatures='${signatures}'`;
+
+			connection.query(sql, function (err, result) {
+				  if (err) {
+					  throw err;
+				  }
+				//   console.log('Result: ' + JSON.stringify(result));
+			  });
+			  });	
 	  },
 
 	  /* Get a single object from the blockchain
@@ -378,6 +463,103 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			blockchainWS.Apis.instance().db_api().exec('get_block_header', [blockNum]).then(b => {
 				resolve(b);
 			});
+		});
+	},
+
+
+	/* Obtain block header from block number
+    blockNum: Height of the block to be returned
+
+    returns: Block header object
+    */
+	getAccountHistory: (name, stop, limit, start)=> {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().history_api().exec('get_account_history', [name, stop, limit, start]).then(r => {
+				resolve(r);
+			});
+		});
+	},
+
+
+	/* Obtain Registration date of an ACCOUNT
+	name: id
+	start: starting object
+
+    returns: date
+    */
+	getRegDate: (name, start) => {
+		// if (db.WITNESSES.includes(name)) {
+		// 	console.log('Genesis account found - no reg date recorded');
+		// 	return '1900-01-01 23:32:12';
+		// }
+		return blockchainWS.Apis.instance().history_api().exec('get_account_history', [name, '1.11.0', 100, start]).then(r => {
+			for (const op of r) {
+				if (op.op[0] == 5) {
+					return api.convertNumberToDate(op.block_num).then((blockTime) => {
+						return moment(blockTime).format('YYYY-MM-DD HH:mm:ss');
+					});
+				}
+			}
+			if (r.length <= 1) {
+				return '1900-01-01 00:00:00';
+			}
+
+			return api.getRegDate(name, r[r.length - 1].id);
+		});
+	},
+
+
+	/* Obtain Date of when an account became a witness
+	name: id
+	start: starting object
+
+    returns: date
+    */
+	getWitnessDate: (name, start) => {
+		// if (db.WITNESSES.includes(name)) {
+		// 	console.log('Genesis account found - no reg date recorded');
+		// 	return '1900-01-01 23:32:12';
+		// }
+		return blockchainWS.Apis.instance().history_api().exec('get_account_history', [name, '1.11.0', 100, start]).then(r => {
+			for (const op of r) {
+				if (op.op[0] == 20) {
+					return api.convertNumberToDate(op.block_num).then((blockTime) => {
+						return moment(blockTime).format('YYYY-MM-DD HH:mm:ss');
+					});
+				}
+			}
+			if (r.length <= 1) {
+				return '1900-01-01 23:32:12';
+			}
+			return api.getWitnessDate(name, r[r.length - 1].id);
+		});
+	},
+
+	/* Utility function for date calculation
+
+    */
+	convertNumberToDate: (blockNumber) => {
+		return new Promise((resolve, reject) => {
+			if (!blockNumber) {
+				return resolve({
+					blockTime: null
+				});
+			}
+
+			const object210 = ChainStore.getObject('2.1.0', false);
+			const object200 = ChainStore.getObject('2.0.0', false);
+
+			if (typeof object200 !== 'object' || typeof object210 !== 'object') {
+				return setTimeout(() => api.convertNumberToDate(blockNumber).then(resolve).catch(reject), 500);
+			}
+
+			const blockInterval = object200.getIn(['parameters', 'block_interval']);
+			const headBlockNumber = object210.get('head_block_number');
+			const headBlockTime = object210.get('time');
+
+			resolve(
+				Number(moment.utc(headBlockTime).subtract((headBlockNumber - blockNumber) * blockInterval, 'second').format('x'))
+			);
 		});
 	}
 };

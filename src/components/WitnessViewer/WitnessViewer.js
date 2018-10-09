@@ -3,12 +3,13 @@ import WitnessRow from './WitnessRow';
 import axios from 'axios';
 import styles from './styles.css';
 import PaginationCall from '../Account/PaginationCall';
-import { Input, InputGroup} from 'reactstrap'; 
+import { Input, InputGroup} from 'reactstrap';
+import { connect } from 'react-redux'; 
 
 class WitnessViewer extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {witnessData: [], searchData: [], witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'DESC'};
+		this.state = {witnessData: this.props.witnesses, searchData: this.props.witnesses, witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'DESC'};
 		this.gridHeight = 40;
 	}
 
@@ -18,16 +19,7 @@ class WitnessViewer extends Component {
 	}
 
 	fetchData() {
-		//API call to search for witness
-		axios.get('api/witnesses?sort=total_votes&direction=DESC', {
-		}).then(response => {
-			const sortedWitnessData = response.data;
-			sortedWitnessData.map( (el, index) => {return el.rank = index+1;});
-
-			this.setState({witnessData: sortedWitnessData});
-			this.setState({searchData: sortedWitnessData});
-			this.refreshPagination(sortedWitnessData);
-		}).catch(error => {console.log('error fetching witness data', error);});
+		this.refreshPagination(this.props.witnesses);
 	}
 
 	refreshPagination (data) {
@@ -121,7 +113,6 @@ class WitnessViewer extends Component {
 
 	renderSmallTable() {
 		const {witnessData} = this.state;
-
 		return (
 			<Fragment>
 				<table className="table">
@@ -154,7 +145,7 @@ class WitnessViewer extends Component {
 	render() {
 		return (
 			<div>
-				{this.props.size === 'small' ? 
+				{this.props.size === 'small' ?
 					this.renderSmallTable()
 					:
 					this.renderBigTable()
@@ -164,4 +155,8 @@ class WitnessViewer extends Component {
 	}
 }
 
-export default WitnessViewer;
+const mapStateToProps = (state) => ({
+	witnesses: state.witnesses.witnessList
+});
+
+export default connect(mapStateToProps)(WitnessViewer);
