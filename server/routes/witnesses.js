@@ -3,8 +3,38 @@ var router = express.Router();
 const mysql = require('mysql');
 const db = require('../database/constants');
 
+// Committee API: GET specific committee member
+router.get('/committee/:id', function (req, res) {
+	console.log(`GET request made to /committee/${req.params.id}`);
+
+	const connection = mysql.createConnection({
+		host     : db.HOST,
+		user     : db.USER,
+		password : db.PASSWORD,
+		database : db.DATABASE
+		  });
+
+		  // Establish connection
+		  connection.connect(function(err) {
+		if (err) {
+			console.error('error connecting to DB: ' + err.stack);
+			return;
+		}
+	});
+
+	// Perform Query
+	connection.query(`SELECT * FROM explorer.committee WHERE committee_member_account = '${req.params.id}'`, function (err, rows, fields) {
+		if (err) throw err;
+		  
+		res.send(rows);
+		  });
+
+	// Close connection
+	connection.end();
+});
+
 // Witness API: GET specific witness
-router.get('/accounts/:name', function (req, res) {
+router.get('/witnesses/:name', function (req, res) {
 	console.log(`GET request made to /witnesses${req.params.name}`);
 
 	const connection = mysql.createConnection({

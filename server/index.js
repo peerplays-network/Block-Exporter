@@ -140,14 +140,16 @@ async function syncDatabase(connection) {
 		if (result.length < 1) { // Insert witness data
 			sql = `INSERT INTO witnesses (account_id, account_name, witness, witness_since, total_votes, total_missed, url, is_active)
 			VALUES ('${account_id}', '${account_name}', '${witness}', '${witness_since}', '${total_votes}', '${total_missed}', '${url}', '${1}');`
-		}
 
-		connection.query(sql, function (err, result) {
-			if (err) {
-				throw err;
-			}
-			console.log("Result: " + JSON.stringify(result));
-	});
+			connection.query(sql, function (err, result) {
+				if (err) {
+					throw err;
+				}
+				console.log("Result: " + JSON.stringify(result));
+		});
+	
+	}
+
 
 	})
   });
@@ -158,21 +160,51 @@ async function syncDatabase(connection) {
   let feeAry = [];
  	 r3.parameters.current_fees.parameters.map((feeObj) => {
 	 console.log(feeObj);
-	 feeObj[1] = JSON.stringify(feeObj[1]);
-	 feeAry.push((feeObj));
+	 if (feeObj.length > 0) {
+		feeObj[1] = JSON.stringify(feeObj[1]);
+		feeAry.push((feeObj));
+	 }
+
 	 
   })
+//   sql = `SELECT * FROM explorer.operations`;
+  
+//   connection.query(sql, function (err, result) {
+// 	if (err) {
+// 		throw err;
+// 	}
 
-
-  sql = `INSERT IGNORE INTO explorer.operations (id, friendly_name, current_fees) VALUES('${feeAry[0][0]}', 'transfer', '${feeAry[0][1]}'), ('${feeAry[1][0]}', 'limit_order_create', '${feeAry[1][1]}'), ('${feeAry[2][0]}', 'limit_order_cancel', '${feeAry[2][1]}'), ('${feeAry[3][0]}','call_order_update', '${feeAry[3][1]}'), ('${feeAry[4][0]}', 'fill_order', '${feeAry[4][1]}'), ('${feeAry[5][0]}', 'account_create', '${feeAry[5][1]}'), ('${feeAry[6][0]}', 'account_update', '${feeAry[6][1]}'), ('${feeAry[7][0]}', 'account_whitelist', '${feeAry[7][1]}'), ('${feeAry[8][0]}', 'account_upgrade', '${feeAry[8][1]}'), ('${feeAry[9][0]}', 'account_transfer', '${feeAry[9][1]}'), ('${feeAry[10][0]}', 'asset_create', '${feeAry[10][1]}'), ('${feeAry[11][0]}', 'asset_update', '${feeAry[11][1]}'), ('${feeAry[12][0]}', 'asset_update_bitasset', '${feeAry[12][1]}'), ('${feeAry[13][0]}', 'asset_update_feed_producers', '${feeAry[13][1]}'), ('${feeAry[14][0]}', 'asset_issue', '${feeAry[14][1]}'), ('${feeAry[15][0]}', 'asset_reserve', '${feeAry[15][1]}'), ('${feeAry[16][0]}', 'asset_fund_fee_pool', '${feeAry[16][1]}'), ('${feeAry[17][0]}', 'asset_settle', '${feeAry[17][1]}'), ('${feeAry[18][0]}', 'asset_global_settle', '${feeAry[18][1]}'), ('${feeAry[19][0]}', 'asset_publish_feed', '${feeAry[19][1]}'), ('${feeAry[20][0]}', 'witness_create', '${feeAry[20][1]}'), ('${feeAry[21][0]}', 'witness_update', '${feeAry[21][1]}'), ('${feeAry[22][0]}', 'proposal_create', '${feeAry[22][1]}'), ('${feeAry[23][0]}', 'proposal_update', '${feeAry[23][1]}'), ('${feeAry[24][0]}', 'proposal_delete', '${feeAry[24][1]}'), ('${feeAry[25][0]}', 'withdraw_permission_create', '${feeAry[25][1]}'), ('${feeAry[26][0]}', 'withdraw_permission_update', '${feeAry[26][1]}'), ('${feeAry[27][0]}', 'withdraw_permission_claim', '${feeAry[27][1]}'), ('${feeAry[28][0]}', 'withdraw_permission_delete', '${feeAry[28][1]}'), ('${feeAry[29][0]}', 'committee_member_create', '${feeAry[29][1]}'), ('${feeAry[30][0]}', 'committee_member_update', '${feeAry[30][1]}'), ('${feeAry[31][0]}', 'committee_member_update_global_parameters', '${feeAry[31][1]}'), ('${feeAry[32][0]}', 'vesting_balance_create', '${feeAry[32][1]}'), ('${feeAry[33][0]}', 'vesting_balance_withdraw', '${feeAry[33][1]}'), ('${feeAry[34][0]}', 'worker_create', '${feeAry[34][1]}'), ('${feeAry[35][0]}', 'custom', '${feeAry[35][1]}'), ('${feeAry[36][0]}', 'assert', '${feeAry[36][1]}'), ('${feeAry[37][0]}', 'balance_claim', '${feeAry[37][1]}'), ('${feeAry[38][0]}', 'override_transfer', '${feeAry[38][1]}'), ('${feeAry[39][0]}', 'transfer_to_blind', '${feeAry[39][1]}'), ('${feeAry[40][0]}', 'blind_transfer', '${feeAry[40][1]}'), ('${feeAry[41][0]}', 'transfer_from_blind', '${feeAry[41][1]}'), ('${feeAry[42][0]}', 'asset_settle_cancel', '${feeAry[42][1]}'), ('${feeAry[43][0]}', 'asset_claim_fees', '${feeAry[43][1]}'), ('${feeAry[44][0]}', 'fba_distribute_operation', '${feeAry[44][1]}'), ('${feeAry[45][0]}', 'tournament_create', '${feeAry[45][1]}'), ('${feeAry[46][0]}', 'tournament_join', '${feeAry[46][1]}'), ('${feeAry[47][0]}','game_move', '${feeAry[47][1]}'), ('${feeAry[48][0]}', 'asset_update_dividend', '${feeAry[48][1]}'), ('${feeAry[49][0]}', 'asset_dividend_distribution', '${feeAry[49][1]}'), ('${feeAry[50][0]}', 'tournament_payout', '${feeAry[50][1]}'), ('${feeAry[51][0]}', 'tournament_leave', '${feeAry[51][1]}'), ('${feeAry[52][0]}', 'ticket_purchase', '${feeAry[52][1]}'), ('${feeAry[53][0]}', 'lottery_reward', '${feeAry[53][1]}'), ('${feeAry[54][0]}', 'lottery_end', '${feeAry[54][1]}'), ('${feeAry[55][0]}', 'sweeps_vesting_claim', '${feeAry[55][1]}'), ('${feeAry[56][0]}', 'lottery_asset_create', '${feeAry[56][1]}')`;
+	// if (result.length < 1) { // Insert data
+		sql = `INSERT IGNORE INTO explorer.operations (id, friendly_name, current_fees) VALUES('${feeAry[0][0]}', 'transfer', '${feeAry[0][1]}'), ('${feeAry[1][0]}', 'limit_order_create', '${feeAry[1][1]}'), ('${feeAry[2][0]}', 'limit_order_cancel', '${feeAry[2][1]}'), ('${feeAry[3][0]}','call_order_update', '${feeAry[3][1]}'), ('${feeAry[4][0]}', 'fill_order', '${feeAry[4][1]}'), ('${feeAry[5][0]}', 'account_create', '${feeAry[5][1]}'), ('${feeAry[6][0]}', 'account_update', '${feeAry[6][1]}'), ('${feeAry[7][0]}', 'account_whitelist', '${feeAry[7][1]}'), ('${feeAry[8][0]}', 'account_upgrade', '${feeAry[8][1]}'), ('${feeAry[9][0]}', 'account_transfer', '${feeAry[9][1]}'), ('${feeAry[10][0]}', 'asset_create', '${feeAry[10][1]}'), ('${feeAry[11][0]}', 'asset_update', '${feeAry[11][1]}'), ('${feeAry[12][0]}', 'asset_update_bitasset', '${feeAry[12][1]}'), ('${feeAry[13][0]}', 'asset_update_feed_producers', '${feeAry[13][1]}'), ('${feeAry[14][0]}', 'asset_issue', '${feeAry[14][1]}'), ('${feeAry[15][0]}', 'asset_reserve', '${feeAry[15][1]}'), ('${feeAry[16][0]}', 'asset_fund_fee_pool', '${feeAry[16][1]}'), ('${feeAry[17][0]}', 'asset_settle', '${feeAry[17][1]}'), ('${feeAry[18][0]}', 'asset_global_settle', '${feeAry[18][1]}'), ('${feeAry[19][0]}', 'asset_publish_feed', '${feeAry[19][1]}'), ('${feeAry[20][0]}', 'witness_create', '${feeAry[20][1]}'), ('${feeAry[21][0]}', 'witness_update', '${feeAry[21][1]}'), ('${feeAry[22][0]}', 'proposal_create', '${feeAry[22][1]}'), ('${feeAry[23][0]}', 'proposal_update', '${feeAry[23][1]}'), ('${feeAry[24][0]}', 'proposal_delete', '${feeAry[24][1]}'), ('${feeAry[25][0]}', 'withdraw_permission_create', '${feeAry[25][1]}'), ('${feeAry[26][0]}', 'withdraw_permission_update', '${feeAry[26][1]}'), ('${feeAry[27][0]}', 'withdraw_permission_claim', '${feeAry[27][1]}'), ('${feeAry[28][0]}', 'withdraw_permission_delete', '${feeAry[28][1]}'), ('${feeAry[29][0]}', 'committee_member_create', '${feeAry[29][1]}'), ('${feeAry[30][0]}', 'committee_member_update', '${feeAry[30][1]}'), ('${feeAry[31][0]}', 'committee_member_update_global_parameters', '${feeAry[31][1]}'), ('${feeAry[32][0]}', 'vesting_balance_create', '${feeAry[32][1]}'), ('${feeAry[33][0]}', 'vesting_balance_withdraw', '${feeAry[33][1]}'), ('${feeAry[34][0]}', 'worker_create', '${feeAry[34][1]}'), ('${feeAry[35][0]}', 'custom', '${feeAry[35][1]}'), ('${feeAry[36][0]}', 'assert', '${feeAry[36][1]}'), ('${feeAry[37][0]}', 'balance_claim', '${feeAry[37][1]}'), ('${feeAry[38][0]}', 'override_transfer', '${feeAry[38][1]}'), ('${feeAry[39][0]}', 'transfer_to_blind', '${feeAry[39][1]}'), ('${feeAry[40][0]}', 'blind_transfer', '${feeAry[40][1]}'), ('${feeAry[41][0]}', 'transfer_from_blind', '${feeAry[41][1]}'), ('${feeAry[42][0]}', 'asset_settle_cancel', '${feeAry[42][1]}'), ('${feeAry[43][0]}', 'asset_claim_fees', '${feeAry[43][1]}'), ('${feeAry[44][0]}', 'fba_distribute_operation', '${feeAry[44][1]}'), ('${feeAry[45][0]}', 'tournament_create', '${feeAry[45][1]}'), ('${feeAry[46][0]}', 'tournament_join', '${feeAry[46][1]}'), ('${feeAry[47][0]}','game_move', '${feeAry[47][1]}'), ('${feeAry[48][0]}', 'asset_update_dividend', '${feeAry[48][1]}'), ('${feeAry[49][0]}', 'asset_dividend_distribution', '${feeAry[49][1]}'), ('${feeAry[50][0]}', 'tournament_payout', '${feeAry[50][1]}'), ('${feeAry[51][0]}', 'tournament_leave', '${feeAry[51][1]}'), ('${feeAry[52][0]}', 'ticket_purchase', '${feeAry[52][1]}'), ('${feeAry[53][0]}', 'lottery_reward', '${feeAry[53][1]}'), ('${feeAry[54][0]}', 'lottery_end', '${feeAry[54][1]}'), ('${feeAry[55][0]}', 'sweeps_vesting_claim', '${feeAry[55][1]}'), ('${feeAry[56][0]}', 'lottery_asset_create', '${feeAry[56][1]}')`;
   
 		connection.query(sql, function (err, result) {
 			if (err) {
 				throw err;
 			}
-			console.log('Exeplorer Server> Done sync.')
-			return;
 	});
+	// }
+//   });
+
+
+
+
+let r4 = await Blockchain.getCommittee();
+
+r4.forEach(async (data, index) => {
+	console.log(data);
+	sql = `INSERT IGNORE INTO explorer.committee (committee_id, committee_member_account, vote_id, total_votes, url) VALUES ('${data.id}', '${data.committee_member_account}', '${data.vote_id}', '${data.total_votes}', '${data.url}') ON DUPLICATE KEY UPDATE    
+	committee_id='${data.id}', committee_member_account='${data.committee_member_account}', vote_id='${data.vote_id}', total_votes='${data.total_votes}', url='${data.url}'`
+
+	connection.query(sql, function (err, result) {
+		if (err) {
+			throw err;
+		}
+
+});
+})
+
+console.log('Exeplorer Server> Done sync.')
+return;
 }
 
 
@@ -209,25 +241,25 @@ connection.connect(function(err) {
 	});
 
   Blockchain.connect(BLOCKCHAIN_URL_DEV).then(async () => {
+	// await syncDatabase(connection);
 
-	await syncDatabase(connection);
+	// let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
+	// connection.query(sql, function (err, result) {
+	// 	if (result[0]) {
+	// 		result = result[0].block_number;
 
-	let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
-	connection.query(sql, function (err, result) {
-		if (result[0]) {
-			result = result[0].block_number;
+	// 	} else {
+	// 		result = 0;
+	// 	}
 
-		} else {
-			result = 0;
-		}
-
-		if (err) {
-			throw err;
-		}
-		console.log('\x1b[36m Exeplorer Server> Starting from block #: ' + result+1)
-		Blockchain.populateBlocks(connection, result, '');
+	// 	if (err) {
+	// 		throw err;
+	// 	}
+	// 	console.log('\x1b[36m Exeplorer Server> Starting from block #: ' + result+1)
+	// 	Blockchain.populateBlocks(connection, result, '');
 		
-	});
+	// });
+
 });
 	
 
