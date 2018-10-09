@@ -107,6 +107,14 @@ class AccountAllDetail extends Component {
 		);
 	}
 
+	returnActive( active ) {
+		if(active) {
+			return 'Yes';
+		}
+		else
+			return 'No';
+	}
+
 	render() {
 		this.getAccount();
 		console.log('account and activeTab', this.account, this.state.activeTab);
@@ -147,7 +155,7 @@ class AccountAllDetail extends Component {
 									<h4>Witness Information</h4>
 									<Row key={i}>
 										<Col sm="2"> Account ID: <strong>{ witness.account_id }</strong></Col>
-										<Col sm="2"> Active: <strong>{ witness.is_active }</strong></Col>
+										<Col sm="2"> Active: <strong>{ this.returnActive(witness.is_active) }</strong></Col>
 										<Col sm="2"> Total Votes: <strong>{ witness.total_votes }</strong></Col>
 										<Col sm="2"> Missed Blocks: <strong>{ witness.total_missed }</strong></Col>
 										<Col sm="2"> Url: <strong>{ witness.url }</strong></Col>
