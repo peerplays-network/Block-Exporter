@@ -31,12 +31,12 @@ export default class BlockItem extends Component {
 									<td>{currentBlock.operation_count}</td>
 								</tr>
 								<tr>
-									<th>Witness Id: </th>
-									<td>{currentBlock.id}</td>
-								</tr>
-								<tr>
 									<th>Witness Name: </th>
 									<td>{witnessName}</td>
+								</tr>
+								<tr>
+									<th>Witness Id: </th>
+									<td>{currentBlock.id}</td>
 								</tr>
 								<tr>
 									<th>Time: </th>

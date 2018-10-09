@@ -60,10 +60,7 @@ class BlockView extends Component {
 		const {witnesses} = this.props;
 
 		const index = !!blocks ? blocks.findIndex(el => el.block_number === currentBlock) : 0;
-		debugger;
 		const witnessName = !!witnesses && index>-1? witnesses.find(el => el.account_id === blocks[index].witness) : '';
-		console.log('name obj', witnessName);
-		console.log('block: ',blocks[index])
 		return (
 			<BlockItem prevBlockClicked={this.prevBlockClicked.bind(this)} 
 				nextBlockClicked={this.nextBlockClicked.bind(this)}
