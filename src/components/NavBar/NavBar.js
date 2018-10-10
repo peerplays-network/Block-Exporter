@@ -49,6 +49,15 @@ export default class NavBar extends React.Component {
 								<DropdownItem>
 									Option 2
 								</DropdownItem>
+								<DropdownItem>
+									<NavLink tag={RRNavLink} to="/account/">Account</NavLink>
+								</DropdownItem>
+								<DropdownItem>
+									<NavLink tag={RRNavLink} to="/transactions/">Transactions</NavLink>
+								</DropdownItem>
+								<DropdownItem>
+									<NavLink tag={RRNavLink} to="/feeDirectory">Fee Directory</NavLink>
+								</DropdownItem>
 								<DropdownItem divider />
 								<DropdownItem>
 									Reset
@@ -68,15 +77,6 @@ export default class NavBar extends React.Component {
 						<Nav className="ml-auto" navbar>
 							<NavItem>
 								<NavLink tag={RRNavLink} to="/test/">Test</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink tag={RRNavLink} to="/account/">Account</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink tag={RRNavLink} to="/transactions/">Transactions</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink tag={RRNavLink} to="/feeDirectory">Fee Directory</NavLink>
 							</NavItem>
 						</Nav>
 					</Collapse>

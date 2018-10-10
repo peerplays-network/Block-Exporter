@@ -148,6 +148,7 @@ const api = {
 
 		/* Fetch and insert block into DB
 			connection: A valid MYSQL connection
+			dynamicGlobal: the block obj
 		*/
 	  },
 
@@ -172,8 +173,8 @@ const api = {
 		  const timestamp = block.timestamp;
 
 			//   console.log(block);
-		//    console.log(block.transactions);
-		//    console.log(block.transactions[0].operations);
+			//    console.log(block.transactions);
+			//    console.log(block.transactions[0].operations);
 		  
 
 			  // Create SQL Query
@@ -188,7 +189,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				console.log('Result: ' + JSON.stringify(result));
 			});
 
-			api.parseBlock(block);
+			api.parseBlock(block, connection, 1);
 		});		  
 	  },
 
@@ -370,7 +371,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 		});
 	},
     
-	/* Get an accountâ€™s balances in various assets
+	/* Get an account’s balances in various assets
     name: Account name
     assets: An array of asset(s) type IDs
 
@@ -536,6 +537,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 	},
 
 	/* Utility function for date calculation
+	blockNumber: the block num to calc date for
 
     */
 	convertNumberToDate: (blockNumber) => {
@@ -560,6 +562,35 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			resolve(
 				Number(moment.utc(headBlockTime).subtract((headBlockNumber - blockNumber) * blockInterval, 'second').format('x'))
 			);
+		});
+	},
+
+	/* Return committee object
+	id: the account id to get the committee obj from
+
+    */
+	getCommittee: () => {
+		let committeeAry = [];
+		return new Promise(async (resolve, reject) => {
+			const com = await api.listCommittee();
+			com.map((c) => {
+				if (c.length > 1) {
+					committeeAry.push(c[1]);
+				}
+			})
+
+			blockchainWS.Apis.instance().db_api().exec('get_committee_members', [committeeAry]).then(w => {
+				resolve(w);
+			});
+		});
+	},
+
+	// helper function to get a list of committee members
+	listCommittee: () => {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().db_api().exec('lookup_committee_member_accounts', ['', 1000]).then(w => {
+				resolve(w);
+			});
 		});
 	}
 };
