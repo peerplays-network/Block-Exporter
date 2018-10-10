@@ -8,14 +8,17 @@ import '../../assets/css/index.css';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchWitnesses } from '../../actions/WitnessActions';
+import { fetchAccounts } from '../../actions/AccountActions';
 
 class ReduxWrapper extends Component {
 	componentDidMount() {
 		this.props.fetchWitnesses();
+		this.props.fetchAccounts();
 	}
 
 	render() {
 		console.log('witnesses', this.props.witnesses);
+		console.log('accounts', this.props.accounts);
 		return (
 			<div>
 				<NavBar />
@@ -25,11 +28,12 @@ class ReduxWrapper extends Component {
 }
 
 const mapStateToProps = (state) => ({
-	witnesses: state.witnesses.witnessList
+	witnesses: state.witnesses.witnessList,
+	accounts: state.accounts.accountList
 });
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({ fetchWitnesses }, dispatch);
+	return bindActionCreators({ fetchWitnesses, fetchAccounts }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReduxWrapper);

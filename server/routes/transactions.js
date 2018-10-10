@@ -3,7 +3,43 @@ var router = express.Router();
 const mysql = require('mysql');
 const db = require('../database/constants');
 
-// Check API status
+// BlockAPI API: GET transactions for account
+router.get('/transactions/:id', function (req, res) {
+	console.log(`GET request made to /transactions:${req.params.id}`);
+
+	if (!req.params.id.startsWith('1.2')) {
+		res.status(400).send('400 Invalid format');
+		return;
+	}
+
+	const connection = mysql.createConnection({
+		host     : db.HOST,
+		user     : db.USER,
+		password : db.PASSWORD,
+		database : db.DATABASE
+		  });
+
+		  // Establish connection
+		  connection.connect(function(err) {
+		if (err) {
+			console.error('error connecting to DB: ' + err.stack);
+			return;
+		}
+	});
+
+	// Perform Query
+	connection.query('SELECT * FROM explorer.transactions', function (err, rows, fields) {
+		if (err) throw err;
+		
+		// console.log(rows);
+		const matches = rows.filter(s => s.operations.includes(req.params.id));
+
+		res.send(matches);
+		  });
+
+	// Close connection
+	connection.end();
+});
 
 // BlockAPI API: GET transactions range
 router.get('/transactions', function (req, res) {
@@ -42,7 +78,7 @@ router.get('/transactions', function (req, res) {
 			res.status(400).send('400 Bad Request - Invalid direction');
 			return;
 		} else {
-            console.log(req.query.direction);
+			console.log(req.query.direction);
 			sql = sql + ` ORDER BY parent_block ${req.query.direction}`;
 		}
 	}

@@ -1,16 +1,16 @@
 /* Account page includes pagination */
 import React, { Component } from 'react';
-import axios from 'axios'; //remove comment when API is completed
 import AccountDetail from './AccountDetail';
 import PaginationCall from './PaginationCall';
 import { Input, InputGroup } from 'reactstrap';
+import { connect } from 'react-redux';
 
 class AccountSearch extends Component {
 	constructor(e) {
 		super(e);
 		this.state = {
-			data: [],
-			temp_data: [],
+			data: this.props.accounts,
+			temp_data: this.props.accounts,
 			account : '',
 			currentPage: 0,
 			pageSize: 3,
@@ -28,15 +28,8 @@ class AccountSearch extends Component {
 		}
 	}
 
-	findData(e) {
-		//API call to search for Account
-		axios.get('/api/accounts/', {
-		}).then(response => {
-			this.setState({ data: response.data });
-			this.setState({ temp_data: response.data });
-			this.refreshPagination(response.data);
-			//this.findAccount(this.state.account, this.state.data);
-		}).catch(error => {console.log('error is fetching account data', error);});
+	findData() {
+		this.refreshPagination(this.props.accounts);
 	}
 
 	refreshPagination (data) {
@@ -102,4 +95,8 @@ AccountSearch.defaultProps = {
 	id: '',
 };
 
-export default AccountSearch;
+const mapStateToProps = (state) => ({
+	accounts: state.accounts.accountList
+});
+
+export default connect(mapStateToProps)(AccountSearch);
