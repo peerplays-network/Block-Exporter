@@ -21,7 +21,7 @@ export default (
 			<Route exact path="/accountAllDetail/*" component={AccountAllDetail} />
 			<Route exact path="/transactions" component={TransactionLarge} />
 			<Route exact path="/feeDirectory" component={FeeDirectory} />
-			<Route exact path="/block-view" component={BlockView} />
+			<Route exact path="/block-view/*" component={BlockView} />
 			<Route exact path="/block-list" component={BlockList} />
 		</Switch>
 	</div>

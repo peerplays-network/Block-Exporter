@@ -15,7 +15,7 @@ class ReduxWrapper extends Component {
 	}
 
 	render() {
-		console.log('witnesses', this.props.witnesses);
+		console.log('redux wrapper witnesses', this.props.witnesses);
 		return (
 			<div>
 				<NavBar />

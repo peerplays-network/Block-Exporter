@@ -3,6 +3,8 @@ import axios from 'axios';
 import Pagination from 'react-paginate';
 import styles from './styles.css';
 import {Table} from 'reactstrap'; 
+import { NavLink } from 'reactstrap';
+import { NavLink as RRNavLink } from 'react-router-dom';
 import { connect } from 'react-redux'; 
 
 class BlockList extends Component {
@@ -50,7 +52,6 @@ class BlockList extends Component {
 
 	render() {
 		const {blocks, blockLength} = this.state;
-		console.log('blocks: ', this.state.blocks);
 		return (
 			<div className="container pt-4 pb-5 mt-5">
 				<div className="card mt-3">
@@ -70,7 +71,7 @@ class BlockList extends Component {
 								{blocks.map((block) => {
 									return(
 										<tr key={block.id}>
-											<td><a href="/block-view">{block.block_number}</a></td>
+											<td><NavLink tag={RRNavLink} to={`/block-view/${block.block_number}`}>{block.block_number}</NavLink></td>
 											<td>{new Date(block.timestamp).toLocaleTimeString()}</td>
 											<td>{this.getWitnessName(block.witness)}</td>
 											<td>{block.transaction_count}</td>
