@@ -9,8 +9,9 @@ export default class BlockList extends Component {
 		super(props);
 
 		this.state = {
-			blocks: [], lower: 0, upper: 1, currentPage: 1, pageSize: 20
+			blocks: [], lower: 0, upper: 1, currentPage: 1, blockLength: 0
 		};
+		this.blocksPerPage= 20;
 	}
 
 	componentDidMount() {
@@ -20,25 +21,50 @@ export default class BlockList extends Component {
 		}).then(response => {
 			lower=response.data[0].block_number-100;
 			upper=response.data[0].block_number;
-			return axios.get(`api/blocks?start=${lower}&end=${upper}`);//api/blocks?start=450&end=550
+			return axios.get(`api/blocks?start=${lower}&end=${upper}`);
 		}).then(response => {
-			this.setState({blocks: response.data.reverse(), lower, upper});
+			this.setState({blocks: response.data.reverse(), lower, upper, blockLength: Math.ceil(upper/this.blocksPerPage)});
 		}).catch(error => console.log('error fetching blocks: ', error));
 	}
 
+	loadNextBlocks(currentPage) {
+		const requestedBlockRange = (this.state.upper-this.blocksPerPage)- (this.blocksPerPage*currentPage);
+		const block = this.state.blocks.findIndex(el => el.block_number === requestedBlockRange);
+		if(block > 0) //block will be > 0 if it exists or -1 if it does not
+		{
+			//make an API call to get the missing data
+		}
+		//if(block)
+		console.log('requested block range: ', requestedBlockRange);
+		//HOW DO I LOAD THE DATA BASED ON PAGE NUMBER
+		//blocks at a time = 100
+		//pages = 11,251
+		//page size = 20
+		//currentPage * pageSize, (currentPage + 1) * pageSize?
+		//if(this.state.blocks[])//request for blocks has exceeded what is in the array
+
+
+		/*
+		axios.get(`api/blocks?start=${this.state.currentBlock+1}&end=${this.upperBound}`, {
+		}).then(response => {
+			this.setState({ blocks: [...this.state.blocks, ...response.data] });
+		}).catch(error => console.log('error fetching blocks'));*/
+	 }
+
 	changePage(index) {
-		debugger;
 		this.setState({currentPage: index.selected+1});
+		this.loadNextBlocks(index.selected+1);
 	}
 
-	getPageLength() {
-		return !!this.state.blocks && this.state.blocks.length > 0 ? Math.ceil(this.state.blocks[0].block_number/this.state.pageSize) : 1;
-	}
+	// getPageLength() {
+	// 	const test = !!this.state.blocks && this.state.blocks.length > 0 ? Math.ceil(this.state.blocks[0].block_number/this.blocksPerPage) : 1;
+	// 	debugger;
+	// 	return test;
+	// }
 
 	render() {
-		console.log('data: ', this.state);
-		const {blocks, currentPage, pageSize} = this.state;
-		console.log('page #', blocks.length/pageSize);
+		const {blocks, currentPage, blockLength} = this.state;
+		console.log('blocks: ',blocks);
 		return (
 			<div className="container pt-4 pb-5 mt-5">
 				<div className="card mt-3">
@@ -55,7 +81,7 @@ export default class BlockList extends Component {
 								</tr>
 							</thead>
 							<tbody className="text-center">
-								{blocks.slice(currentPage * pageSize, (currentPage + 1) * pageSize).map((block) => {
+								{blocks.slice(currentPage * this.blocksPerPage, (currentPage + 1) * this.blocksPerPage).map((block) => {
 									return(
 										<tr key={block.id}>
 											<td>{block.block_number}</td>
@@ -78,7 +104,7 @@ export default class BlockList extends Component {
 							pageLinkClassName="page-link"
 							previousLinkClassName="page-link"
 							nextLinkClassName="page-link"
-							pageCount={this.getPageLength()}
+							pageCount={blockLength}
 							pageRangeDisplayed={2}
 							onPageChange={this.changePage.bind(this)}
           				/>
