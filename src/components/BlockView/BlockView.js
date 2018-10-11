@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import BlockItem from './BlockItem';
-import { connect } from 'react-redux'; 
+import { connect } from 'react-redux';
+import * as Constants from '../../constants/constants'; 
 
-const BLOCK_RANGE = 50;
 class BlockView extends Component {
 	constructor(props) {
 		super(props);
@@ -14,8 +14,8 @@ class BlockView extends Component {
 	}
 
 	componentDidMount() {
-		this.lowerBound = Number(this.state.currentBlock)-BLOCK_RANGE;
-		this.upperBound = Number(this.state.currentBlock)+BLOCK_RANGE-1;
+		this.lowerBound = Number(this.state.currentBlock)-Constants.BLOCK_RANGE;
+		this.upperBound = Number(this.state.currentBlock)+Constants.BLOCK_RANGE-1;
 
 		axios.get(`/api/blocks?start=${this.lowerBound}&end=${this.upperBound}`, {
 		}).then(response => {
@@ -26,7 +26,7 @@ class BlockView extends Component {
 	}
 
 	 loadNextBlocks(currentBlock) {
-		this.upperBound = this.upperBound+BLOCK_RANGE;
+		this.upperBound = this.upperBound+Constants.BLOCK_RANGE;
 		axios.get(`/api/blocks?start=${this.state.currentBlock+1}&end=${this.upperBound}`, {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
@@ -36,7 +36,7 @@ class BlockView extends Component {
 	 }
 
 	 loadPreviousBlocks(currentBlock) {
-		this.lowerBound = this.lowerBound-BLOCK_RANGE;
+		this.lowerBound = this.lowerBound-Constants.BLOCK_RANGE;
 		axios.get(`/api/blocks?start=${this.lowerBound}&end=${this.state.currentBlock-1}`, {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });

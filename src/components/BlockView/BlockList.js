@@ -6,6 +6,7 @@ import {Table} from 'reactstrap';
 import { NavLink } from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
 import { connect } from 'react-redux'; 
+import * as Constants from '../../constants/constants'; 
 
 class BlockList extends Component {
 	constructor(props) {
@@ -14,7 +15,6 @@ class BlockList extends Component {
 		this.state = {
 			blocks: [], currentPage: 0, blockLength: 0
 		};
-		this.blocksPerPage= 20;
 	}
 
 	componentDidMount() {
@@ -22,7 +22,7 @@ class BlockList extends Component {
 		let upper=1;
 		axios.get('api/blocks/last', {
 		}).then(response => {
-			lower=response.data[0].block_number-(this.blocksPerPage-1);
+			lower=response.data[0].block_number-(Constants.BLOCKS_PER_PAGE-1);
 			upper=response.data[0].block_number;
 			return axios.get(`api/blocks?start=${lower}&end=${upper}`);
 		}).then(response => {
@@ -34,8 +34,8 @@ class BlockList extends Component {
 	}
 
 	loadNextBlocks(currentPage) {
-		const requestedBlockRange = this.state.upper - (this.blocksPerPage*currentPage);
-		axios.get(`api/blocks?start=${requestedBlockRange-(this.blocksPerPage-1)}&end=${requestedBlockRange}`, {
+		const requestedBlockRange = this.state.upper - (Constants.BLOCKS_PER_PAGE*currentPage);
+		axios.get(`api/blocks?start=${requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1)}&end=${requestedBlockRange}`, {
 		}).then(response => {
 			this.setState({ blocks: response.data.reverse() });
 		}).catch(error => console.log('error fetching blocks'));
@@ -90,7 +90,7 @@ class BlockList extends Component {
 							pageLinkClassName="page-link"
 							previousLinkClassName="page-link"
 							nextLinkClassName="page-link"
-							pageCount={blockLength/this.blocksPerPage}
+							pageCount={blockLength/Constants.BLOCKS_PER_PAGE}
 							pageRangeDisplayed={2}
 							onPageChange={this.changePage.bind(this)}
           				/>
