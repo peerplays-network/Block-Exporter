@@ -54,9 +54,19 @@ export default class BlockItem extends Component {
 		);
 	}
 
+	renderErrorOrLoading() {
+		if(this.props.error)
+			return <h1 className="text-center">Unable to load block, please try again</h1>
+		else {
+			return (
+				<div> </div>
+			);
+		}
+	}
+
 	render() {
 		return (
-			!!this.props.currentBlock ? this.renderBlockTable() : <h1 className="text-center">Sorry this block doesn't exist :(</h1>
+			!!this.props.currentBlock ? this.renderBlockTable() : this.renderErrorOrLoading()
 		);
 	}
 }

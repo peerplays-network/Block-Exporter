@@ -8,7 +8,7 @@ import * as Constants from '../../constants/constants';
 class BlockView extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {blocks: [], currentBlock: !!this.props.match.params[0]? Number(this.props.match.params[0]) : 500, prevDisabled: false, nextDisabled: false};
+		this.state = {blocks: [], currentBlock: !!this.props.match.params[0]? Number(this.props.match.params[0]) : 500, prevDisabled: false, nextDisabled: false, error: false};
 		this.lowerBound = 0;
 		this.upperBound = 0;
 	}
@@ -19,8 +19,9 @@ class BlockView extends Component {
 
 		axios.get(`/api/blocks?start=${this.lowerBound}&end=${this.upperBound}`, {
 		}).then(response => {
-			this.setState({blocks: response.data});
+			this.setState({blocks: response.data, loading: false});
 		}).catch(error => {
+			this.setState({error: true});
 			console.log(error.response);
 		});
 	}
@@ -31,6 +32,7 @@ class BlockView extends Component {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
 		}).catch(error => {
+			this.setState({error: true});
 			console.log(error.response);
 		});
 	 }
@@ -41,7 +43,8 @@ class BlockView extends Component {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
 		}).catch(error => {
-			console.log(error.response)
+			this.setState({error: true});
+			console.log(error.response);
 		});
 	 }
 
@@ -70,13 +73,15 @@ class BlockView extends Component {
 		
 		const index = !!blocks && blocks.length > 0 ? blocks.findIndex(el => el.block_number === Number(currentBlock)) : 0;
 		const witnessName = !!witnesses && witnesses.length>0 && blocks.length>0 ? witnesses.find(el => el.account_id === blocks[index].witness).account_name : '';
+		debugger;
 		return (
 			<BlockItem prevBlockClicked={this.prevBlockClicked.bind(this)} 
 				nextBlockClicked={this.nextBlockClicked.bind(this)}
 				witnessName={witnessName}
 				currentBlock={blocks[index]}
 				nextDisabled={nextDisabled}
-				prevDisabled={prevDisabled}/>
+				prevDisabled={prevDisabled}
+				error={this.state.error}/>
 		);
 	}
 }
