@@ -8,7 +8,7 @@ const BLOCK_RANGE = 50;
 class BlockView extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {blocks: [], currentBlock: !!this.props.match.params[0]? this.props.match.params[0] : 500, prevDisabled: false, nextDisabled: false};
+		this.state = {blocks: [], currentBlock: !!this.props.match.params[0]? Number(this.props.match.params[0]) : 500, prevDisabled: false, nextDisabled: false};
 		this.lowerBound = 0;
 		this.upperBound = 0;
 	}
@@ -17,7 +17,7 @@ class BlockView extends Component {
 		this.lowerBound = Number(this.state.currentBlock)-BLOCK_RANGE;
 		this.upperBound = Number(this.state.currentBlock)+BLOCK_RANGE-1;
 
-		axios.get(`http://localhost:5000/api/blocks?start=${this.lowerBound}&end=${this.upperBound}`, {
+		axios.get(`/api/blocks?start=${this.lowerBound}&end=${this.upperBound}`, {
 		}).then(response => {
 			this.setState({blocks: response.data});
 		}).catch(error => {
@@ -27,7 +27,7 @@ class BlockView extends Component {
 
 	 loadNextBlocks(currentBlock) {
 		this.upperBound = this.upperBound+BLOCK_RANGE;
-		axios.get(`http://localhost:5000/api/blocks?start=${this.state.currentBlock+1}&end=${this.upperBound}`, {
+		axios.get(`/api/blocks?start=${this.state.currentBlock+1}&end=${this.upperBound}`, {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
 		}).catch(error => {
@@ -37,7 +37,7 @@ class BlockView extends Component {
 
 	 loadPreviousBlocks(currentBlock) {
 		this.lowerBound = this.lowerBound-BLOCK_RANGE;
-		axios.get(`http://localhost:5000/api/blocks?start=${this.lowerBound}&end=${this.state.currentBlock-1}`, {
+		axios.get(`/api/blocks?start=${this.lowerBound}&end=${this.state.currentBlock-1}`, {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
 		}).catch(error => {
@@ -46,6 +46,7 @@ class BlockView extends Component {
 	 }
 
 	prevBlockClicked() {
+		this.props.history.push(`/block-view/${this.state.currentBlock-1}`);
 		this.setState({currentBlock: this.state.currentBlock-1});
 		if(this.state.currentBlock === this.lowerBound)
 			this.loadPreviousBlocks(this.state.currentBlock);
@@ -55,6 +56,7 @@ class BlockView extends Component {
 	}
 
 	nextBlockClicked() {
+		this.props.history.push(`/block-view/${this.state.currentBlock+1}`);
 		this.setState({currentBlock: this.state.currentBlock+1,
 			prevDisabled: false});
 		if(this.state.currentBlock === this.upperBound) {
@@ -67,10 +69,7 @@ class BlockView extends Component {
 		const {witnesses} = this.props;
 		
 		const index = !!blocks && blocks.length > 0 ? blocks.findIndex(el => el.block_number === Number(currentBlock)) : 0;
-		// console.log(this.props);
-		// console.log(this.state);
-		// console.log(index);
-		const witnessName = !!witnesses && witnesses.length>0? witnesses.find(el => el.account_id === blocks[index].witness).account_name : '';
+		const witnessName = !!witnesses && witnesses.length>0 && blocks.length>0 ? witnesses.find(el => el.account_id === blocks[index].witness).account_name : '';
 		return (
 			<BlockItem prevBlockClicked={this.prevBlockClicked.bind(this)} 
 				nextBlockClicked={this.nextBlockClicked.bind(this)}
@@ -83,7 +82,7 @@ class BlockView extends Component {
 }
 
 const mapStateToProps = (state) => ({
-	witnesses: state.witnesses
+	witnesses: state.witnesses.witnessList
 });
 
 export default connect(mapStateToProps)(BlockView);
