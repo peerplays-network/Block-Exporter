@@ -16,17 +16,16 @@ const mysql = require('mysql');
 const Blockchain = require("./api");
 const wsMonitor = require("./api/monitor");
 const db = require("./database/constants");
+const config_server = require("./config/main");
 
 const BLOCKCHAIN_URL_QA = "wss://qa.5050labs.fun:8091/ws";
 const BLOCKCHAIN_URL_DEV = "ws://10.20.10.45:8090/ws";
 const BLOCKCHAIN_URL_EXECHAIN= "ws://10.20.10.51:8090/ws";
 
-
 const app = express();
 const compiler = webpack(config);
 const router = express.Router();
 const port = process.env.PORT || 5000;
-
 
 // ===== CONFIG =====
 app.use(bodyParser.json());
@@ -47,9 +46,6 @@ app.use("/api", accounts);
 app.use("/api", witnesses);
 app.use("/api", operations);
 app.use("/api", transactions);
-
-
-
 
 // ===== SYNC FUNCTIONS =====
 
@@ -241,27 +237,29 @@ connection.connect(function(err) {
 	console.log('Connected to DB: id ' + connection.threadId);
 	});
 
-// Uncommenting this code will enable syncing + live WS monitoring to the database:
+  Blockchain.connect(config_server.BLOCKCHAIN_URL).then(async () => {
 
-//   Blockchain.connect(BLOCKCHAIN_URL_EXECHAIN).then(async () => {
-// 	await syncDatabase(connection);
+	if (config_server.SYNC_DATABASE) {
+		await syncDatabase(connection);
 
-// 	let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
-// 	connection.query(sql, function (err, result) {
-// 		if (result[0]) {
-// 			result = result[0].block_number;
+		let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
+		connection.query(sql, function (err, result) {
+			if (result[0]) {
+				result = result[0].block_number;
+	
+			} else {
+				result = 0;
+			}
+	
+			if (err) {
+				throw err;
+			}
+			console.log('\x1b[36m Exeplorer Server> Starting from block #: ' + result+1)
+			Blockchain.populateBlocks(connection, result, '');
+			
+		});
 
-// 		} else {
-// 			result = 0;
-// 		}
-
-// 		if (err) {
-// 			throw err;
-// 		}
-// 		console.log('\x1b[36m Exeplorer Server> Starting from block #: ' + result+1)
-// 		Blockchain.populateBlocks(connection, result, '');
-		
-// 	});
+	}
 
 });
 	

@@ -88,9 +88,7 @@ router.get('/transactions', function (req, res) {
 		if (err) throw err;
         
 		if (rows.length < 1) {
-			res.status(400).send('400 NO DATA AVAILABLE - CHECK YOUR PARAMS');
-			connection.end();
-			return;
+			return res.status(400).send('400 NO DATA AVAILABLE - CHECK YOUR PARAMS');
 		}
 		  
 		res.send(rows);
