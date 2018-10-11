@@ -18,10 +18,6 @@ const wsMonitor = require("./api/monitor");
 const db = require("./database/constants");
 const config_server = require("./config/main");
 
-const BLOCKCHAIN_URL_QA = "wss://qa.5050labs.fun:8091/ws";
-const BLOCKCHAIN_URL_DEV = "ws://10.20.10.45:8090/ws";
-const BLOCKCHAIN_URL_EXECHAIN= "ws://10.20.10.51:8090/ws";
-
 const app = express();
 const compiler = webpack(config);
 const router = express.Router();
