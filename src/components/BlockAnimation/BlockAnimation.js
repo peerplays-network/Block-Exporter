@@ -23,7 +23,6 @@ class BlockAnimation extends Component
 				let bars = [];
 				for (let i = lastBlock - num + 1; i <= lastBlock; i++)
 				{
-					console.log(i);
 					bars = bars.concat([i]);
 				}
 				this.setState({bars: bars, lastBlock: lastBlock}, ()=>{
@@ -45,9 +44,7 @@ class BlockAnimation extends Component
 				lastBlock = response.data[0].block_number;
 				if(lastBlock > this.state.lastBlock)
 				{
-					console.log('got a new block');
 					this.setState({lastBlock: lastBlock}, ()=>{
-						console.log('adding a block');
 						this.add();
 					});
 				}
@@ -76,6 +73,11 @@ class BlockAnimation extends Component
 		});
 	}
 
+	onClick(num)
+	{
+		this.props.history.push(`/block-view/${num.num}`);
+	}
+
 	render()
 	{
 		return(
@@ -84,7 +86,7 @@ class BlockAnimation extends Component
 					{
 						this.state.bars.map(num=>(
 							<Transition key={num} timeout={250} mountOnEnter unmountOnExit>
-								<div className={`${styles['bar']} d-inline-flex`} ref={this.bars}>{num}</div>
+								<div className={`${styles['bar']} d-inline-flex`} ref={this.bars} onClick={(i)=>this.onClick({num})}>{num}</div>
 							</Transition>
 						))
 					}

@@ -8,6 +8,7 @@
     text-orientation: upright;
     font-size: 13px;
     align-items: center;
+    cursor: pointer;
 }
 .bar-back{
     background-color: rgb(18, 99, 221);

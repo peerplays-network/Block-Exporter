@@ -119,7 +119,7 @@ class Welcome extends Component {
 
 		return (
 			<div>
-				<BlockAnimation />
+				<BlockAnimation history={this.props.history}/>
 				<div>
 					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={null} 
 						rowHeight={10} draggableCancel=".panel-body" autoSize={false} isResizable={false} 
