@@ -2,43 +2,51 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import BlockItem from './BlockItem';
-import { connect } from 'react-redux'; 
+import { connect } from 'react-redux';
+import * as Constants from '../../constants/constants'; 
 
-const BLOCK_RANGE = 100;
 class BlockView extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {blocks: [{}], currentBlock: !!this.props.currentBlock? this.props.currentBlock : 500, prevDisabled: false, nextDisabled: false};
+		this.state = {blocks: [], currentBlock: !!this.props.match.params[0]? Number(this.props.match.params[0]) : 500, prevDisabled: false, nextDisabled: false};
 		this.lowerBound = 0;
-		this.upperBound = 1;
+		this.upperBound = 0;
 	}
 
 	componentDidMount() {
-		this.lowerBound = this.state.currentBlock-BLOCK_RANGE;
-		this.upperBound = this.state.currentBlock+BLOCK_RANGE;
-		axios.get(`api/blocks?start=${this.lowerBound}&end=${this.upperBound}`, {
+		this.lowerBound = Number(this.state.currentBlock)-Constants.BLOCK_RANGE;
+		this.upperBound = Number(this.state.currentBlock)+Constants.BLOCK_RANGE-1;
+
+		axios.get(`/api/blocks?start=${this.lowerBound}&end=${this.upperBound}`, {
 		}).then(response => {
 			this.setState({blocks: response.data});
-		}).catch(error => console.log('error fetching blocks'));
+		}).catch(error => {
+			console.log(error.response);
+		});
 	}
 
 	 loadNextBlocks(currentBlock) {
-		this.upperBound = this.upperBound+BLOCK_RANGE;
-		axios.get(`api/blocks?start=${this.state.currentBlock+1}&end=${this.upperBound}`, {
+		this.upperBound = this.upperBound+Constants.BLOCK_RANGE;
+		axios.get(`/api/blocks?start=${this.state.currentBlock+1}&end=${this.upperBound}`, {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
-		}).catch(error => console.log('error fetching blocks'));
+		}).catch(error => {
+			console.log(error.response);
+		});
 	 }
 
 	 loadPreviousBlocks(currentBlock) {
-		this.lowerBound = this.lowerBound-BLOCK_RANGE;
-		axios.get(`api/blocks?start=${this.lowerBound}&end=${this.state.currentBlock-1}`, {
+		this.lowerBound = this.lowerBound-Constants.BLOCK_RANGE;
+		axios.get(`/api/blocks?start=${this.lowerBound}&end=${this.state.currentBlock-1}`, {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
-		}).catch(error => console.log('error fetching blocks'));
+		}).catch(error => {
+			console.log(error.response)
+		});
 	 }
 
 	prevBlockClicked() {
+		this.props.history.push(`/block-view/${this.state.currentBlock-1}`);
 		this.setState({currentBlock: this.state.currentBlock-1});
 		if(this.state.currentBlock === this.lowerBound)
 			this.loadPreviousBlocks(this.state.currentBlock);
@@ -48,6 +56,7 @@ class BlockView extends Component {
 	}
 
 	nextBlockClicked() {
+		this.props.history.push(`/block-view/${this.state.currentBlock+1}`);
 		this.setState({currentBlock: this.state.currentBlock+1,
 			prevDisabled: false});
 		if(this.state.currentBlock === this.upperBound) {
@@ -58,13 +67,13 @@ class BlockView extends Component {
 	render() {
 		const {blocks, currentBlock, nextDisabled, prevDisabled} = this.state;
 		const {witnesses} = this.props;
-
-		const index = !!blocks ? blocks.findIndex(el => el.block_number === currentBlock) : 0;
-		const witnessName = !!witnesses && index>-1? witnesses.find(el => el.account_id === blocks[index].witness) : '';
+		
+		const index = !!blocks && blocks.length > 0 ? blocks.findIndex(el => el.block_number === Number(currentBlock)) : 0;
+		const witnessName = !!witnesses && witnesses.length>0 && blocks.length>0 ? witnesses.find(el => el.account_id === blocks[index].witness).account_name : '';
 		return (
 			<BlockItem prevBlockClicked={this.prevBlockClicked.bind(this)} 
 				nextBlockClicked={this.nextBlockClicked.bind(this)}
-				witnessName={witnessName.account_name} 
+				witnessName={witnessName}
 				currentBlock={blocks[index]}
 				nextDisabled={nextDisabled}
 				prevDisabled={prevDisabled}/>
