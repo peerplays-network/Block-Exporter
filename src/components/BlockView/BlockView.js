@@ -20,7 +20,9 @@ class BlockView extends Component {
 		axios.get(`http://localhost:5000/api/blocks?start=${this.lowerBound}&end=${this.upperBound}`, {
 		}).then(response => {
 			this.setState({blocks: response.data});
-		}).catch(error => console.log('error fetching blocks'));
+		}).catch(error => {
+			console.log(error.response);
+		});
 	}
 
 	 loadNextBlocks(currentBlock) {
@@ -28,7 +30,9 @@ class BlockView extends Component {
 		axios.get(`http://localhost:5000/api/blocks?start=${this.state.currentBlock+1}&end=${this.upperBound}`, {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
-		}).catch(error => console.log('error fetching blocks'));
+		}).catch(error => {
+			console.log(error.response);
+		});
 	 }
 
 	 loadPreviousBlocks(currentBlock) {
@@ -36,7 +40,9 @@ class BlockView extends Component {
 		axios.get(`http://localhost:5000/api/blocks?start=${this.lowerBound}&end=${this.state.currentBlock-1}`, {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
-		}).catch(error => console.log('error fetching blocks'));
+		}).catch(error => {
+			console.log(error.response)
+		});
 	 }
 
 	prevBlockClicked() {
@@ -61,9 +67,9 @@ class BlockView extends Component {
 		const {witnesses} = this.props;
 		
 		const index = !!blocks && blocks.length > 0 ? blocks.findIndex(el => el.block_number === Number(currentBlock)) : 0;
-		console.log(this.props);
-		console.log(this.state);
-		console.log(index);
+		// console.log(this.props);
+		// console.log(this.state);
+		// console.log(index);
 		const witnessName = !!witnesses && witnesses.length>0? witnesses.find(el => el.account_id === blocks[index].witness).account_name : '';
 		return (
 			<BlockItem prevBlockClicked={this.prevBlockClicked.bind(this)} 
