@@ -4,6 +4,7 @@ import anime from 'animejs';
 import {TransitionGroup, Transition} from 'react-transition-group';
 import * as Constants from '../../constants/constants';
 import Block from './Block';
+import styles from './styles.css';
 
 class BlockAnimation extends Component
 {
@@ -80,7 +81,7 @@ class BlockAnimation extends Component
 	{
 		return(
 			<div className="container" >
-				<TransitionGroup component="div" className="d-flex">
+				<TransitionGroup component="div" className={`${styles['bar-back']} d-flex`}>
 					{
 						this.state.bars.map(num=>(
 							<Transition key={num} timeout={250} mountOnEnter unmountOnExit>
