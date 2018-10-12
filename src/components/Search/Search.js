@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 //import axios from 'axios';
 import {Card, CardBody, Row, Col, Table} from 'reactstrap';
 import { connect } from 'react-redux';
-import { NavLink } from 'reactstrap';
+import { NavLink} from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
 
 class Search extends Component {
@@ -10,8 +10,8 @@ class Search extends Component {
 		super(props);
 		this.state = { 
 			searchString: props.match.params[0], 
-			accounts: [], 
-			
+			accounts: [{account_name: 'init4', account_id: '923821'}], 
+			witnesses: [{account_name: 'init8', account_id: '923821'}],
 			blocks: [{
 				block_id: '0001d19af9fc800da16c93dde767cfeba0b97cba',
 				block_number: 119194,
@@ -29,36 +29,45 @@ class Search extends Component {
 	}
 
 	getWitnessName(witnessId) {
-		return this.props.witnesses.find(el => el.account_id === witnessId).account_name;
+		return !!this.props.witnesses? this.props.witnesses.find(el => el.account_id === witnessId).account_name : '';
 	}
 
 	renderBlocksTable() {
 		return (
 			<div>
-				<Table responsive>
-					<thead className="text-center">
-						<tr>
-							<th>Height</th>
-							<th>Time</th>
-							<th>Witness</th>
-							<th>Transactions</th>
-							<th>Operations</th>
-						</tr>
-					</thead>
-					<tbody className="text-center">
-						{this.state.blocks.map((block) => {
-							return(
-								<tr key={block.id}>
-									<td><NavLink tag={RRNavLink} to={`/block-view/${block.block_number}`}>{block.block_number}</NavLink></td>
-									<td>{new Date(block.timestamp).toLocaleTimeString()}</td>
-									<td>{this.getWitnessName(block.witness)}</td>
-									<td>{block.transaction_count}</td>
-									<td>{block.operation_count}</td>
+				<Card>
+					<CardBody>
+						<Row>
+							<Col md="12">
+								<h1 className="display-5 text-center mt-3"><span className="fa fa-cubes">&nbsp;</span>Blocks</h1>
+							</Col>
+						</Row>
+						<Table responsive>
+							<thead className="text-center">
+								<tr>
+									<th>Height</th>
+									<th>Time</th>
+									<th>Witness</th>
+									<th>Transactions</th>
+									<th>Operations</th>
 								</tr>
-							);
-						})}
-					</tbody>
-				</Table>
+							</thead>
+							<tbody className="text-center">
+								{this.state.blocks.map((block) => {
+									return(
+										<tr key={block.id}>
+											<td><NavLink tag={RRNavLink} to={`/block-view/${block.block_number}`}>{block.block_number}</NavLink></td>
+											<td>{new Date(block.timestamp).toLocaleTimeString()}</td>
+											<td>{this.getWitnessName(block.witness)}</td>
+											<td>{block.transaction_count}</td>
+											<td>{block.operation_count}</td>
+										</tr>
+									);
+								})}
+							</tbody>
+						</Table>
+					</CardBody>
+				</Card>
 			</div>
 		);
 	}
@@ -68,33 +77,88 @@ class Search extends Component {
 	}
 
 	renderAccountsTable() {
-		
+		return (
+			<div>
+				<Card>
+					<CardBody>
+						<Row>
+							<Col md="12">
+								<h1 className="display-5 text-center mt-3"><span className="fa fa-user-alt">&nbsp;</span>Accounts</h1>
+							</Col>
+						</Row>
+						<Table responsive>
+							<thead className="text-center">
+								<tr>
+									<th scope="col">Account Id</th>
+									<th scope="col">Account Name</th>
+								</tr>
+							</thead>
+							<tbody className="text-center">
+								{this.state.accounts.map((witness) => {
+									return (
+										<tr key={witness.account_id}>
+											<td>{witness.account_name}</td>
+											<td>{witness.account_id}</td>
+										</tr>
+									);
+								})}
+							</tbody>
+						</Table>
+					</CardBody>
+				</Card>
+			</div>
+		);
+	}
+
+	renderWitnessesTable() {
+		return (
+			<div>
+				<Card>
+					<CardBody>
+						<Row>
+							<Col md="12">
+								<h1 className="display-5 text-center mt-3"><span className="fa fa-cogs">&nbsp;</span>Witnesses</h1>
+							</Col>
+						</Row>
+						<Table responsive>
+							<thead className="text-center">
+								<tr>
+									<th scope="col">Witness Id</th>
+									<th scope="col">Witness Name</th>
+								</tr>
+							</thead>
+							<tbody className="text-center">
+								{this.state.witnesses.map((witness) => {
+									return (
+										<tr key={witness.account_id}>
+											<td>{witness.account_name}</td>
+											<td>{witness.account_id}</td>
+										</tr>
+									);
+								})}
+							</tbody>
+						</Table>
+					</CardBody>
+				</Card>
+			</div>
+		);
 	}
 
 	render() {
+		debugger;
 		return (
 			<div className="container pt-4 pb-5 mt-5"> 
-				<h3> You Searched {this.state.searchString}</h3>
+				<h3> Search Results For "{this.state.searchString}"</h3>
 				{
-					this.state.accounts.length > 0 
-						? 
-						<Card>
-							<CardBody>
-								<Row>
-									<Col md="12">
-										<h1 className="display-5 text-center mt-3"><span className="fa fa-cubes">&nbsp;</span>Blocks</h1>
-									</Col>
-								</Row>
-								{this.renderBlocksTable()}
-							</CardBody>						
-						</Card>
-					 : null
+					this.state.blocks.length > 0 ? this.renderBlocksTable() : null
 				}
+				<br/>
 				{
-					this.state.blocks.length > 0 ? this.renderTransactionsTable() : null
+					this.state.witnesses.length > 0 ? this.renderWitnessesTable() : null
 				}
+				<br/>
 				{
-					this.state.transactions.length > 0 ? this.renderAccountsTable() : null
+					this.state.accounts.length > 0 ? this.renderAccountsTable() : null
 				}
 			</div>
 		);
