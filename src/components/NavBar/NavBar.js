@@ -1,6 +1,7 @@
 import React from 'react';
 import {
 	Navbar,
+	Collapse,
 	NavbarToggler,
 	NavbarBrand,
 	Nav,
@@ -17,6 +18,7 @@ import {
 import { NavLink as RRNavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import styles from './NavBar.css';
+import BlockAnimation from '../BlockAnimation/BlockAnimation';
 
 class Navigation extends React.Component {
 	constructor(props) {
@@ -89,10 +91,19 @@ class Navigation extends React.Component {
 					</Nav>
 					<NavbarBrand tag={RRNavLink} to="/">EXE EXPLORER</NavbarBrand>
 					<NavbarToggler onClick={this.toggle} />
-					<InputGroup size="sm">
-						<Input onChange={this.textChanged.bind(this)} placeholder="Search for Accounts, Blocks, ..."></Input>
-						<InputGroupAddon addonType="prepend"><Button onClick={this.search.bind(this)}>Search</Button></InputGroupAddon>
-					</InputGroup>
+					<Collapse isOpen={this.state.isOpen} navbar>
+						<Nav className="ml-auto" navbar>
+							<NavItem>
+								<InputGroup size="sm">
+									<Input onChange={this.textChanged.bind(this)} placeholder="Search for Accounts, Blocks, ..."></Input>
+									<InputGroupAddon addonType="prepend"><Button onClick={this.search.bind(this)}>Search</Button></InputGroupAddon>
+								</InputGroup>
+							</NavItem>
+							<NavItem>
+								<BlockAnimation history={this.props.history} />
+							</NavItem>
+						</Nav>
+					</Collapse>
 				</Navbar>
 			</div>
 		);

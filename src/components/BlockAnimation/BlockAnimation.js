@@ -1,27 +1,25 @@
 import React, { Component } from 'react';
-import styles from './styles.css';
 import axios from 'axios';
 import anime from 'animejs';
 import {TransitionGroup, Transition} from 'react-transition-group';
+import * as Constants from '../../constants/constants';
+import Block from './Block';
 
 class BlockAnimation extends Component
 {
 	constructor(props) {
 		super(props);
-		this.state = {numOfBars:0, bars:[], lastBlock:0};
-		this.myInput = React.createRef();
+		this.state = {bars:[], lastBlock:0};
 		this.bars = React.createRef();
 	}
 
 	componentDidMount() {
-		const num = Math.floor(this.myInput.current.offsetWidth/43);
-		this.setState({numOfBars: num});
 		let lastBlock = 0;
 		axios.get('api/blocks/last', {})
 			.then(response => {
 				lastBlock = response.data[0].block_number;
 				let bars = [];
-				for (let i = lastBlock - num + 1; i <= lastBlock; i++)
+				for (let i = lastBlock - Constants.NUMBER_OF_BLOCKS + 1; i <= lastBlock; i++)
 				{
 					bars = bars.concat([i]);
 				}
@@ -62,7 +60,7 @@ class BlockAnimation extends Component
 
 	add() {
 		let bars = this.state.bars;
-		if(this.state.bars.length + 1 > this.state.numOfBars)
+		if(this.state.bars.length + 1 > Constants.NUMBER_OF_BLOCKS)
 		{
 			bars.shift();
 		}
@@ -81,12 +79,12 @@ class BlockAnimation extends Component
 	render()
 	{
 		return(
-			<div className="container" ref={this.myInput}>
-				<TransitionGroup component="div" className={`${styles['bar-back']} d-flex`}>
+			<div className="container" >
+				<TransitionGroup component="div" className="d-flex">
 					{
 						this.state.bars.map(num=>(
 							<Transition key={num} timeout={250} mountOnEnter unmountOnExit>
-								<div className={`${styles['bar']} d-inline-flex`} ref={this.bars} onClick={(i)=>this.onClick({num})}>{num}</div>
+								<Block onClick={this.onClick.bind(this)} num={num} ref={this.bars}/>
 							</Transition>
 						))
 					}

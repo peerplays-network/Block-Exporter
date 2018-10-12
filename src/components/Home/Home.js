@@ -17,7 +17,6 @@ import WitnessViewer from '../WitnessViewer/WitnessViewer';
 import FeeDirectory from '../FeeDirectory/FeeDirectory';
 import AccountSearch from '../Account/Account';
 import GridLayout, {WidthProvider as widthProvider} from 'react-grid-layout';
-import BlockAnimation from '../BlockAnimation/BlockAnimation';
 
 const Grid = widthProvider(GridLayout);
 
@@ -119,7 +118,6 @@ class Welcome extends Component {
 
 		return (
 			<div>
-				<BlockAnimation history={this.props.history}/>
 				<div>
 					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={null} 
 						rowHeight={10} draggableCancel=".panel-body" autoSize={false} isResizable={false} 
