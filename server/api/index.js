@@ -371,7 +371,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 		});
 	},
     
-	/* Get an account’s balances in various assets
+	/* Get account balances in various assets
     name: Account name
     assets: An array of asset(s) type IDs
 
@@ -489,10 +489,6 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     returns: date
     */
 	getRegDate: (name, start) => {
-		// if (db.WITNESSES.includes(name)) {
-		// 	console.log('Genesis account found - no reg date recorded');
-		// 	return '1900-01-01 23:32:12';
-		// }
 		return blockchainWS.Apis.instance().history_api().exec('get_account_history', [name, '1.11.0', 100, start]).then(r => {
 			for (const op of r) {
 				if (op.op[0] == 5) {
@@ -517,10 +513,6 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     returns: date
     */
 	getWitnessDate: (name, start) => {
-		// if (db.WITNESSES.includes(name)) {
-		// 	console.log('Genesis account found - no reg date recorded');
-		// 	return '1900-01-01 23:32:12';
-		// }
 		return blockchainWS.Apis.instance().history_api().exec('get_account_history', [name, '1.11.0', 100, start]).then(r => {
 			for (const op of r) {
 				if (op.op[0] == 20) {

@@ -11,6 +11,7 @@ import TransactionLarge from '../components/Transactions/TransactionLarge';
 import FeeDirectory from '../components/FeeDirectory/FeeDirectory';
 import BlockList from '../components/BlockView/BlockList';
 import Directory from '../components/Directory/Directory';
+import Search from '../components/Search/Search';
 
 export default (
 	<div>
@@ -25,6 +26,7 @@ export default (
 			<Route exact path="/block-view/*" component={BlockView} />
 			<Route exact path="/block-list" component={BlockList} />
 			<Route exact path="/directory" component={Directory} />
+			<Route exact path="/search/*" component={Search} />
 		</Switch>
 	</div>
 );

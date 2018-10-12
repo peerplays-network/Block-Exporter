@@ -81,7 +81,7 @@ class BlockAnimation extends Component
 	{
 		return(
 			<div className="container" >
-				<TransitionGroup component="div" className={`${styles['bar-back']} d-flex`}>
+				<TransitionGroup component="div" className="d-flex">
 					{
 						this.state.bars.map(num=>(
 							<Transition key={num} timeout={250} mountOnEnter unmountOnExit>

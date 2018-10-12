@@ -75,9 +75,7 @@ router.get('/blocks/last', function (req, res) {
 		if (err) throw err;
 
 		if (rows.length < 1) {
-			res.status(400).send('400 NO DATA AVAILABLE');
-			connection.end();
-			return;
+			return res.status(400).send('400 NO DATA AVAILABLE');
 		}
 
 		res.send(rows);
@@ -123,9 +121,7 @@ router.get('/blocks', function (req, res) {
 		sql = `SELECT * FROM explorer.blocks WHERE block_number >= ${start} AND block_number <= ${end} ORDER BY block_number`;
 		if (req.query.direction) {
 			if (req.query.direction !== 'ASC' && (req.query.direction !== 'DESC')) {
-				res.status(400).send('400 Bad Request - Invalid direction');
-				connection.end();
-				return;
+				return res.status(400).send('400 Bad Request - Invalid direction');
 			} else {
 				sql = sql + ` ${req.query.direction}`;
 			}
@@ -137,9 +133,7 @@ router.get('/blocks', function (req, res) {
 		if (err) throw err;
 
 		if (rows.length < 1) {
-			res.status(400).send('400 NO DATA AVAILABLE - CHECK YOUR PARAMS');
-			connection.end();
-			return;
+			return res.status(400).send('400 NO DATA AVAILABLE - CHECK YOUR PARAMS');
 		}
 
 		res.send(rows);
