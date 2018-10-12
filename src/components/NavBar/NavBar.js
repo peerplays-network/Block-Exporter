@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-	Collapse,
 	Navbar,
 	NavbarToggler,
 	NavbarBrand,
@@ -10,23 +9,37 @@ import {
 	UncontrolledDropdown,
 	DropdownToggle,
 	DropdownMenu,
-	DropdownItem} from 'reactstrap';
+	DropdownItem,
+	Input,
+	InputGroup,
+	InputGroupAddon,
+	Button} from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import styles from './NavBar.css';
 
-export default class NavBar extends React.Component {
+class Navigation extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.toggle = this.toggle.bind(this);
 		this.state = {
-			isOpen: false
+			isOpen: false, searchText: ''
 		};
 	}
 	toggle() {
 		this.setState({
 			isOpen: !this.state.isOpen
 		});
+	}
+
+	search(e) {
+		if(this.state.searchText.length > 0)
+			this.props.history.push(`/search/${this.state.searchText}`);
+	}
+
+	textChanged(e) {
+		this.setState({searchText: e.target.value});
 	}
 
 	render() {
@@ -76,15 +89,14 @@ export default class NavBar extends React.Component {
 					</Nav>
 					<NavbarBrand tag={RRNavLink} to="/">EXE EXPLORER</NavbarBrand>
 					<NavbarToggler onClick={this.toggle} />
-					<Collapse isOpen={this.state.isOpen} navbar>
-						<Nav className="ml-auto" navbar>
-							<NavItem>
-								<NavLink tag={RRNavLink} to="/test/">Test</NavLink>
-							</NavItem>
-						</Nav>
-					</Collapse>
+					<InputGroup size="sm">
+						<Input onChange={this.textChanged.bind(this)} placeholder="Search for Accounts, Blocks, ..."></Input>
+						<InputGroupAddon addonType="prepend"><Button onClick={this.search.bind(this)}>Search</Button></InputGroupAddon>
+					</InputGroup>
 				</Navbar>
 			</div>
 		);
 	}
 }
+
+export default withRouter(Navigation);

@@ -21,6 +21,4 @@ export async function fetchWitnesses() {
 			payload: []
 		};
 	}
-
-	
 }

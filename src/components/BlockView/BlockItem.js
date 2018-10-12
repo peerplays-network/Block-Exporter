@@ -56,7 +56,7 @@ export default class BlockItem extends Component {
 
 	renderErrorOrLoading() {
 		if(this.props.error)
-			return <h1 className="text-center">Unable to load block, please try again</h1>
+			return <h1 className="text-center">Unable to load block, please try again</h1>;
 		else {
 			return (
 				<div> </div>
