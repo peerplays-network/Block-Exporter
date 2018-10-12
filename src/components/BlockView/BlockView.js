@@ -26,6 +26,11 @@ class BlockView extends Component {
 		});
 	}
 
+	componentDidUpdate(prevProps) {
+		if(!!this.props.match.params[0] && Number(this.props.match.params[0])!==this.state.currentBlock)
+			this.setState({currentBlock: Number(this.props.match.params[0])});
+	}
+
 	 loadNextBlocks(currentBlock) {
 		this.upperBound = this.upperBound+Constants.BLOCK_RANGE;
 		axios.get(`/api/blocks?start=${this.state.currentBlock+1}&end=${this.upperBound}`, {
@@ -73,7 +78,6 @@ class BlockView extends Component {
 		
 		const index = !!blocks && blocks.length > 0 ? blocks.findIndex(el => el.block_number === Number(currentBlock)) : 0;
 		const witnessName = !!witnesses && witnesses.length>0 && blocks.length>0 ? witnesses.find(el => el.account_id === blocks[index].witness).account_name : '';
-		debugger;
 		return (
 			<BlockItem prevBlockClicked={this.prevBlockClicked.bind(this)} 
 				nextBlockClicked={this.nextBlockClicked.bind(this)}

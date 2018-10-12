@@ -59,12 +59,6 @@ class Navigation extends React.Component {
 							</DropdownToggle>
 							<DropdownMenu >
 								<DropdownItem>
-									Option 1
-								</DropdownItem>
-								<DropdownItem>
-									Option 2
-								</DropdownItem>
-								<DropdownItem>
 									<NavLink tag={RRNavLink} to="/account/">Account</NavLink>
 								</DropdownItem>
 								<DropdownItem>
@@ -75,6 +69,9 @@ class Navigation extends React.Component {
 								</DropdownItem>
 								<DropdownItem>
 									<NavLink tag={RRNavLink} to="/directory">Site Directory</NavLink>
+								</DropdownItem>
+								<DropdownItem>
+									<NavLink tag={RRNavLink} to="/block-list">Blocks</NavLink>
 								</DropdownItem>
 								<DropdownItem divider />
 								<DropdownItem>
@@ -100,7 +97,7 @@ class Navigation extends React.Component {
 								</InputGroup>
 							</NavItem>
 							<NavItem>
-								<BlockAnimation history={this.props.history} />
+								<BlockAnimation />
 							</NavItem>
 						</Nav>
 					</Collapse>

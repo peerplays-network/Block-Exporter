@@ -51,6 +51,7 @@ class BlockList extends Component {
 	}
 
 	render() {
+		console.log('history', this.props.history);
 		const {blocks, blockLength} = this.state;
 		return (
 			<div className="container pt-4 pb-5 mt-5">
