@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import styles from './styles.css';
 import axios from 'axios';
 import anime from 'animejs';
 import {TransitionGroup, Transition} from 'react-transition-group';
@@ -85,7 +84,7 @@ class BlockAnimation extends Component
 					{
 						this.state.bars.map(num=>(
 							<Transition key={num} timeout={250} mountOnEnter unmountOnExit>
-								<Block onClick={this.onClick} num={num} ref={this.bars}/>
+								<Block onClick={this.onClick.bind(this)} num={num} ref={this.bars}/>
 							</Transition>
 						))
 					}
