@@ -1,16 +1,7 @@
 .bar {
-    height: 150px;
-    width: 30px;
-    margin: 10px 5px;
-    padding: 5px;
-    background-color: rgb(18, 221, 221);
-    writing-mode: vertical-lr;
-    text-orientation: upright;
-    font-size: 13px;
-    align-items: center;
+    height: 20px;
+    width: 20px;
+    margin: 10px 5px 5px 5px;
+    background-color: gray;
     cursor: pointer;
-}
-.bar-back{
-    background-color: rgb(18, 99, 221);
-    border: 1px solid rgb(165, 197, 245);
 }

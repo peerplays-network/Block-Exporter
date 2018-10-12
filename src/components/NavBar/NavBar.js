@@ -13,6 +13,7 @@ import {
 	DropdownItem} from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
 import styles from './NavBar.css';
+import BlockAnimation from '../BlockAnimation/BlockAnimation';
 
 export default class NavBar extends React.Component {
 	constructor(props) {
@@ -78,6 +79,7 @@ export default class NavBar extends React.Component {
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar>
 						<Nav className="ml-auto" navbar>
+							<BlockAnimation history={this.props.history} />
 							<NavItem>
 								<NavLink tag={RRNavLink} to="/test/">Test</NavLink>
 							</NavItem>
