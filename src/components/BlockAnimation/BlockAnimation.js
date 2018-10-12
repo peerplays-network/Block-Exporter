@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import anime from 'animejs';
 import {TransitionGroup, Transition} from 'react-transition-group';
+import { withRouter } from 'react-router';
 import * as Constants from '../../constants/constants';
 import Block from './Block';
 
@@ -15,7 +16,7 @@ class BlockAnimation extends Component
 
 	componentDidMount() {
 		let lastBlock = 0;
-		axios.get('api/blocks/last', {})
+		axios.get('/api/blocks/last', {})
 			.then(response => {
 				lastBlock = response.data[0].block_number;
 				let bars = [];
@@ -94,4 +95,4 @@ class BlockAnimation extends Component
 	}
 }
 
-export default BlockAnimation;
+export default withRouter(BlockAnimation);
