@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-	Collapse,
 	Navbar,
+	Collapse,
 	NavbarToggler,
 	NavbarBrand,
 	Nav,
@@ -10,23 +10,38 @@ import {
 	UncontrolledDropdown,
 	DropdownToggle,
 	DropdownMenu,
-	DropdownItem} from 'reactstrap';
+	DropdownItem,
+	Input,
+	InputGroup,
+	InputGroupAddon,
+	Button} from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import styles from './NavBar.css';
+import BlockAnimation from '../BlockAnimation/BlockAnimation';
 
-export default class NavBar extends React.Component {
+class Navigation extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.toggle = this.toggle.bind(this);
 		this.state = {
-			isOpen: false
+			isOpen: false, searchText: ''
 		};
 	}
 	toggle() {
 		this.setState({
 			isOpen: !this.state.isOpen
 		});
+	}
+
+	search(e) {
+		if(this.state.searchText.length > 0)
+			this.props.history.push(`/search/${this.state.searchText}`);
+	}
+
+	textChanged(e) {
+		this.setState({searchText: e.target.value});
 	}
 
 	render() {
@@ -44,12 +59,6 @@ export default class NavBar extends React.Component {
 							</DropdownToggle>
 							<DropdownMenu >
 								<DropdownItem>
-									Option 1
-								</DropdownItem>
-								<DropdownItem>
-									Option 2
-								</DropdownItem>
-								<DropdownItem>
 									<NavLink tag={RRNavLink} to="/account/">Account</NavLink>
 								</DropdownItem>
 								<DropdownItem>
@@ -60,6 +69,9 @@ export default class NavBar extends React.Component {
 								</DropdownItem>
 								<DropdownItem>
 									<NavLink tag={RRNavLink} to="/directory">Site Directory</NavLink>
+								</DropdownItem>
+								<DropdownItem>
+									<NavLink tag={RRNavLink} to="/block-list">Blocks</NavLink>
 								</DropdownItem>
 								<DropdownItem divider />
 								<DropdownItem>
@@ -79,7 +91,13 @@ export default class NavBar extends React.Component {
 					<Collapse isOpen={this.state.isOpen} navbar>
 						<Nav className="ml-auto" navbar>
 							<NavItem>
-								<NavLink tag={RRNavLink} to="/test/">Test</NavLink>
+								<InputGroup size="sm">
+									<Input onChange={this.textChanged.bind(this)} placeholder="Search for Accounts, Blocks, ..."></Input>
+									<InputGroupAddon addonType="prepend"><Button onClick={this.search.bind(this)}>Search</Button></InputGroupAddon>
+								</InputGroup>
+							</NavItem>
+							<NavItem>
+								<BlockAnimation />
 							</NavItem>
 						</Nav>
 					</Collapse>
@@ -88,3 +106,5 @@ export default class NavBar extends React.Component {
 		);
 	}
 }
+
+export default withRouter(Navigation);

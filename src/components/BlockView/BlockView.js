@@ -8,7 +8,7 @@ import * as Constants from '../../constants/constants';
 class BlockView extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {blocks: [], currentBlock: !!this.props.match.params[0]? Number(this.props.match.params[0]) : 500, prevDisabled: false, nextDisabled: false};
+		this.state = {blocks: [], currentBlock: !!this.props.match.params[0]? Number(this.props.match.params[0]) : 500, prevDisabled: false, nextDisabled: false, error: false};
 		this.lowerBound = 0;
 		this.upperBound = 0;
 	}
@@ -19,10 +19,16 @@ class BlockView extends Component {
 
 		axios.get(`/api/blocks?start=${this.lowerBound}&end=${this.upperBound}`, {
 		}).then(response => {
-			this.setState({blocks: response.data});
+			this.setState({blocks: response.data, loading: false});
 		}).catch(error => {
+			this.setState({error: true});
 			console.log(error.response);
 		});
+	}
+
+	componentDidUpdate(prevProps) {
+		if(!!this.props.match.params[0] && Number(this.props.match.params[0])!==this.state.currentBlock)
+			this.setState({currentBlock: Number(this.props.match.params[0])});
 	}
 
 	 loadNextBlocks(currentBlock) {
@@ -31,6 +37,7 @@ class BlockView extends Component {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
 		}).catch(error => {
+			this.setState({error: true});
 			console.log(error.response);
 		});
 	 }
@@ -41,7 +48,8 @@ class BlockView extends Component {
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
 		}).catch(error => {
-			console.log(error.response)
+			this.setState({error: true});
+			console.log(error.response);
 		});
 	 }
 
@@ -76,7 +84,8 @@ class BlockView extends Component {
 				witnessName={witnessName}
 				currentBlock={blocks[index]}
 				nextDisabled={nextDisabled}
-				prevDisabled={prevDisabled}/>
+				prevDisabled={prevDisabled}
+				error={this.state.error}/>
 		);
 	}
 }
