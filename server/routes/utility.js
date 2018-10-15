@@ -4,10 +4,7 @@ const mysql = require('mysql');
 const db = require('../database/constants');
 
 function determineSearchType(term) {
-	if (term.startsWith('#')) {
-		return 'BLOCK';
-	}
-	if (!term.includes('.')) { 
+	if (!term.includes('.') && isNaN(term)) { 
 		return 'NAME';
 	} else if (term.startsWith('1.2')) { // ID - Account Obj
 		return 'ACCOUNT';
@@ -15,6 +12,8 @@ function determineSearchType(term) {
 		return 'COMMITTEE';
 	} else if (term.startsWith('1.6')) { // ID - Witness Obj
 		return 'WITNESS';
+	} else if (isNaN(term) === false) {
+		return 'BLOCK';
 	}
 	else {
 		return 'UNKNOWN';

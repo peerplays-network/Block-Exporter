@@ -231,29 +231,29 @@ connection.connect(function(err) {
 
   Blockchain.connect(config_server.BLOCKCHAIN_URL).then(async () => {
 
-	// Blockchain.startMonitor(connection);
+	Blockchain.startMonitor(connection);
 
-	if (config_server.SYNC_DATABASE) {
-		await syncDatabase(connection);
+	// if (config_server.SYNC_DATABASE) {
+	// 	await syncDatabase(connection);
 
-		let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
-		connection.query(sql, function (err, result) {
-			if (result[0]) {
-				result = result[0].block_number;
+	// 	let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
+	// 	connection.query(sql, function (err, result) {
+	// 		if (result[0]) {
+	// 			result = result[0].block_number;
 	
-			} else {
-				result = 0;
-			}
+	// 		} else {
+	// 			result = 0;
+	// 		}
 	
-			if (err) {
-				throw err;
-			}
-			console.log('\x1b[36m Exeplorer Server> Starting from block #: ' + result+1)
-			Blockchain.populateBlocks(connection, result, '');
+	// 		if (err) {
+	// 			throw err;
+	// 		}
+	// 		console.log('\x1b[36m Exeplorer Server> Starting from block #: ' + result+1)
+	// 		Blockchain.populateBlocks(connection, result, '');
 			
-		});
+	// 	});
 
-	}
+	// }
 
 });
 	
