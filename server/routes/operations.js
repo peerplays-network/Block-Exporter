@@ -5,7 +5,6 @@ const db = require('../database/constants');
 
 // Operations API: Get specific OPERATION
 router.get('/operations/:id', function (req, res) {
-	console.log(`GET request made to /operations/${req.params.id}`);
 
 	const connection = mysql.createConnection({
 		host     : db.HOST,
@@ -37,7 +36,6 @@ router.get('/operations/:id', function (req, res) {
 
 // Operations API: Get OPERATIONS
 router.get('/operations', function (req, res) {
-	console.log('GET request made to /operations');
 
 	const connection = mysql.createConnection({
 		host     : db.HOST,

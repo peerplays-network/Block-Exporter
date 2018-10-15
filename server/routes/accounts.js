@@ -5,7 +5,6 @@ const db = require('../database/constants');
 
 // Accounts API: GET specific account
 router.get('/accounts/:name', function (req, res) {
-	console.log(`GET request made to /accounts:${req.params.name}`);
 
 	const connection = mysql.createConnection({
 		host     : db.HOST,
@@ -35,8 +34,6 @@ router.get('/accounts/:name', function (req, res) {
 
 // Accounts API: GET accounts
 router.get('/accounts', function (req, res) {
-	console.log('GET request made to /accounts');
-
 	const colNames = ['id', 'account_name', 'active_key', 'owner_key', 'memo_key', 'member_since', 'membership_expiration', 'lifetime_fees_paid', 'pending_fees', 'network_fees_paid', 'registar', 'referrer', 'account_id']
 
 	const connection = mysql.createConnection({
