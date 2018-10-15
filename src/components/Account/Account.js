@@ -9,8 +9,8 @@ class AccountSearch extends Component {
 	constructor(e) {
 		super(e);
 		this.state = {
-			data: this.props.accounts,
-			temp_data: this.props.accounts,
+			data: (this.props.accounts) ? this.props.accounts : [],
+			temp_data: (this.props.accounts) ? this.props.accounts : [],
 			account : '',
 			currentPage: 0,
 			pageSize: 3,
@@ -29,7 +29,8 @@ class AccountSearch extends Component {
 	}
 
 	findData() {
-		this.refreshPagination(this.props.accounts);
+		var info = (this.props.accounts === undefined || this.props.accounts.length === 0) ? [] : this.props.accounts;
+		this.refreshPagination(info);
 	}
 
 	refreshPagination (data) {
