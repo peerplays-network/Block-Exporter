@@ -3,7 +3,6 @@
 const path = require('path');
 
 const express = require('express');
-var compression = require('compression');
 const webpack = require('webpack');
 const bodyParser = require('body-parser');
 
