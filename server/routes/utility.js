@@ -79,7 +79,6 @@ router.get('/search', function (req, res) {
 			return;
 		}
 	});
-	console.log(sql);
 	connection.query(sql, function (err, rows, fields) {
 		if (err) throw err;
 		  
