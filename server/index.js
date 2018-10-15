@@ -34,14 +34,10 @@ const accounts = require("./routes/accounts");
 const witnesses = require("./routes/witnesses");
 const operations = require("./routes/operations");
 const transactions = require("./routes/transactions");
+const utility = require("./routes/utility");
 
 
-
-app.use("/api", blocks);
-app.use("/api", accounts);
-app.use("/api", witnesses);
-app.use("/api", operations);
-app.use("/api", transactions);
+app.use("/api", [blocks, accounts, witnesses, operations, transactions, utility]);
 
 // ===== SYNC FUNCTIONS =====
 
@@ -234,6 +230,8 @@ connection.connect(function(err) {
 	});
 
   Blockchain.connect(config_server.BLOCKCHAIN_URL).then(async () => {
+
+	// Blockchain.startMonitor(connection);
 
 	if (config_server.SYNC_DATABASE) {
 		await syncDatabase(connection);

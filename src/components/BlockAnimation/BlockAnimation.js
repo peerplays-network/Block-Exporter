@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import anime from 'animejs';
-import {TransitionGroup, Transition} from 'react-transition-group';
+import posed, {PoseGroup} from 'react-pose';
 import { withRouter } from 'react-router';
 import * as Constants from '../../constants/constants';
 import Block from './Block';
-import styles from './styles.css';
 
+const Item = posed.div({
+	enter: {opacity: 1},
+	exit: {opacity: 0}
+});
 class BlockAnimation extends Component
 {
 	constructor(props) {
 		super(props);
 		this.state = {bars:[], lastBlock:0};
-		this.bars = React.createRef();
 	}
 
 	componentDidMount() {
@@ -52,14 +53,6 @@ class BlockAnimation extends Component
 			.catch(error => console.log('error fetching blocks: ', error));
 	}
 
-	componentDidUpdate() {
-		this.animeRef =anime({
-			targets: this.bars.current,
-			translateX: ['50%', '0%'],
-			duration: 250,
-		});
-	}
-
 	add() {
 		let bars = this.state.bars;
 		if(this.state.bars.length + 1 > Constants.NUMBER_OF_BLOCKS)
@@ -81,16 +74,14 @@ class BlockAnimation extends Component
 	render()
 	{
 		return(
-			<div className="container" >
-				<TransitionGroup component="div" className={`${styles['bar-back']} d-flex`}>
-					{
-						this.state.bars.map(num=>(
-							<Transition key={num} timeout={250} mountOnEnter unmountOnExit>
-								<Block onClick={this.onClick.bind(this)} num={num} ref={this.bars}/>
-							</Transition>
-						))
-					}
-				</TransitionGroup>
+			<div className="container d-flex" >
+				<PoseGroup>
+					{this.state.bars.map(num=>(
+						<Item key={num}>
+							<Block onClick={this.onClick.bind(this)} num={num}/>
+						</Item>
+					))}
+				</PoseGroup>
 			</div>
 		);
 	}
