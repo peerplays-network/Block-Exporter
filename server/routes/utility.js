@@ -30,7 +30,6 @@ router.get('/search', function (req, res) {
     
 	const searchInput = req.query.input;
 	const searchType = determineSearchType(searchInput);
-	console.log(searchType);
 	let sql = '';
 
 	switch (searchType) {

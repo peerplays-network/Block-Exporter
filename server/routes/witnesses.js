@@ -5,7 +5,6 @@ const db = require('../database/constants');
 
 // Committee API: GET specific committee member
 router.get('/committee/:id', function (req, res) {
-	console.log(`GET request made to /committee/${req.params.id}`);
 
 	const connection = mysql.createConnection({
 		host     : db.HOST,
@@ -35,7 +34,6 @@ router.get('/committee/:id', function (req, res) {
 
 // Witness API: GET specific witness
 router.get('/witnesses/:name', function (req, res) {
-	console.log(`GET request made to /witnesses${req.params.name}`);
 
 	const connection = mysql.createConnection({
 		host     : db.HOST,
@@ -66,8 +64,7 @@ router.get('/witnesses/:name', function (req, res) {
 
 // Witness API: GET witnesses
 router.get('/witnesses', function (req, res) {
-	console.log('GET request made to /witnesses');
-    
+
 	const colNames = ['id', 'account_id', 'account_name', 'witness', 'witness_since', 'total_votes', 'total_missed', 'url', 'is_active'];
 
 	const connection = mysql.createConnection({

@@ -186,7 +186,6 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				if (err) {
 					throw err;
 				}
-				console.log('Result: ' + JSON.stringify(result));
 			});
 
 			api.parseBlock(block, connection, 1);
@@ -237,7 +236,6 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 					VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '${member_since}', '${account_id}')`;
 		
 				connection.query(sql, function(err, result) {
-					console.log('Result: ' + JSON.stringify(result));
 		
 					if (err) {
 						throw err;
