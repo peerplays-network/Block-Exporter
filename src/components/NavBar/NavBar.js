@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
 	Navbar,
 	Collapse,
@@ -19,6 +21,7 @@ import { NavLink as RRNavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import styles from './NavBar.css';
 import BlockAnimation from '../BlockAnimation/BlockAnimation';
+import { sideBarClicked } from '../../actions/GridActions';
 
 class Navigation extends React.Component {
 	constructor(props) {
@@ -29,6 +32,11 @@ class Navigation extends React.Component {
 			isOpen: false, searchText: ''
 		};
 	}
+
+	componentDidMount() {
+		this.props.sideBarClicked(true);
+	}
+
 	toggle() {
 		this.setState({
 			isOpen: !this.state.isOpen
@@ -47,7 +55,14 @@ class Navigation extends React.Component {
 	render() {
 		const slideMenu = () => {
 			const menu = document.querySelector('.sliding-menu');
-			menu.style.left === '-100%' ? menu.style.left = '0%' : menu.style.left = '-100%';
+			if(menu.style.left === '-200px') {
+				this.props.sideBarClicked(true);
+				menu.style.left = '0px';
+			}
+			else {
+				this.props.sideBarClicked(false);
+				menu.style.left = '-200px';
+			}
 		};
 		return (
 			<div>
@@ -107,4 +122,8 @@ class Navigation extends React.Component {
 	}
 }
 
-export default withRouter(Navigation);
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({ sideBarClicked }, dispatch);
+}
+
+export default withRouter(connect(null, mapDispatchToProps)(Navigation));
