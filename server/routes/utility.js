@@ -34,7 +34,7 @@ router.get('/search', function (req, res) {
 
 	switch (searchType) {
 		case 'BLOCK':
-			sql = `SELECT * FROM explorer.blocks WHERE block_number = '${searchInput}'`
+			sql = `SELECT * FROM explorer.blocks WHERE block_number = '${searchInput}'`;
 			break;
 		case 'NAME':
 			sql =
@@ -80,8 +80,12 @@ router.get('/search', function (req, res) {
 	});
 	connection.query(sql, function (err, rows, fields) {
 		if (err) throw err;
-		  
-		res.send(rows);
+
+		if (rows.length < 1) {
+			res.status(404).send('404 - Not found');
+		} else {
+			res.send(rows);
+		}
 		  });
 
 	connection.end();

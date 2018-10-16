@@ -8,6 +8,7 @@ and feeding it to calculateComponentHeight()
 */
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Panel from '../Panel/Panel';
 import MaintenanceCD from '../MaintenanceCD/MaintenanceCD';
 import SidePanel from '../SidePanel/SidePanel';
@@ -23,15 +24,25 @@ const Grid = widthProvider(GridLayout);
 class Welcome extends Component {
 	constructor() {
 		super();
-
-		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: '', visible: false, id: 0, gridPlacement: {i: '0', x: 3, y: 0, w: 2.5, h: 20}},
-								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: '', visible: false, id: 1, gridPlacement: {i: '1', x: 3, y: 31, w: 3.5, h: 20}},
-								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: 7.5, y: 0, w: 4.5, h: 20}},
-								   {name: 'Current Transactions', image: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id:3, gridPlacement: {i: '3', x: 7.5, y: 0, w: 4.5, h: 20}},
-								   {name: 'Fee Directory', image: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 3, y: 0, w: 4.5, h: 20}}
+		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: '', visible: false, id: 0, gridPlacement: {i: '0', x: 15, y: 0, w: 2.5, h: 20}},
+								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: '', visible: false, id: 1, gridPlacement: {i: '1', x: 15, y: 31, w: 3.5, h: 20}},
+								   {name: 'Account Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: 15, y: 0, w: 4.5, h: 20}},
+								   {name: 'Current Transactions', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id:3, gridPlacement: {i: '3', x: 15, y: 0, w: 4.5, h: 20}},
+								   {name: 'Fee Directory', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 15, y: 0, w: 4.5, h: 20}}
 								  ], 
-								  layout : [],
+								  layout : [{i: '-1', x: 0, y: 0, w: 12, h: 90, static: true}],
 					 };
+	}
+
+	componentDidUpdate(prevProps) {
+		if(prevProps.sideBarOpen !== this.props.sideBarOpen) {
+			const stateCopy = Object.assign({}, this.state);
+			if(this.props.sideBarOpen)
+				stateCopy.layout[0].w = 12;
+			else
+				stateCopy.layout[0].w = 0;
+			this.setState({stateCopy});
+		}
 	}
 
 	onClosePanel(id) {
@@ -107,6 +118,7 @@ class Welcome extends Component {
 		const stateCopy = Object.assign({}, this.state);
 		const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
 		stateCopy.layout[layoutIndex].h = height;
+
 		this.setState({stateCopy});
 	}
 
@@ -115,14 +127,17 @@ class Welcome extends Component {
 		is passed to it.
 		*/
 		const newLayout = JSON.parse(JSON.stringify(this.state.layout));
-
 		return (
 			<div>
 				<div>
 					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={null} 
 						rowHeight={10} draggableCancel=".panel-body" autoSize={false} isResizable={false} 
 						preventCollision={true} margin={[0, 0]} containerPadding={[0, 0]} onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
-						 {this.state.components.map(component => { 
+						 <div className={`${styles['react-grid-item']}`} key={'-1'} >
+							<SidePanel components={this.state.components} 
+							   changeSize={this.changePanelSize.bind(this)}/>	
+						</div>
+						{this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
 									<div className={`${styles['react-grid-item']}`} key={component.id}>
@@ -139,13 +154,14 @@ class Welcome extends Component {
 						 }
 					</Grid>
 				</div>
-				<div>
-					<SidePanel components={this.state.components} 
-							   changeSize={this.changePanelSize.bind(this)}/>	
-				</div>
 			</div>
 		);
 	}
 }
 
-export default Welcome;
+const mapStateToProps = (state) => ({
+	sideBarOpen: state.grid.sideBarOpen,
+});
+
+export default connect(mapStateToProps)(Welcome);
+
