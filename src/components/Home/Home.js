@@ -24,11 +24,11 @@ class Welcome extends Component {
 	constructor() {
 		super();
 
-		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: '', visible: false, id: 0, gridPlacement: {i: '0', x: 3, y: 0, w: 2.5, h: 20}},
-								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: '', visible: false, id: 1, gridPlacement: {i: '1', x: 3, y: 31, w: 3.5, h: 20}},
-								   {name: 'Account Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: 7.5, y: 0, w: 4.5, h: 20}},
-								   {name: 'Current Transactions', image: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id:3, gridPlacement: {i: '3', x: 7.5, y: 0, w: 4.5, h: 20}},
-								   {name: 'Fee Directory', image: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 3, y: 0, w: 4.5, h: 20}}
+		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: '', visible: false, id: 0, gridPlacement: {i: '0', x: 15, y: 0, w: 2.5, h: 20}},
+								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: '', visible: false, id: 1, gridPlacement: {i: '1', x: 15, y: 31, w: 3.5, h: 20}},
+								   {name: 'Account Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: 15, y: 0, w: 4.5, h: 20}},
+								   {name: 'Current Transactions', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id:3, gridPlacement: {i: '3', x: 15, y: 0, w: 4.5, h: 20}},
+								   {name: 'Fee Directory', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 15, y: 0, w: 4.5, h: 20}}
 								  ], 
 								  layout : [],
 					 };
@@ -122,7 +122,11 @@ class Welcome extends Component {
 					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={null} 
 						rowHeight={10} draggableCancel=".panel-body" autoSize={false} isResizable={false} 
 						preventCollision={true} margin={[0, 0]} containerPadding={[0, 0]} onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
-						 {this.state.components.map(component => { 
+						 <div className={`${styles['react-grid-item']}`} style={{borderStyle: 'dotted'}}key={'-1'} data-grid={{x: 0, y: 0, w: 12, h: 90, static: true}}>
+							<SidePanel components={this.state.components} 
+							   changeSize={this.changePanelSize.bind(this)}/>	
+						</div>
+						{this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
 									<div className={`${styles['react-grid-item']}`} key={component.id}>
@@ -138,10 +142,6 @@ class Welcome extends Component {
 						})
 						 }
 					</Grid>
-				</div>
-				<div>
-					<SidePanel components={this.state.components} 
-							   changeSize={this.changePanelSize.bind(this)}/>	
 				</div>
 			</div>
 		);
