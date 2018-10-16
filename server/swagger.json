@@ -151,6 +151,9 @@
             },
             "400": {
               "description": "Invalid request"
+            },
+            "404": {
+              "description": "Not found"
             }
           }
         }
@@ -376,7 +379,7 @@
           "tags": [
             "Witnesses/Committee"
           ],
-          "description": "Find witness by account name",
+          "description": "Find committee member by account name",
           "parameters": [
             {
               "name": "id",
@@ -404,7 +407,7 @@
           "tags": [
             "Other"
           ],
-          "description": "Get a list of blocks",
+          "description": "Search for an object in the blockchain",
           "parameters": [
             {
               "name": "input",
