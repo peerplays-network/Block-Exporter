@@ -73,7 +73,7 @@ router.get('/blocks/last', function (req, res) {
 		if (err) throw err;
 
 		if (rows.length < 1) {
-			return res.status(400).send('400 NO DATA AVAILABLE');
+			return res.status(404).send('400 NO DATA AVAILABLE');
 		}
 
 		res.send(rows);
@@ -129,7 +129,7 @@ router.get('/blocks', function (req, res) {
 		if (err) throw err;
 
 		if (rows.length < 1) {
-			return res.status(400).send('400 NO DATA AVAILABLE - CHECK YOUR PARAMS');
+			return res.status(404).send('404 NO DATA AVAILABLE - CHECK YOUR PARAMS');
 		}
 
 		res.send(rows);
