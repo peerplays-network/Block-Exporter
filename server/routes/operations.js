@@ -55,7 +55,6 @@ router.get('/operations', function (req, res) {
 	// Perform Query
 	connection.query('SELECT * FROM explorer.operations', function (err, rows, fields) {
 		if (err) throw err;
-		console.log(rows[0]);
 		res.send(rows);
 		  });
 

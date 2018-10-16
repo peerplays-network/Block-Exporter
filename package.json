@@ -46,6 +46,8 @@
     "redux-thunk": "^2.3.0",
     "rimraf": "^2.6.2",
     "sass-loader": "^7.1.0",
+    "swagger-ui": "^3.19.3",
+    "swagger-ui-express": "^4.0.1",
     "url-loader": "^1.1.1",
     "webpack": "^4.11.0",
     "webpack-merge": "^4.1.0"

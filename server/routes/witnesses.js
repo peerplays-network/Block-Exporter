@@ -5,7 +5,6 @@ const db = require('../database/constants');
 
 // Committee API: GET specific committee member
 router.get('/committee/:id', function (req, res) {
-
 	const connection = mysql.createConnection({
 		host     : db.HOST,
 		user     : db.USER,
@@ -24,8 +23,12 @@ router.get('/committee/:id', function (req, res) {
 	// Perform Query
 	connection.query(`SELECT * FROM explorer.committee WHERE committee_member_account = '${req.params.id}'`, function (err, rows, fields) {
 		if (err) throw err;
-		  
-		res.send(rows);
+
+		if (rows.length < 1) {
+			res.status(404).send('404 - Not Found');
+		} else {
+			res.send(rows);
+		}
 		  });
 
 	// Close connection
@@ -34,7 +37,6 @@ router.get('/committee/:id', function (req, res) {
 
 // Witness API: GET specific witness
 router.get('/witnesses/:name', function (req, res) {
-
 	const connection = mysql.createConnection({
 		host     : db.HOST,
 		user     : db.USER,
@@ -53,8 +55,12 @@ router.get('/witnesses/:name', function (req, res) {
 	// Perform Query
 	connection.query(`SELECT * FROM explorer.witnesses WHERE account_name = '${req.params.name}'`, function (err, rows, fields) {
 		if (err) throw err;
-		  
-		res.send(rows);
+
+		if (rows.length < 1) {
+			res.status(404).send('404 - Not Found');
+		} else {
+			res.send(rows);
+		}
 		  });
 
 	// Close connection
@@ -64,7 +70,6 @@ router.get('/witnesses/:name', function (req, res) {
 
 // Witness API: GET witnesses
 router.get('/witnesses', function (req, res) {
-
 	const colNames = ['id', 'account_id', 'account_name', 'witness', 'witness_since', 'total_votes', 'total_missed', 'url', 'is_active'];
 
 	const connection = mysql.createConnection({
