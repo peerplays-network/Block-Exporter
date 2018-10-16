@@ -8,69 +8,34 @@ class TransactionLarge extends Component {
 	constructor() {
 		super();
 		this.state = {
-			transactionData: [{account: 'codepuncher57', action: 'cancels staking action', time: 8, memo: '', transactionID: 0x39e2b580}, 
-				{account: 'speculationman', action: 'wants 200 eXe for 0.43 BTC', time: 800, memo: '', transactionID: 0x52d11dee},
-				{account: 'trenchcoattester', action: 'sent 128 eXe to debughero', time: 8000, memo: 'payment for killer work', transactionID: 0x0339afbb},
-				{account: 'pebkacspecialist', action: 'cancels trade order', time: 10000, memo: '', transactionID: 0x2fef3d58},
-				{account: 'exewatcher', action: 'recieved 5 eXe for producing a block', time: 60000, memo: 'Witness Reward', transactionID: 0xf2c1f6a6},
-				{account: 'codepuncher57', action: 'stakes 407 eXe', time: 80000, memo: '', transactionID: 0x9b3e0a9b},
-				{account: 'speculationwoman', action: 'wants 200 eXe for 0.43 BTC', time: 200, memo: '', transactionID: 0x52d11def},
-				{account: 'trenchcoatgoing', action: 'sent 128 eXe to debughero', time: 9000, memo: 'payment for killer work', transactionID: 0x0339afbe},
-				{account: 'pebkacspecialistate', action: 'cancels trade order', time: 15000, memo: '', transactionID: 0x2fef3d59},
-				{account: 'nightswatch', action: 'recieved 5 eXe for producing a block', time: 60500, memo: 'Witness Reward', transactionID: 0xf2c1f6a8},
-				{account: 'codepuncher69', action: 'stakes 407 eXe', time: 89000, memo: '', transactionID: 0x9b3e0a9c},
-				{account: 'codepuncher57', action: 'cancels staking action', time: 8, memo: '', transactionID: 0x39e2b580}, 
-				{account: 'speculationman', action: 'wants 200 eXe for 0.43 BTC', time: 800, memo: '', transactionID: 0x52d11dee},
-				{account: 'trenchcoattester', action: 'sent 128 eXe to debughero', time: 8000, memo: 'payment for killer work', transactionID: 0x0339afbb},
-				{account: 'pebkacspecialist', action: 'cancels trade order', time: 10000, memo: '', transactionID: 0x2fef3d58},
-				{account: 'exewatcher', action: 'recieved 5 eXe for producing a block', time: 60000, memo: 'Witness Reward', transactionID: 0xf2c1f6a6},
-				{account: 'codepuncher57', action: 'stakes 407 eXe', time: 80000, memo: '', transactionID: 0x9b3e0a9b},
-				{account: 'speculationwoman', action: 'wants 200 eXe for 0.43 BTC', time: 200, memo: '', transactionID: 0x52d11def},
-				{account: 'trenchcoatgoing', action: 'sent 128 eXe to debughero', time: 9000, memo: 'payment for killer work', transactionID: 0x0339afbe},
-				{account: 'pebkacspecialistate', action: 'cancels trade order', time: 15000, memo: '', transactionID: 0x2fef3d59},
-				{account: 'nightswatch', action: 'recieved 5 eXe for producing a block', time: 60500, memo: 'Witness Reward', transactionID: 0xf2c1f6a8},
-				{account: 'codepuncher69', action: 'stakes 407 eXe', time: 89000, memo: '', transactionID: 0x9b3e0a9c},
-			],
-			searchData: [{account: 'codepuncher57', action: 'cancels staking action', time: 8, memo: '', transactionID: 0x39e2b580}, 
-				{account: 'speculationman', action: 'wants 200 eXe for 0.43 BTC', time: 800, memo: '', transactionID: 0x52d11dee},
-				{account: 'trenchcoattester', action: 'sent 128 eXe to debughero', time: 8000, memo: 'payment for killer work', transactionID: 0x0339afbb},
-				{account: 'pebkacspecialist', action: 'cancels trade order', time: 10000, memo: '', transactionID: 0x2fef3d58},
-				{account: 'exewatcher', action: 'recieved 5 eXe for producing a block', time: 60000, memo: 'Witness Reward', transactionID: 0xf2c1f6a6},
-				{account: 'codepuncher57', action: 'stakes 407 eXe', time: 80000, memo: '', transactionID: 0x9b3e0a9b},
-				{account: 'speculationwoman', action: 'wants 200 eXe for 0.43 BTC', time: 200, memo: '', transactionID: 0x52d11def},
-				{account: 'trenchcoatgoing', action: 'sent 128 eXe to debughero', time: 9000, memo: 'payment for killer work', transactionID: 0x0339afbe},
-				{account: 'pebkacspecialistate', action: 'cancels trade order', time: 15000, memo: '', transactionID: 0x2fef3d59},
-				{account: 'nightswatch', action: 'recieved 5 eXe for producing a block', time: 60500, memo: 'Witness Reward', transactionID: 0xf2c1f6a8},
-				{account: 'codepuncher69', action: 'stakes 407 eXe', time: 89000, memo: '', transactionID: 0x9b3e0a9c},
-				{account: 'codepuncher57', action: 'cancels staking action', time: 8, memo: '', transactionID: 0x39e2b580}, 
-				{account: 'speculationman', action: 'wants 200 eXe for 0.43 BTC', time: 800, memo: '', transactionID: 0x52d11dee},
-				{account: 'trenchcoattester', action: 'sent 128 eXe to debughero', time: 8000, memo: 'payment for killer work', transactionID: 0x0339afbb},
-				{account: 'pebkacspecialist', action: 'cancels trade order', time: 10000, memo: '', transactionID: 0x2fef3d58},
-				{account: 'exewatcher', action: 'recieved 5 eXe for producing a block', time: 60000, memo: 'Witness Reward', transactionID: 0xf2c1f6a6},
-				{account: 'codepuncher57', action: 'stakes 407 eXe', time: 80000, memo: '', transactionID: 0x9b3e0a9b},
-				{account: 'speculationwoman', action: 'wants 200 eXe for 0.43 BTC', time: 200, memo: '', transactionID: 0x52d11def},
-				{account: 'trenchcoatgoing', action: 'sent 128 eXe to debughero', time: 9000, memo: 'payment for killer work', transactionID: 0x0339afbe},
-				{account: 'pebkacspecialistate', action: 'cancels trade order', time: 15000, memo: '', transactionID: 0x2fef3d59},
-				{account: 'nightswatch', action: 'recieved 5 eXe for producing a block', time: 60500, memo: 'Witness Reward', transactionID: 0xf2c1f6a8},
-				{account: 'codepuncher69', action: 'stakes 407 eXe', time: 89000, memo: '', transactionID: 0x9b3e0a9c},
-			],
-		 transaction: '', currentPage: 0, pageSize: 20, pagesCount: 0, sortType: 'DESC'};
+			transactionData: [],
+			searchData: [],
+			blocks: [],
+			blockLength: '',
+			transaction: '', currentPage: 0, pageSize: 20, pagesCount: 0, sortType: 'DESC'};
 	}
 
 	fetchData() {
 		//API call to search for transactions
-		axios.get('/api/transactions/', {
+		let lower=0;
+		let upper=1;
+		axios.get('/api/blocks/last', {
+		}).then(response => {
+			lower=response.data[0].block_number-(Constants.BLOCKS_PER_PAGE-1);
+			upper=response.data[0].block_number;
+			return axios.get(`api/transactions?start=${lower}&end=${upper}`);
 		}).then(response => {
 			const transactionData = response.data;
 			
 			this.setState({transactionData: transactionData});
 			this.setState({searchData: transactionData});
 			this.refreshPagination(transactionData);
-		}).catch(error => {console.log('error fetching transaction data', error);});
+			return axios.get('api/blocks/length');
+		}).catch(error => console.log('error fetching blocks: ', error));
 	}
 
 	componentDidMount () {
-		//this.fetchData();
+		this.fetchData();
 		this.refreshPagination(this.state.transactionData);
 	}
 
