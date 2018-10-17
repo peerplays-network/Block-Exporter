@@ -27,6 +27,11 @@ class AccountSearch extends Component {
 			this.props.calculateComponentHeight(this.props.id, this.gridHeight);
 		}
 	}
+	
+	componentDidUpdate(prevProps) {        
+		if(prevProps.accounts !== this.props.accounts)            
+			this.setState({data: this.props.accounts, temp_data: this.props.accounts});    
+	}
 
 	findData() {
 		var info = (this.props.accounts === undefined || this.props.accounts.length === 0) ? [] : this.props.accounts;
