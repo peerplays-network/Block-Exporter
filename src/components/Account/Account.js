@@ -9,8 +9,8 @@ class AccountSearch extends Component {
 	constructor(e) {
 		super(e);
 		this.state = {
-			data: this.props.accounts,
-			temp_data: this.props.accounts,
+			data: (this.props.accounts) ? this.props.accounts : [],
+			temp_data: (this.props.accounts) ? this.props.accounts : [],
 			account : '',
 			currentPage: 0,
 			pageSize: 3,
@@ -27,9 +27,15 @@ class AccountSearch extends Component {
 			this.props.calculateComponentHeight(this.props.id, this.gridHeight);
 		}
 	}
+	
+	componentDidUpdate(prevProps) {        
+		if(prevProps.accounts !== this.props.accounts)            
+			this.setState({data: this.props.accounts, temp_data: this.props.accounts});    
+	}
 
 	findData() {
-		this.refreshPagination(this.props.accounts);
+		var info = (this.props.accounts === undefined || this.props.accounts.length === 0) ? [] : this.props.accounts;
+		this.refreshPagination(info);
 	}
 
 	refreshPagination (data) {
