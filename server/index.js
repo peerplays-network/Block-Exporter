@@ -39,9 +39,10 @@ const witnesses = require("./routes/witnesses");
 const operations = require("./routes/operations");
 const transactions = require("./routes/transactions");
 const utility = require("./routes/utility");
+const contracts = require("./routes/contracts");
 
 
-app.use("/api", [blocks, accounts, witnesses, operations, transactions, utility]);
+app.use("/api", [blocks, accounts, witnesses, operations, transactions, utility, contracts]);
 
 // ===== SYNC FUNCTIONS =====
 
@@ -59,7 +60,8 @@ async function syncDatabase(connection) {
 		}
 	}
 
-	let r1 = await Blockchain.getFullAccounts(nameAry); // accounts
+	// Accounts
+	let r1 = await Blockchain.getFullAccounts(nameAry);
 
 	r1.forEach(async (data, index) => {
 		if (data && data[1].account) {
@@ -107,9 +109,8 @@ async function syncDatabase(connection) {
 		witnessAry.push(witness[1]); // 0 = name, 1 = id
 	}
 
-	const r2 = await Blockchain.getWitnessObjsById(witnessAry); // witnesses
-
-	// console.log(r2);
+	// Witnesses
+	const r2 = await Blockchain.getWitnessObjsById(witnessAry); 
 
 	r2.forEach(async (data, index) => {
 		// build witness object
@@ -146,7 +147,8 @@ async function syncDatabase(connection) {
   });
 
 
-  let r3 = await Blockchain.getGlobalProperties(); 	// UPDATE ALL FEES
+  // Fees
+  let r3 = await Blockchain.getGlobalProperties();
 
   let feeAry = [];
  	 r3.parameters.current_fees.parameters.map((feeObj) => {
@@ -177,11 +179,10 @@ async function syncDatabase(connection) {
 
 
 
-
+// Committee
 let r4 = await Blockchain.getCommittee();
 
 r4.forEach(async (data, index) => {
-	console.log(data);
 	sql = `INSERT IGNORE INTO explorer.committee (committee_id, committee_member_account, vote_id, total_votes, url) VALUES ('${data.id}', '${data.committee_member_account}', '${data.vote_id}', '${data.total_votes}', '${data.url}') ON DUPLICATE KEY UPDATE    
 	committee_id='${data.id}', committee_member_account='${data.committee_member_account}', vote_id='${data.vote_id}', total_votes='${data.total_votes}', url='${data.url}'`
 
@@ -189,8 +190,28 @@ r4.forEach(async (data, index) => {
 		if (err) {
 			throw err;
 		}
-
 });
+})
+
+// Smart Contracts
+let r5 = await Blockchain.listAllContracts();
+
+r5.forEach(async (data, index) => {
+	console.log(data);
+	let suicided = 0;
+	if (data.suicided == true) {
+		suicided = 1
+	}
+
+	sql = `INSERT INTO explorer.contracts (object_id, statistics_id, name, suicided) VALUES ('${data.id}', '${data.statistics}', '${data.name}', '${suicided}') ON DUPLICATE KEY UPDATE    
+	object_id='${data.id}', statistics_id='${data.statistics}', name='${data.name}', suicided='${suicided}'`
+
+	connection.query(sql, function (err, result) {
+		if (err) {
+			throw err;
+		}
+});
+	
 })
 
 console.log('Exeplorer Server> Done sync.')
@@ -231,8 +252,6 @@ connection.connect(function(err) {
 	});
 
   Blockchain.connect(config_server.BLOCKCHAIN_URL).then(async () => {
-
-	// Blockchain.startMonitor(connection);
 
 	if (config_server.SYNC_DATABASE) {
 		await syncDatabase(connection);
