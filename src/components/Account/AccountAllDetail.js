@@ -11,12 +11,14 @@ class AccountAllDetail extends Component {
 			Account: [],
 			Transactions: [],
 			Witnesses: [],
+			Committee: [],
 			activeTab: '1'
 		};
 		this.toggle = this.toggle.bind(this);
 		this.account = '';
 		this.findData = this.findData.bind(this);
 		this.findTransactions = this.findTransactions.bind(this);
+		this.findCommittee = this.findCommittee.bind(this);
 		this.getAccount = this.getAccount.bind(this);
 		this.tabNavBuild = this.tabNavBuild.bind(this);
 	}
@@ -47,7 +49,7 @@ class AccountAllDetail extends Component {
 
 	findWitnesses(e) {
 		const account = this.account;
-		this.getAccount();
+		//this.getAccount();
 		//API call to search for Account
 		axios.get('/api/witnesses/', {
 		}).then(response => {
@@ -58,10 +60,24 @@ class AccountAllDetail extends Component {
 		}).catch(error => {console.log('error is fetching account data', error);});
 	}
 
+	findCommittee(e) {
+		const account_id = this.account.account_id;
+		//this.getAccount();
+		//API call to search for Account
+		axios.get(`/api/committee/${account_id}`, {
+		}).then(response => {
+			/*const sortedCommitteeData = response.data.filter(function(item) {
+				return item.account_name === account;
+			 });*/
+			this.setState({ Committee: response.data });
+		}).catch(error => {console.log('error is fetching account data', error);});
+	}
+
 	componentDidMount() {
 		this.findData();
 		//this.findTransactions();
 		this.findWitnesses();
+		this.findCommittee();
 	}
 
 	toggle(tab) {
@@ -82,6 +98,10 @@ class AccountAllDetail extends Component {
 		if(index === '3' && this.state.Witnesses.length <= 0 ) {
 			return null;
 		}
+		if(index === '4' && this.state.Committee.length <= 0 ) {
+			return null;
+		}
+		
 		return (
 			<NavItem>
 				<NavLink className={classnames({ active: this.state.activeTab === index })} onClick={() => { this.toggle(index); }}>
@@ -124,6 +144,7 @@ class AccountAllDetail extends Component {
 					{ this.tabNavBuild('1', 'Account') }
 					{ this.tabNavBuild('2', 'Transactions') }
 					{ this.tabNavBuild('3', 'Witness') }
+					{ this.tabNavBuild('4', 'Committee') }
 				</Nav>
 				<Card>
 					<CardBody>
@@ -163,6 +184,17 @@ class AccountAllDetail extends Component {
 									
 								</TabPane>
 							)}
+							<TabPane tabId="4">
+								<h4>Committee Information</h4>
+								{this.state.Committee.map((committee, i) =>
+									<Row key={i}>
+										<Col sm="2"> Committee ID: <strong>{ committee.committee_id }</strong></Col>
+										<Col sm="2"> Vote ID: <strong>{ committee.vote_id }</strong></Col>
+										<Col sm="2"> Total Votes: <strong>{ committee.total_votes }</strong></Col>
+										<Col sm="2"> URL: <strong>{ committee.url }</strong></Col>
+									</Row>
+								)}
+							</TabPane>
 						</TabContent>
 					</CardBody>
 				</Card>
