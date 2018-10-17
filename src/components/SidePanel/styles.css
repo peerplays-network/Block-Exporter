@@ -3,11 +3,12 @@
     position: fixed;
     left: 0%;
     top: 0;
-    background: #f3f3f3;
+    background: #555555;
     min-width: 250px;
     height: 93vh;
     top: 56px;
     transition: all 0.2s ease;
+    border-right: 5px solid black;
  }
 
 
@@ -28,3 +29,30 @@
   .side-image {
     margin-top: 6px;
   }
+
+  .sidepanel-contrast-text{
+    color: white;
+  }
+
+  .disabled-widget-size{
+    background: rgb(146, 146, 146);
+    color: rgb(90, 90, 90);
+    width: 40px;
+  }
+
+  .enabled-widget-size{
+    background: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    width: 40px;
+  }
+
+  .enabled-widget-size:hover{
+    background: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    
+  }
+
+  .widget-header{
+    background: rgb(61, 61, 61);
+  }
+ 

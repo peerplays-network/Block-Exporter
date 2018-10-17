@@ -6,17 +6,17 @@ export default class SidePanelItem extends Component {
 		return (
 			<Fragment>
 				<div className="col-2 offset-1">
-					{this.props.minSize !== 'small' ? <button onClick={() => props.changeSize(this.props.id, 'small')} disabled className="btn btn-sm">S</button> 
-						: <button onClick={() => props.changeSize(this.props.id, 'small')} className="btn btn-sm">S</button>
+					{this.props.minSize !== 'small' ? <button onClick={() => props.changeSize(this.props.id, 'small')} disabled className={`${styles['disabled-widget-size']} btn btn-sm`}>S</button> 
+						: <button onClick={() => props.changeSize(this.props.id, 'small')} className={`${styles['enabled-widget-size']} btn btn-sm`}>S</button>
 					}
 				</div>
 				<div className="col-2 offset-1">
-					{this.props.minSize === 'large' ? <button onClick={() => props.changeSize(this.props.id, 'medium')} className="btn btn-sm" disabled>M</button>
-						:  <button onClick={() => props.changeSize(this.props.id, 'medium')} className="btn btn-sm">M</button> 
+					{this.props.minSize === 'large' ? <button onClick={() => props.changeSize(this.props.id, 'medium')} className={`${styles['disabled-widget-size']} btn btn-sm`} disabled>M</button>
+						:  <button onClick={() => props.changeSize(this.props.id, 'medium')} className={`${styles['enabled-widget-size']} btn btn-sm`}>M</button> 
 					}
 				</div>
 				<div className="col-2 offset-1">
-					<button onClick={() => props.changeSize(this.props.id, 'large')} className="btn btn-sm">L</button>
+					<button onClick={() => props.changeSize(this.props.id, 'large')} className={`${styles['enabled-widget-size']} btn btn-sm`}>L</button>
 				</div>
 			</Fragment>
 		);
@@ -27,7 +27,7 @@ export default class SidePanelItem extends Component {
 			<tr>
 				<td> 
 					<div className="row text-center">
-						<div className="col-8">
+						<div className={`${styles['sidepanel-contrast-text']} col-8`}   >
 							{this.props.name}
 							<div className="row text-center mt-2">
 								{this.renderButtons(this.props, this.props.minSize)}
