@@ -22,11 +22,15 @@ const app = express();
 const compiler = webpack(config);
 const router = express.Router();
 const port = process.env.PORT || 5000;
+var swaggerUi = require('swagger-ui-express');
+var swaggerDocument = require('./swagger.json');
 
-// ===== CONFIG =====
+// ===== CONFIG/MIDDLEWARE =====
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use('/api/v1', router);
 
 // ===== ROUTES =====
 const blocks = require("./routes/blocks");
@@ -86,7 +90,6 @@ async function syncDatabase(connection) {
 			VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '${member_since}', '${account_id}')`;
 
 				connection.query(sql, function(err, result) {
-					console.log("Result: " + JSON.stringify(result));
 
 					if (err) {
 						throw err;
@@ -134,7 +137,6 @@ async function syncDatabase(connection) {
 				if (err) {
 					throw err;
 				}
-				console.log("Result: " + JSON.stringify(result));
 		});
 	
 	}
@@ -148,7 +150,6 @@ async function syncDatabase(connection) {
 
   let feeAry = [];
  	 r3.parameters.current_fees.parameters.map((feeObj) => {
-	 console.log(feeObj);
 	 if (feeObj.length > 0) {
 		feeObj[1] = JSON.stringify(feeObj[1]);
 		feeAry.push((feeObj));

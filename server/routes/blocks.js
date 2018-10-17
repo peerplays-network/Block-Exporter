@@ -11,7 +11,6 @@ router.get('/healthcheck', function (req, res) {
 
 // BlockAPI API: GET number of blocks in the blockchain
 router.get('/blocks/length', function (req, res) {
-	console.log('GET request made to /blocks/length');
 
 	const connection = mysql.createConnection({
 		host: db.HOST,
@@ -47,7 +46,6 @@ router.get('/blocks/length', function (req, res) {
 
 // BlockAPI API: GET last block
 router.get('/blocks/last', function (req, res) {
-	console.log('GET request made to /blocks/last');
 
 	const connection = mysql.createConnection({
 		host: db.HOST,
@@ -75,7 +73,7 @@ router.get('/blocks/last', function (req, res) {
 		if (err) throw err;
 
 		if (rows.length < 1) {
-			return res.status(400).send('400 NO DATA AVAILABLE');
+			return res.status(404).send('400 NO DATA AVAILABLE');
 		}
 
 		res.send(rows);
@@ -96,8 +94,6 @@ router.get('/blocks', function (req, res) {
 
 	const start = req.query.start;
 	const end = req.query.end;
-
-	console.log(`GET request made to /blocks ${start} to ${end}`);
 
 
 	const connection = mysql.createConnection({
@@ -133,7 +129,7 @@ router.get('/blocks', function (req, res) {
 		if (err) throw err;
 
 		if (rows.length < 1) {
-			return res.status(400).send('400 NO DATA AVAILABLE - CHECK YOUR PARAMS');
+			return res.status(404).send('404 NO DATA AVAILABLE - CHECK YOUR PARAMS');
 		}
 
 		res.send(rows);
@@ -145,7 +141,6 @@ router.get('/blocks', function (req, res) {
 
 // Variables API: GET variables
 router.get('/variables', function (req, res) {
-	console.log('GET request made to /variables');
 
 	const connection = mysql.createConnection({
 		host: db.HOST,
@@ -165,7 +160,6 @@ router.get('/variables', function (req, res) {
 	// Perform Query
 	connection.query('SELECT * FROM explorer.variables', function (err, rows, fields) {
 		if (err) throw err;
-		console.log(rows[0]);
 		res.send(rows);
 	});
 

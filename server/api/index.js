@@ -77,7 +77,7 @@ const api = {
 			if (sql === '') {
 				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 	  VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
-			} else if (start % 200 == 0) {
+			} else if (start % 200 === 0) {
 			} else {
 				sql = sql + `, ('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 				// console.log(sql);
@@ -85,7 +85,7 @@ const api = {
   
 			// Run Query
 			// console.log(start);
-			if (start % 200 == 0) {
+			if (start % 200 === 0) {
 				connection.query(sql, function (err, result) {
 					if (err) {
 						throw err;
@@ -96,7 +96,7 @@ const api = {
 				// return;itne
 			}
 
-			if (start % 200 == 0) {
+			if (start % 200 === 0) {
 				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 				VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 			}
@@ -186,7 +186,6 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				if (err) {
 					throw err;
 				}
-				console.log('Result: ' + JSON.stringify(result));
 			});
 
 			api.parseBlock(block, connection, 1);
@@ -237,7 +236,6 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 					VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '${member_since}', '${account_id}')`;
 		
 				connection.query(sql, function(err, result) {
-					console.log('Result: ' + JSON.stringify(result));
 		
 					if (err) {
 						throw err;

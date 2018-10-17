@@ -5,7 +5,6 @@ const db = require('../database/constants');
 
 // BlockAPI API: GET transactions for account
 router.get('/transactions/:id', function (req, res) {
-	console.log(`GET request made to /transactions:${req.params.id}`);
 
 	if (!req.params.id.startsWith('1.2')) {
 		res.status(400).send('400 Invalid format');
@@ -52,7 +51,6 @@ router.get('/transactions', function (req, res) {
 	const start = req.query.start;
 	const end = req.query.end;
 
-	console.log(`GET request made to /transactions ${start} to ${end}`);
 
 
 	const connection = mysql.createConnection({
@@ -88,7 +86,7 @@ router.get('/transactions', function (req, res) {
 		if (err) throw err;
         
 		if (rows.length < 1) {
-			return res.status(400).send('400 NO DATA AVAILABLE - CHECK YOUR PARAMS');
+			return res.status(404).send('404 NO DATA AVAILABLE - CHECK YOUR PARAMS');
 		}
 		  
 		res.send(rows);
