@@ -592,6 +592,22 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				resolve(w);
 			});
 		});
+	},
+
+	getContractBalance: (contract_id) => {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().db_api().exec('get_contract_balances', [contract_id]).then(w => {
+				resolve(w);
+			});
+		});
+	},
+
+	getContractStats: (statistics_id) => {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().db_api().exec('get_objects', [[statistics_id]]).then(w => {
+				resolve(w);
+			});
+		});
 	}
 };
 
