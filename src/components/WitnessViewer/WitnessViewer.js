@@ -35,15 +35,10 @@ class WitnessViewer extends Component {
 
 	findAccount(witness, data) {
 		var temp_data = [];
-		//if the data.id matches witness name add to data
-		for (var account in data) {
-			if (data[account].account_name.indexOf(witness) >= 0 ) 
-				temp_data.push(data[account]);
-		}
-		if (temp_data.length <= 0)
-			temp_data = data;
+		temp_data = data.filter(obj => {
+			return obj.account_name.includes(witness);
+		  });
 		this.setState({ searchData: temp_data });
-		//this.data = temp_data;
 		this.refreshPagination(temp_data);
 	}
 
@@ -73,6 +68,17 @@ class WitnessViewer extends Component {
 		this.state.sortType === 'DESC' ? this.setState({sortType: 'ASC'}) : this.setState({sortType: 'DESC'});
 	}
 
+	sortByRank() {
+		this.changeSortType();
+		let newState = this.state.searchData.sort((a,b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)).reverse();
+		
+		if(this.state.sortType === 'ASC')
+		{
+			newState = newState.reverse();
+		}
+		this.setState({searchData: newState});
+	}
+
 	renderBigTable() {
 		const { currentPage, witness, searchData, pageSize } = this.state;
 
@@ -87,7 +93,7 @@ class WitnessViewer extends Component {
 				<table className="table">
 					<thead className={`${styles['clickable']} thead-light`}>
 						<tr>
-							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Rank</th>
+							<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
 							<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness</th>
 							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
 							<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
@@ -116,9 +122,9 @@ class WitnessViewer extends Component {
 		return (
 			<Fragment>
 				<table className="table">
-					<thead className="thead-light">
+					<thead className={`${styles['clickable']} thead-light`}>
 						<tr>
-							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Rank</th>
+							<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
 							<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness</th>
 							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
 							<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
