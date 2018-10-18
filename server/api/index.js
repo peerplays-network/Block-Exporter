@@ -188,7 +188,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				}
 			});
 
-			api.parseBlock(block, connection, 1);
+			api.parseBlock(block, connection, 1); // For transactions
 		});		  
 	  },
 
@@ -579,6 +579,31 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 	listCommittee: () => {
 		return new Promise((resolve, reject) => {
 			blockchainWS.Apis.instance().db_api().exec('lookup_committee_member_accounts', ['', 1000]).then(w => {
+				resolve(w);
+			});
+		});
+	},
+
+	// list all smart contracts
+	listAllContracts: () => {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().db_api().exec('get_all_contracts', []).then(w => {
+				resolve(w);
+			});
+		});
+	},
+
+	getContractBalance: (contract_id) => {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().db_api().exec('get_contract_balances', [contract_id]).then(w => {
+				resolve(w);
+			});
+		});
+	},
+
+	getContractStats: (statistics_id) => {
+		return new Promise((resolve, reject) => {
+			blockchainWS.Apis.instance().db_api().exec('get_objects', [[statistics_id]]).then(w => {
 				resolve(w);
 			});
 		});
