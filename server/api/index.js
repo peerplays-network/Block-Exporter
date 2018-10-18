@@ -157,7 +157,6 @@ const api = {
 		  const block_number = dynamicGlobal.head_block_number;
 
 		  blockchainWS.Apis.instance().db_api().exec('get_block', [block_number]).then(block => {
-			  console.log(block);
 		  // When a block is not found we assume we are up to date.
 		  if (!block) {
 			  console.log('Exeplorer Server> DONE inserting blocks - no block found');
