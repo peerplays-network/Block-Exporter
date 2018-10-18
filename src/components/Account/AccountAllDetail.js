@@ -16,11 +16,6 @@ class AccountAllDetail extends Component {
 		};
 		this.toggle = this.toggle.bind(this);
 		this.account = '';
-		this.findData = this.findData.bind(this);
-		this.findTransactions = this.findTransactions.bind(this);
-		this.findCommittee = this.findCommittee.bind(this);
-		this.getAccount = this.getAccount.bind(this);
-		this.tabNavBuild = this.tabNavBuild.bind(this);
 	}
 
 	getAccount() {
@@ -30,26 +25,27 @@ class AccountAllDetail extends Component {
 	findData(e) {
 		this.getAccount();
 		//API call to search for Account
-		axios.get('/api/accounts/'+this.account, {
+		axios.get(`/api/accounts/${this.account}`, {
 		}).then(response => {
 			this.setState({ Account: response.data });
-			console.log('', response);
 		}).catch(error => {console.log('error is fetching account data', error);});
 	}
 
 	findTransactions() {
-		axios.get('/api/transactions/'+this.account, {
+		let account_id = '';
+
+		axios.get(`/api/accounts/${this.account}`, {
+		}).then(response => {
+			account_id = response.data[0].account_id;
+			return axios.get(`/api/transactions/${account_id}`);
 		}).then(response => {
 			this.setState({ Transactions: response.data });
-		}).catch(error => {
-			console.log('error is fetching account data', error); 
-			this.setState({ Transactions: [] });
-		});
+		}).catch(error => {	console.log('error is fetching transaction data', error); this.setState({ Transactions: [] }); });
+		console.log('transaction = ', this.state.Transactions);
 	}
 
 	findWitnesses(e) {
 		const account = this.account;
-		//this.getAccount();
 		//API call to search for Account
 		axios.get('/api/witnesses/', {
 		}).then(response => {
@@ -57,25 +53,24 @@ class AccountAllDetail extends Component {
 				return item.account_name === account;
 			 });
 			this.setState({ Witnesses: sortedWitnessData });
-		}).catch(error => {console.log('error is fetching account data', error);});
+		}).catch(error => {console.log('error is fetching witness data', error);});
 	}
 
 	findCommittee(e) {
-		const account_id = this.account.account_id;
-		//this.getAccount();
+		let account_id = '';
 		//API call to search for Account
-		axios.get(`/api/committee/${account_id}`, {
+		axios.get(`/api/accounts/${this.account}`, {
 		}).then(response => {
-			/*const sortedCommitteeData = response.data.filter(function(item) {
-				return item.account_name === account;
-			 });*/
+			account_id = response.data[0].account_id;
+			return axios.get(`/api/committee/${account_id}`);
+		}).then(response => {
 			this.setState({ Committee: response.data });
-		}).catch(error => {console.log('error is fetching account data', error);});
+		}).catch(error => {console.log('error is fetching committee data', error);});
 	}
 
 	componentDidMount() {
 		this.findData();
-		//this.findTransactions();
+		this.findTransactions();
 		this.findWitnesses();
 		this.findCommittee();
 	}
@@ -137,7 +132,6 @@ class AccountAllDetail extends Component {
 
 	render() {
 		this.getAccount();
-		console.log('account and activeTab', this.account, this.state.activeTab);
 		return (
 			<div>
 				<Nav tabs>
@@ -148,7 +142,7 @@ class AccountAllDetail extends Component {
 				</Nav>
 				<Card>
 					<CardBody>
-						<TabContent activeTab={this.state.activeTab}>
+						<TabContent activeTab={this.state.activeTab} key="1" >
 							<TabPane tabId="1">
 								<h4>Account Information</h4>
 								{this.state.Account.map((account, i) =>
@@ -171,19 +165,18 @@ class AccountAllDetail extends Component {
 									</Row>
 								)}
 							</TabPane>
-							{this.state.Witnesses.map((witness, i) =>
-								<TabPane tabId="3">
-									<h4>Witness Information</h4>
+							<TabPane tabId="3">
+								<h4>Witness Information</h4>
+								{this.state.Witnesses.map((witness, i) =>
 									<Row key={i}>
 										<Col sm="2"> Account ID: <strong>{ witness.account_id }</strong></Col>
 										<Col sm="2"> Active: <strong>{ this.returnActive(witness.is_active) }</strong></Col>
 										<Col sm="2"> Total Votes: <strong>{ witness.total_votes }</strong></Col>
 										<Col sm="2"> Missed Blocks: <strong>{ witness.total_missed }</strong></Col>
 										<Col sm="2"> Url: <strong>{ witness.url }</strong></Col>
-									</Row>
-									
-								</TabPane>
-							)}
+									</Row>	
+								)}
+							</TabPane>
 							<TabPane tabId="4">
 								<h4>Committee Information</h4>
 								{this.state.Committee.map((committee, i) =>
