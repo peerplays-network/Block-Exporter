@@ -12,6 +12,8 @@ function determineSearchType(term) {
 		return 'COMMITTEE';
 	} else if (term.startsWith('1.6')) { // ID - Witness Obj
 		return 'WITNESS';
+	} else if (term.startsWith('1.16')) {
+		return 'CONTRACT';
 	} else if (isNaN(term) === false) {
 		return 'BLOCK';
 	}
@@ -53,6 +55,10 @@ router.get('/search', function (req, res) {
 		case 'WITNESS':
 			sql =
 			`SELECT * FROM explorer.witnesses WHERE account_id = '${searchInput}'`;
+			break;
+		case 'CONTRACT':
+			sql =
+			`SELECT * FROM explorer.contracts WHERE object_id = '${searchInput}'`;
 			break;
 		default: // Unknown --- search multiple tables
 			sql =
