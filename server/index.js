@@ -197,18 +197,19 @@ r4.forEach(async (data, index) => {
 let r5 = await Blockchain.listAllContracts();
 
 r5.forEach(async (data, index) => {
-	console.log(data);
+	// console.log(data);
 	let suicided = 0;
 	if (data.suicided == true) {
 		suicided = 1
 	}
-
 	const balanceObj = await Blockchain.getContractBalance(data.id);
 	const statsObj = await Blockchain.getContractStats(data.statistics);
-	
 
-	sql = `INSERT INTO explorer.contracts (object_id, statistics_id, name, suicided, balances, statistics ) VALUES ('${data.id}', '${data.statistics}', '${data.name}', '${suicided}', '${balanceObj}', '${statsObj}') ON DUPLICATE KEY UPDATE    
-	object_id='${data.id}', statistics_id='${data.statistics}', name='${data.name}', suicided='${suicided}', balance='${balanceObj}', statistics='${statsObj}'`
+	const balanceJSON = JSON.stringify(balanceObj);
+	const statsJSON = JSON.stringify(statsObj);
+
+	sql = `INSERT INTO explorer.contracts (object_id, statistics_id, name, suicided, balances, statistics ) VALUES ('${data.id}', '${data.statistics}', '${data.name}', '${suicided}', '${balanceJSON}', '${statsJSON}') ON DUPLICATE KEY UPDATE    
+	object_id='${data.id}', statistics_id='${data.statistics}', name='${data.name}', suicided='${suicided}', balances='${balanceJSON}', statistics='${statsJSON}'`
 
 	connection.query(sql, function (err, result) {
 		if (err) {
@@ -256,15 +257,7 @@ connection.connect(function(err) {
 	});
 
   Blockchain.connect(config_server.BLOCKCHAIN_URL).then(async () => {
-
-	// Blockchain.listAllContracts().then((r) => {
-	// 	console.log(r);
-	// })
-
-	// Blockchain.listCommittee((r2) => {
-	// 	console.log(r2);
-	// })
-
+	  
 	if (config_server.SYNC_DATABASE) {
 		await syncDatabase(connection);
 
