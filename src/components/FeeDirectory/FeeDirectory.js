@@ -27,7 +27,7 @@ class FeeDirectory extends Component {
 				}, {});
 			group['All']=response.data;
 			this.setState({ fee: response.data, groupedData: group});
-		}).catch(error => {console.log('error fetching account data', error);});
+		}).catch(error => {console.log('error fetching operations data', error);});
 	}
 	
 	componentDidMount() {
@@ -52,8 +52,8 @@ class FeeDirectory extends Component {
 			if (data[operation].friendly_name.indexOf(searchFee) >= 0 ) 
 				temp_data.push(data[operation]);
 		}
-		if (temp_data.length <= 0)
-			temp_data = data;
+		// if (temp_data.length <= 0)
+		// 	temp_data = data;
 		this.setState({ fee: temp_data });
 	}
 
@@ -104,7 +104,7 @@ class FeeDirectory extends Component {
 					</div>
 
 					<div className={`${styles['group']} col-sm-10`} >
-						{this.state.fee.map(child => (
+						{this.state.fee && this.state.fee.map(child => (
 							<FeeSection
 								key={child.id}
 								isOpen={!!openSections[child.friendly_name]}
@@ -113,11 +113,11 @@ class FeeDirectory extends Component {
 								fullPage={fullPage}
 								fee={child}
 							/>
-						))}
+						))}{this.state.fee.length===0 && <div> No Fee Found </div>}
 					</div>
 				</div>}
 				{this.props.size!=='large' && <div>
-					{this.state.fee.map(child => (
+					{this.state.fee && this.state.fee.map(child => (
 						<FeeSection
 							key={child.id}
 							isOpen={!!openSections[child.friendly_name]}
@@ -126,7 +126,7 @@ class FeeDirectory extends Component {
 							fullPage={fullPage}
 							fee={child}
 						/>
-					))}
+					))}{this.state.fee.length===0 && <div> No Fee Found </div>}
 				</div>}
 			</div>
 		);
