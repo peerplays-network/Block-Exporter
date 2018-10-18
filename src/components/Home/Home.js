@@ -111,6 +111,8 @@ class Welcome extends Component {
 		stateCopy.layout[layoutIndex] = stateCopy.components[id].gridPlacement;
 
 		this.setState({stateCopy});
+
+		this.onDragStop(layout, oldItem, newItem, placeholder, e, element);
 	}
 
 	calculateComponentHeight(id, height) {
@@ -120,6 +122,24 @@ class Welcome extends Component {
 		stateCopy.layout[layoutIndex].h = height;
 
 		this.setState({stateCopy});
+	}
+
+	onDragStop(layout, oldItem, newItem, placeholder, e, element) {
+		//checks to see if the widget has gone out of bounds, and re-aligns it to be in the viewport
+		const grid = document.getElementsByClassName('react-grid-layout')[0];
+		const translateYMaxValue = window.innerHeight- grid.offsetTop - element.offsetHeight;
+
+		const translateValues = window.getComputedStyle(element).transform.split(',');
+		const translateX = parseInt(translateValues[translateValues.length - 2], 0);
+		let translateY = parseInt(translateValues[translateValues.length - 1].slice(0, -1), 0);
+		
+		if (translateY > translateYMaxValue) {
+			translateY = translateYMaxValue;
+		}
+		if (translateY < 0) {
+			translateY = 0;
+		}
+    	element.style.transform = `translate(${translateX}px, ${translateY}px)`;
 	}
 
 	render() {
@@ -132,7 +152,8 @@ class Welcome extends Component {
 				<div>
 					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={null} 
 						rowHeight={10} draggableCancel=".panel-body" autoSize={false} isResizable={false} 
-						preventCollision={true} margin={[0, 0]} containerPadding={[0, 0]} onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
+						preventCollision={true} margin={[0, 0]} containerPadding={[0, 0]} 
+						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
 						 <div className={`${styles['react-grid-item']}`} key={'-1'} >
 							<SidePanel components={this.state.components} 
 							   changeSize={this.changePanelSize.bind(this)}/>	
