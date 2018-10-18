@@ -51,13 +51,9 @@ class AccountSearch extends Component {
 
 	findAccount(accountName, data) {
 		var temp_data = [];
-		//if the data.id matches accountName add to data
-		for (var account in data) {
-			if (data[account].account_name.indexOf(accountName) >= 0 ) 
-				temp_data.push(data[account]);
-		}
-		if (temp_data.length <= 0)
-			temp_data = data;
+		temp_data = data.filter(obj => {
+			return obj.account_name.includes(accountName);
+		  });
 		this.setState({ temp_data: temp_data });
 		this.refreshPagination(temp_data);
 	}
