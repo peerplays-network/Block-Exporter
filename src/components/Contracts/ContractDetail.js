@@ -31,7 +31,6 @@ class ContractDetail extends Component {
 		axios.get('/api/contracts/'+this.contract, {
 		}).then(response => {
 			this.setState({ Contract: response.data });
-			console.log('contracts', response);
 		}).catch(error => {console.log('error is fetching account data', error);});
 	}
 
@@ -90,7 +89,6 @@ class ContractDetail extends Component {
 
 	render() {
 		this.getContract();
-		console.log('account and activeTab', this.account, this.state.activeTab);
 		return (
 			<div>
 				<Nav tabs>

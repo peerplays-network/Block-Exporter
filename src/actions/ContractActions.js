@@ -16,7 +16,6 @@ export async function fetchContracts() {
 		};
 	}
 	catch(e) {
-		console.log(e);
 		return {
 			type: FETCH_CONTRACT_LIST,
 			payload: []
