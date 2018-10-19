@@ -110,12 +110,12 @@ class ContractDetail extends Component {
 											<div> Name: <strong>{ contract.name }</strong></div>
 											<div> ID: <strong>{ contract.object_id }</strong></div>
 											<div><span>
-												Balance: <strong>{bal.map((balance, i)=><span>{`EXE ${balance.amount}`}</span>)}
+												Balance: <strong>{bal.map((balance, i)=><span key={i}>{`EXE ${balance.amount}`}</span>)}
 												</strong>
 											</span></div>
 											{statistics.map((stats, i)=>{
 												return (
-													<div>
+													<div key={i}>
 														<div> Owner: <strong>{ stats.owner }</strong></div>
 														<div> Most Recent Operation: <strong>{ stats.most_recent_op }</strong></div>
 														<div> Total Operations: <strong>{ stats.total_ops }</strong></div>
