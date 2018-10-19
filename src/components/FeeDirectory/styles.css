@@ -34,3 +34,11 @@
 .arrow{
     cursor: pointer;
 }
+th{
+    cursor: pointer;
+    text-align: center;
+}
+
+td{
+    text-align: center;
+}
