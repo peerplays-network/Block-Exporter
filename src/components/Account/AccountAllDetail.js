@@ -160,8 +160,8 @@ class AccountAllDetail extends Component {
 									<Row key={i}>
 										<Col sm="2"> Name: <strong>{ transaction.account_name }</strong></Col>
 										<Col sm="2"> Account ID: <strong>{ transaction.account_id }</strong></Col>
-										<Col sm="2"> Lifetime fees paid: <strong>{ transaction.lifetime_fees_paid }</strong></Col>
-										<Col sm="2"> Registrar: <strong>{ transaction.referrer }</strong></Col>
+										<Col sm="2"> - <strong>{ transaction.lifetime_fees_paid }</strong> minutes ago</Col>
+										<Col sm="2"><strong>{ transaction.id }</strong></Col>
 									</Row>
 								)}
 							</TabPane>
