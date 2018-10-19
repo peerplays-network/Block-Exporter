@@ -31,3 +31,14 @@
     margin-bottom:10px; 
     margin-top:10px;
 }
+.arrow{
+    cursor: pointer;
+}
+th{
+    cursor: pointer;
+    text-align: center;
+}
+
+td{
+    text-align: center;
+}

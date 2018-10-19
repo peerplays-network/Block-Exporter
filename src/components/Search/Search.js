@@ -29,7 +29,7 @@ class Search extends Component {
 				this.redirectToPage(response.data[0]);
 			else
 				this.setState({accounts: response.data});
-		}).catch(error => {console.log('error fetching search data', error);});
+		}).catch(error => {console.log('error fetching search data', error); this.setState({accounts:[]});});
 	}
 
 	componentDidUpdate() {
@@ -43,7 +43,7 @@ class Search extends Component {
 				this.redirectToPage(response.data[0]);
 			else
 				this.setState({accounts: response.data});
-		}).catch(error => {console.log('error fetching search data', error);});
+		}).catch(error => {console.log('error fetching search data', error); this.setState({accounts:[]});});
 	}
 
 	redirectToPage(responseObj) {
@@ -112,8 +112,8 @@ class Search extends Component {
 						<Table responsive>
 							<thead className="text-center">
 								<tr>
-									<th scope="col">Account Id</th>
 									<th scope="col">Account Name</th>
+									<th scope="col">Account Id</th>
 								</tr>
 							</thead>
 							<tbody className="text-center">
@@ -170,10 +170,11 @@ class Search extends Component {
 	render() {
 		return (
 			<div className="container pt-4 pb-5 mt-5"> 
-				{!!this.state.accounts? <h3> Search Results For "{this.state.searchString}"</h3> : <h3> No Results For "{this.state.searchString}"</h3> }
+				{this.state.accounts.length > 0 && <h3> Search Results For "{this.state.searchString}"</h3>}
+				{this.state.accounts.length === 0 && <h3> No Results For "{this.state.searchString}"</h3> }
 				<br/>
 				{
-					this.state.accounts.length > 0 ? this.renderAccountsTable() : null
+					this.state.accounts.length > 0 && this.renderAccountsTable()
 				}
 			</div>
 		);
