@@ -16,7 +16,9 @@ class AccountSearch extends Component {
 			account : '',
 			currentPage: 0,
 			pageSize: 3,
-			pagesCount: 0
+			pagesCount: 0,
+			sortType: 'DESC',
+			sortBy: 'account_name',
 		};
 		this.gridHeight = 43;
 		//pagination set page length
@@ -66,24 +68,21 @@ class AccountSearch extends Component {
 	}
 
 	sortByColumn(colType) {
-		this.changeSortType();
+		let sortType = this.state.sortType;
+		if(this.state.sortBy === colType)
+		{
+			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
+		}
+		this.setState({sortType:sortType, sortBy:colType});
 		/*sorts depending on the column type. Also does a lookup on the witness data which
 		  stores the initial API call made when the component is loaded and witness rank is calculated.
 		the witness rank is the appended to the data coming in from the sort API call.*/
-		axios.get(`api/accounts?sort=${colType}&direction=${this.state.sortType}`, {
+		axios.get(`api/accounts?sort=${colType}&direction=${sortType}`, {
 		}).then(response => {
-			let sortedAccountData = response.data;
-			sortedAccountData = sortedAccountData.map(object => {
-				const rankObject = this.state.temp_data.find(el => el.id === object.id);
-				return rankObject;
-			});
-			this.setState({temp_data: sortedAccountData});
-			this.refreshPagination(sortedAccountData);
+			this.findAccount(this.state.account, response.data);
+			//this.setState({temp_data: response.data});
+			//this.refreshPagination(this.state.temp_data);
 		}).catch(error => {console.log('error fetching witness data', error);});
-	}
-
-	changeSortType() {
-		this.state.sortType === 'DESC' ? this.setState({sortType: 'ASC'}) : this.setState({sortType: 'DESC'});
 	}
 
 	render() {
