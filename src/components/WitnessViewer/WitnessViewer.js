@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 class WitnessViewer extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {witnessData: this.props.witnesses, searchData: this.props.witnesses, witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'DESC'};
+		this.state = {witnessData: this.props.witnesses, searchData: this.props.witnesses, witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'account_name'};
 		this.gridHeight = 40;
 	}
 
@@ -48,11 +48,16 @@ class WitnessViewer extends Component {
 	}
 
 	sortByColumn(colType) {
-		this.changeSortType();
+		let sortType = this.state.sortType;
+		if(this.state.sortBy === colType)
+		{
+			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
+		}
+		this.setState({sortType:sortType, sortBy:colType});
 		/*sorts depending on the column type. Also does a lookup on the witness data which
 		  stores the initial API call made when the component is loaded and witness rank is calculated.
 		the witness rank is the appended to the data coming in from the sort API call.*/
-		axios.get(`api/witnesses?sort=${colType}&direction=${this.state.sortType}`, {
+		axios.get(`api/witnesses?sort=${colType}&direction=${sortType}`, {
 		}).then(response => {
 			let sortedWitnessData = response.data;
 			sortedWitnessData = sortedWitnessData.map(object => {
@@ -70,7 +75,7 @@ class WitnessViewer extends Component {
 
 	sortByRank() {
 		this.changeSortType();
-		let newState = this.state.searchData.sort((a,b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)).reverse();
+		let newState = this.state.searchData.sort((a, b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)).reverse();
 		
 		if(this.state.sortType === 'ASC')
 		{
