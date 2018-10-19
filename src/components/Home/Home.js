@@ -18,6 +18,7 @@ import WitnessViewer from '../WitnessViewer/WitnessViewer';
 import FeeDirectory from '../FeeDirectory/FeeDirectory';
 import AccountSearch from '../Account/Account';
 import GridLayout, {WidthProvider as widthProvider} from 'react-grid-layout';
+import Contract from '../Contracts/Contract';
 
 const Grid = widthProvider(GridLayout);
 
@@ -28,10 +29,11 @@ class Welcome extends Component {
 								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: '', visible: false, id: 1, gridPlacement: {i: '1', x: 15, y: 31, w: 3.5, h: 20}},
 								   {name: 'Account Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: 15, y: 0, w: 4.5, h: 20}},
 								   {name: 'Current Transactions', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id:3, gridPlacement: {i: '3', x: 15, y: 0, w: 4.5, h: 20}},
-								   {name: 'Fee Directory', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 15, y: 0, w: 4.5, h: 20}}
-								  ], 
+								   {name: 'Fee Directory', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 15, y: 0, w: 4.5, h: 20}},
+								   {name: 'Contract Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 5, gridPlacement: {i: '5', x: 15, y: 0, w: 4.5, h: 20}}
+		], 
 								  layout : [{i: '-1', x: 0, y: 0, w: 12, h: 90, static: true}],
-					 };
+		};
 	}
 
 	componentDidUpdate(prevProps) {
@@ -95,6 +97,8 @@ class Welcome extends Component {
 				return <TransactionDisplay id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)} size={component.size}/>;
 			case 4:
 				return <FeeDirectory id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)} size={component.size}/>;
+			case 5:
+				return <Contract id={component.id} calculateComponentHeight={this.calculateComponentHeight.bind(this)} size={component.size}/>;
  			default:
 				return;
 		}
