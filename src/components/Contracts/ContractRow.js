@@ -13,8 +13,8 @@ class ContractRow extends Component {
 					{ balance && balance.map((bal, i) =>{
 						const str = 'EXE ' + bal.amount;
 						return (
-							<Row key={i}>
-								<div>{str}</div>
+							<Row className="justify-content-center" key={i}>
+								<div >{str}</div>
 							</Row>
 						);
 					})}
