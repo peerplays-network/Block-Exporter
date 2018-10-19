@@ -112,8 +112,8 @@ class Search extends Component {
 						<Table responsive>
 							<thead className="text-center">
 								<tr>
-									<th scope="col">Account Id</th>
 									<th scope="col">Account Name</th>
+									<th scope="col">Account Id</th>
 								</tr>
 							</thead>
 							<tbody className="text-center">
