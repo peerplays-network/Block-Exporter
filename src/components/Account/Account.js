@@ -4,6 +4,8 @@ import AccountDetail from './AccountDetail';
 import PaginationCall from './PaginationCall';
 import { Input, InputGroup } from 'reactstrap';
 import { connect } from 'react-redux';
+import styles from '../WitnessViewer/styles.css';
+import axios from 'axios';
 
 class AccountSearch extends Component {
 	constructor(e) {
@@ -63,6 +65,27 @@ class AccountSearch extends Component {
 		this.setState({ currentPage: index });
 	}
 
+	sortByColumn(colType) {
+		this.changeSortType();
+		/*sorts depending on the column type. Also does a lookup on the witness data which
+		  stores the initial API call made when the component is loaded and witness rank is calculated.
+		the witness rank is the appended to the data coming in from the sort API call.*/
+		axios.get(`api/accounts?sort=${colType}&direction=${this.state.sortType}`, {
+		}).then(response => {
+			let sortedAccountData = response.data;
+			sortedAccountData = sortedAccountData.map(object => {
+				const rankObject = this.state.temp_data.find(el => el.id === object.id);
+				return rankObject;
+			});
+			this.setState({temp_data: sortedAccountData});
+			this.refreshPagination(sortedAccountData);
+		}).catch(error => {console.log('error fetching witness data', error);});
+	}
+
+	changeSortType() {
+		this.state.sortType === 'DESC' ? this.setState({sortType: 'ASC'}) : this.setState({sortType: 'DESC'});
+	}
+
 	render() {
 		const { temp_data, account, currentPage, pageSize } = this.state;
 		
@@ -75,11 +98,11 @@ class AccountSearch extends Component {
 					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 				</div>
 				<table className="table">
-					<thead className="thead-light">
+					<thead className={`${styles['clickable']} thead-light`}>
 						<tr>
-							<th>Account Name</th>
-							<th>Account ID</th>
-							<th>Referrer</th>
+							<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Account Name</th>
+							<th onClick={this.sortByColumn.bind(this, 'account_id')} scope="col">Account ID</th>
+							<th onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</th>
 						</tr>
 					</thead>
 					<tbody>
