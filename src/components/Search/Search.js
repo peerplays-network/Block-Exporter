@@ -25,6 +25,8 @@ class Search extends Component {
 		console.log('history: ', this.props.history);
 		axios.get(`/api/search?input=${this.state.searchString}`, {
 		}).then(response => {
+			console.log('response', response.data);
+			debugger;
 			if(response.data.length === 1)
 				this.redirectToPage(response.data[0]);
 			else
@@ -51,6 +53,8 @@ class Search extends Component {
 			this.props.history.push(`/block-view/${responseObj.block_number}`);
 		else if(!!responseObj.account_name)
 			this.props.history.push(`/accountAllDetail/${responseObj.account_name}`);
+		else if(!!responseObj.committee_id)
+			this.props.history.push(`/accountAllDetail/${responseObj.committee_id}`);
 		else
 			console.log('no matches');
 	}
