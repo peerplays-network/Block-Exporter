@@ -53,7 +53,7 @@ const api = {
 		blockchainWS.Apis.instance().db_api().exec('get_block', [start]).then(block => {
 			console.log(start);
 			// When a block is not found we assume we are up to date.
-			if (!block || start === 900) {
+			if (!block) {
 				console.log('Exeplorer Server> DONE inserting blocks - no block found');
 				api.startMonitor(connection);
 				return;
@@ -77,7 +77,7 @@ const api = {
 			if (sql === '') {
 				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 	  VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
-			} else if (start % 200 === 0) {
+			} else if (start % 1000 === 0) {
 			} else {
 				sql = sql + `, ('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 				// console.log(sql);
@@ -85,7 +85,7 @@ const api = {
   
 			// Run Query
 			// console.log(start);
-			if (start % 200 === 0) {
+			if (start % 1000 === 0) {
 				connection.query(sql, function (err, result) {
 					if (err) {
 						throw err;
@@ -96,7 +96,7 @@ const api = {
 				// return;itne
 			}
 
-			if (start % 200 === 0) {
+			if (start % 1000 === 0) {
 				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 				VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 			}
