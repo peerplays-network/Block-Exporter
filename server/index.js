@@ -218,7 +218,7 @@ r5.forEach(async (data, index) => {
 	
 })
 
-console.log('Exeplorer Server> Done sync.')
+console.log('Exeplorer Server> Done non-block sync.')
 return;
 }
 
