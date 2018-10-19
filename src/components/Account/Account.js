@@ -77,11 +77,9 @@ class AccountSearch extends Component {
 		/*sorts depending on the column type. Also does a lookup on the witness data which
 		  stores the initial API call made when the component is loaded and witness rank is calculated.
 		the witness rank is the appended to the data coming in from the sort API call.*/
-		axios.get(`api/accounts?sort=${colType}&direction=${sortType}`, {
+		axios.get(`/api/accounts?sort=${colType}&direction=${sortType}`, {
 		}).then(response => {
 			this.findAccount(this.state.account, response.data);
-			//this.setState({temp_data: response.data});
-			//this.refreshPagination(this.state.temp_data);
 		}).catch(error => {console.log('error fetching witness data', error);});
 	}
 
