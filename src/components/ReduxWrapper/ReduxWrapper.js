@@ -9,11 +9,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchWitnesses } from '../../actions/WitnessActions';
 import { fetchAccounts } from '../../actions/AccountActions';
+import { fetchContracts } from '../../actions/ContractActions';
 
 class ReduxWrapper extends Component {
 	componentDidMount() {
 		this.props.fetchWitnesses();
 		this.props.fetchAccounts();
+		this.props.fetchContracts();
 	}
 
 	render() {
@@ -29,11 +31,12 @@ class ReduxWrapper extends Component {
 
 const mapStateToProps = (state) => ({
 	witnesses: state.witnesses.witnessList,
-	accounts: state.accounts.accountList
+	accounts: state.accounts.accountList,
+	contracts: state.contracts.contractList
 });
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({ fetchWitnesses, fetchAccounts }, dispatch);
+	return bindActionCreators({ fetchWitnesses, fetchAccounts, fetchContracts }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReduxWrapper);
