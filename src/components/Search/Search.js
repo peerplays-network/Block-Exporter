@@ -25,8 +25,6 @@ class Search extends Component {
 		console.log('history: ', this.props.history);
 		axios.get(`/api/search?input=${this.state.searchString}`, {
 		}).then(response => {
-			console.log('response', response.data);
-			debugger;
 			if(response.data.length === 1)
 				this.redirectToPage(response.data[0]);
 			else
@@ -38,7 +36,7 @@ class Search extends Component {
 		if(this.state.searchString !== this.props.match.params[0]) {
 			this.setState({searchString: this.props.match.params[0]});
 		}
-
+		
 		axios.get(`/api/search?input=${this.props.match.params[0]}`, {
 		}).then(response => {
 			if(response.data.length === 1)
@@ -51,8 +49,12 @@ class Search extends Component {
 	redirectToPage(responseObj) {
 		if(!!responseObj.block_number)
 			this.props.history.push(`/block-view/${responseObj.block_number}`);
-		else if(!!responseObj.account_name)
-			this.props.history.push(`/accountAllDetail/${responseObj.account_name}`);
+		else if(!!responseObj.account_name) {
+			if(this.state.searchString.includes('1.6'))
+				this.props.history.push(`/accountAllDetail/${responseObj.account_name}/${responseObj.account_id}`);
+			else
+				this.props.history.push(`/accountAllDetail/${responseObj.account_name}`);
+		}
 		else if(!!responseObj.committee_id)
 			this.props.history.push(`/accountAllDetail/${responseObj.committee_id}`);
 		else
@@ -124,7 +126,7 @@ class Search extends Component {
 								{this.state.accounts.map((account) => {
 									return (
 										<tr key={account.account_id}>
-											<td><NavLink tag={RRNavLink} to={'/accountAllDetail/'+account.account_name} >{account.account_name}</NavLink></td>
+											<td><NavLink tag={RRNavLink} to={`/accountAllDetail/${account.account_name}`} >{account.account_name}</NavLink></td>
 											<td>{account.account_id}</td>
 										</tr>
 									);
