@@ -1,4 +1,5 @@
 /* eslint-disable */
+require('dotenv').config()
 
 const path = require('path');
 
@@ -156,8 +157,6 @@ async function syncDatabase(connection) {
 		feeObj[1] = JSON.stringify(feeObj[1]);
 		feeAry.push((feeObj));
 	 }
-
-	 
   })
 //   sql = `SELECT * FROM explorer.operations`;
   
@@ -258,7 +257,8 @@ connection.connect(function(err) {
 
   Blockchain.connect(config_server.BLOCKCHAIN_URL).then(async () => {
 	  
-	if (config_server.SYNC_DATABASE) {
+	if (process.env.SYNC == 'true') {
+		console.log('Sync mode is ON');
 		await syncDatabase(connection);
 
 		let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
@@ -279,6 +279,8 @@ connection.connect(function(err) {
 		});
 
 	}
+
+
 
 });
 	
