@@ -106,6 +106,26 @@ class AccountAllDetail extends Component {
 		);
 	}
 
+	getTimeSince( timeCode ) {
+		//return timeCode;
+		var today = new Date();
+		//split timeCode
+		var timeArray = timeCode.split('T');
+		//days
+		var dateArray = timeArray[0].split('-');
+		if (dateArray[0] !== today.getFullYear().toString()) return (<Col sm="2"><strong>{today.getFullYear()-dateArray[0]}</strong> year(s) ago</Col>);
+		if (dateArray[1] !== (today.getMonth()+1).toString()) return (<Col sm="2"><strong>{today.getMonth()-dateArray[1]}</strong> month(s) ago</Col>);
+		if (dateArray[2] !== today.getDate().toString()) return (<Col sm="2"><strong>{today.getDate()-dateArray[2]}</strong> day(s) ago</Col>);
+		//hours
+		var clockArray = timeArray[1].split(':');
+		if (clockArray[0] !== today.getHours().toString()) return (<Col sm="2"><strong>{today.getHours()-clockArray[0]}</strong> hour(s) ago</Col>);
+		//minutes
+		if (clockArray[1] !== today.getMinutes().toString()) return (<Col sm="2"><strong>{today.getMinutes()-clockArray[1]}</strong> minute(s) ago</Col>);
+		//sec
+		var secs = clockArray[2].split('.');
+		return (<Col sm="2"><strong>{today.getSeconds()-secs[0]}</strong> minute(s) ago</Col>);
+	}
+
 	tabPaneBuild( index, type ) {
 		return (
 			<TabPane tabId="1">
@@ -160,7 +180,7 @@ class AccountAllDetail extends Component {
 									<Row key={i}>
 										<Col sm="2"> Name: <strong>{ transaction.account_name }</strong></Col>
 										<Col sm="2"> Account ID: <strong>{ transaction.account_id }</strong></Col>
-										<Col sm="2"> - <strong>{ transaction.lifetime_fees_paid }</strong> minutes ago</Col>
+										{ this.getTimeSince(transaction.expiration) }
 										<Col sm="2"><strong>{ transaction.id }</strong></Col>
 									</Row>
 								)}
