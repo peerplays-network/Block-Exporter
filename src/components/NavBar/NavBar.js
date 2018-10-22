@@ -66,11 +66,11 @@ class Navigation extends React.Component {
 		};
 		return (
 			<div>
-				<Navbar color="light" light expand="md">
+				<Navbar className={`${styles['header-background']}`} light expand="md">
 					<Nav navbar >
 						<UncontrolledDropdown nav inNavbar>
 							<DropdownToggle nav >
-								<i className="fas fa-bars fa-1x"></i>
+								<i className={`${styles['header-contrast-text'] } fas fa-bars fa-1x`}></i>
 							</DropdownToggle>
 							<DropdownMenu >
 								<DropdownItem>
@@ -92,12 +92,12 @@ class Navigation extends React.Component {
 						</UncontrolledDropdown>
 						<NavItem navbar>
 							<NavLink>
-								<i onClick={slideMenu.bind(this)} className={`${styles['cursor']} fas fa-toolbox fa-1x`}></i>
+								<i onClick={slideMenu.bind(this)} className={`${styles['cursor']}  ${styles['header-contrast-text']} fas fa-toolbox fa-1x`}></i>
 							</NavLink>
 						</NavItem>
 						
 					</Nav>
-					<NavbarBrand tag={RRNavLink} to="/">EXE EXPLORER</NavbarBrand>
+					<div className={`${styles['header-contrast-text']}`}><a href="/" className={`${styles['link-no-decor']}`}>EXE EXPLORER</a></div>
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar>
 						<Nav className="ml-auto" navbar>
