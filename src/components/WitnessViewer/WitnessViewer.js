@@ -9,17 +9,20 @@ import { connect } from 'react-redux';
 class WitnessViewer extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {witnessData: this.props.witnesses, searchData: this.props.witnesses, witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'account_name'};
+		this.state = {witnessData: this.props.witnesses, searchData: this.props.witnesses, witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'rank'};
 		this.gridHeight = 40;
 	}
 
 	componentDidMount() {
-		this.fetchData();
-		this.props.calculateComponentHeight(this.props.id, this.gridHeight);
-	}
-
-	fetchData() {
+		let newState = this.state.searchData.sort((a, b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)).reverse();
+		
+		if(this.state.sortType === 'ASC')
+		{
+			newState = newState.reverse();
+		}
+		this.setState({searchData: newState});
 		this.refreshPagination(this.props.witnesses);
+		this.props.calculateComponentHeight(this.props.id, this.gridHeight);
 	}
 
 	refreshPagination (data) {
@@ -74,14 +77,18 @@ class WitnessViewer extends Component {
 	}
 
 	sortByRank() {
-		this.changeSortType();
+		let sortType = this.state.sortType;
+		if(this.state.sortBy === 'rank')
+		{
+			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
+		}
 		let newState = this.state.searchData.sort((a, b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)).reverse();
 		
 		if(this.state.sortType === 'ASC')
 		{
 			newState = newState.reverse();
 		}
-		this.setState({searchData: newState});
+		this.setState({searchData: newState, sortType:sortType, sortBy:'rank'});
 	}
 
 	renderBigTable() {
@@ -91,7 +98,7 @@ class WitnessViewer extends Component {
 			<Fragment>
 				<div className="pagination-wrapper"> 
 					<InputGroup>
-						<Input type="text" value={witness} onChange={this.onWitnessEnter.bind(this)} placeholder="Account" />
+						<Input type="text" value={witness} onChange={this.onWitnessEnter.bind(this)} placeholder="Witness" />
 					</InputGroup>
 					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 				</div>

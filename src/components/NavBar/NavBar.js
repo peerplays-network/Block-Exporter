@@ -88,10 +88,6 @@ class Navigation extends React.Component {
 								<DropdownItem>
 									<NavLink tag={RRNavLink} to="/block-list">Blocks</NavLink>
 								</DropdownItem>
-								<DropdownItem divider />
-								<DropdownItem>
-									Reset
-								</DropdownItem>
 							</DropdownMenu>
 						</UncontrolledDropdown>
 						<NavItem navbar>

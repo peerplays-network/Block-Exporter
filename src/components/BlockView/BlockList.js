@@ -61,11 +61,11 @@ class BlockList extends Component {
 						<Table responsive>
 							<thead className="text-center">
 								<tr>
-									<th>Height</th>
-									<th>Time</th>
-									<th>Witness</th>
-									<th>Transactions</th>
-									<th>Operations</th>
+									<th style={{cursor:'default'}}>Height</th>
+									<th style={{cursor:'default'}}>Time</th>
+									<th style={{cursor:'default'}}>Witness</th>
+									<th style={{cursor:'default'}}>Transactions</th>
+									<th style={{cursor:'default'}}>Operations</th>
 								</tr>
 							</thead>
 							<tbody className="text-center">

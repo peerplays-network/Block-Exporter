@@ -102,7 +102,7 @@ class AccountAllDetail extends Component {
 		
 		return (
 			<NavItem>
-				<NavLink className={classnames({ active: this.state.activeTab === index })} onClick={() => { this.toggle(index); }}>
+				<NavLink className={classnames({ active: this.state.activeTab === index })} style={{cursor:'pointer'}} onClick={() => { this.toggle(index); }}>
 					{ type } Details ({ this.account[0] })
 				</NavLink>
 			</NavItem>
