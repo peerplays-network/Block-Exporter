@@ -10,6 +10,7 @@
     "lint:fix": "eslint . --fix",
     "start": "cross-env SYNC=false node server/index.js",
     "start-full": "cross-env SYNC=true node server/index.js",
+    "server:dev": "NODE_ENV=development cross-env SYNC=true pm2 start server/index.js  --name dev-exechain-explorer-45",
     "test": "jest"
   },
   "dependencies": {
