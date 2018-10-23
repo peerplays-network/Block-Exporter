@@ -73,21 +73,11 @@ class Navigation extends React.Component {
 								<i className={`${styles['header-contrast-text'] } fas fa-bars fa-1x`}></i>
 							</DropdownToggle>
 							<DropdownMenu >
-								<DropdownItem>
-									<NavLink tag={RRNavLink} to="/account/">Account</NavLink>
-								</DropdownItem>
-								<DropdownItem>
-									<NavLink tag={RRNavLink} to="/transactions/">Transactions</NavLink>
-								</DropdownItem>
-								<DropdownItem>
-									<NavLink tag={RRNavLink} to="/feeDirectory">Fee Directory</NavLink>
-								</DropdownItem>
-								<DropdownItem>
-									<NavLink tag={RRNavLink} to="/directory">Site Directory</NavLink>
-								</DropdownItem>
-								<DropdownItem>
-									<NavLink tag={RRNavLink} to="/block-list">Blocks</NavLink>
-								</DropdownItem>
+								<DropdownItem href="/account/">Account</DropdownItem>
+								<DropdownItem href="/transactions/">Transactions</DropdownItem>
+								<DropdownItem href="/feeDirectory">Fee Directory</DropdownItem>
+								<DropdownItem href="/directory">Site Directory</DropdownItem>
+								<DropdownItem href="/block-list">Blocks</DropdownItem>
 							</DropdownMenu>
 						</UncontrolledDropdown>
 						<NavItem navbar>
