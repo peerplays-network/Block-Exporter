@@ -22,9 +22,24 @@
 .link-no-decor{
   text-decoration: none;
   color:white;
+  
 }
 
 .link-no-decor:hover{
   text-decoration: none;
   color:white;
+}
+
+.header-height{
+  height:60px;
+}
+.bold{
+  font-weight: bold;
+}
+.size30{
+  font-size: 30px;
+}
+
+.size25{
+  font-size: 25px;
 }
