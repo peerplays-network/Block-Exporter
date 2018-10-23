@@ -16,7 +16,8 @@ import {
 	Input,
 	InputGroup,
 	InputGroupAddon,
-	Button} from 'reactstrap';
+	Button,
+	Tooltip} from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import styles from './NavBar.css';
@@ -29,7 +30,7 @@ class Navigation extends React.Component {
 
 		this.toggle = this.toggle.bind(this);
 		this.state = {
-			isOpen: false, searchText: ''
+			isOpen: false, searchText: '', tooltipOpen: false
 		};
 	}
 
@@ -43,9 +44,22 @@ class Navigation extends React.Component {
 		});
 	}
 
+	toggleToolTip() {
+		this.setState({
+			tooltipOpen: !this.state.tooltipOpen
+		  });
+	}
+
 	search(e) {
+		this.setState({searchText: ''});
 		if(this.state.searchText.length > 0)
 			this.props.history.push(`/search/${this.state.searchText}`);
+	}
+
+	onKeyPress(e) {
+		if(e.key === 'Enter') {
+			this.search(e);
+		}
 	}
 
 	textChanged(e) {
@@ -93,10 +107,14 @@ class Navigation extends React.Component {
 						<Nav className="ml-auto" navbar>
 							<NavItem>
 								<InputGroup size="sm">
-									<Input onChange={this.textChanged.bind(this)} placeholder="Search for Accounts, Blocks, ..."></Input>
+									<Input id="searchBar" onChange={this.textChanged.bind(this)} onKeyPress={this.onKeyPress.bind(this)} value={this.state.searchText} placeholder="Search for name or id"></Input>
 									<InputGroupAddon addonType="prepend"><Button onClick={this.search.bind(this)}>Search</Button></InputGroupAddon>
 								</InputGroup>
 							</NavItem>
+							<Tooltip placement="left" isOpen={this.state.tooltipOpen} autohide={false} target="searchBar"
+								toggle={this.toggleToolTip.bind(this)}>
+								Search for Accounts, Blocks, or Committee Members by name or id
+							</Tooltip>
 							<NavItem>
 								<BlockAnimation />
 							</NavItem>
