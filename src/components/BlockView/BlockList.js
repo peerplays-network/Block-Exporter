@@ -18,6 +18,7 @@ class BlockList extends Component {
 	}
 
 	componentDidMount() {
+		debugger;
 		let lower=0;
 		let upper=1;
 		axios.get('api/blocks/last', {
@@ -26,10 +27,12 @@ class BlockList extends Component {
 			upper=response.data[0].block_number;
 			return axios.get(`api/blocks?start=${lower}&end=${upper}`);
 		}).then(response => {
-			this.setState({blocks: response.data.reverse(), lower, upper});
+			this.setState({blockLength: response.data[0].block_number});
+			this.setState({blocks: response.data.reverse(), blockLength: response.data[0].block_number});
 			return axios.get('api/blocks/length');
-		}).then(response => {
-			this.setState({blockLength: response.data});
+		// .then(response => {
+		// 	this.setState({blockLength: response.data});
+		// 	console.log('block length',response.data);
 		}).catch(error => console.log('error fetching blocks: ', error));
 	}
 
