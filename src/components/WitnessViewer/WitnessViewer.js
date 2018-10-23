@@ -33,13 +33,25 @@ class WitnessViewer extends Component {
 	onWitnessEnter(e) {
 		e.preventDefault();
 		this.setState({witness: e.target.value});
-		this.findAccount(e.target.value, this.state.witnessData);
+		if(e.target.value.includes('1.6.'))
+			this.findAccountById(e.target.value, this.state.witnessData);
+		else
+			this.findAccountByName(e.target.value, this.state.witnessData);
 	}
 
-	findAccount(witness, data) {
+	findAccountByName(witness, data) {
 		var temp_data = [];
 		temp_data = data.filter(obj => {
 			return obj.account_name.includes(witness);
+		  });
+		this.setState({ searchData: temp_data });
+		this.refreshPagination(temp_data);
+	}
+
+	findAccountById(witness, data) {
+		var temp_data = [];
+		temp_data = data.filter(obj => {
+			return obj.account_id === (witness);
 		  });
 		this.setState({ searchData: temp_data });
 		this.refreshPagination(temp_data);
