@@ -6,7 +6,6 @@
     background: #555555;
     min-width: 250px;
     height: 93vh;
-    top: 56px;
     transition: all 0.2s ease;
     border-right: 5px solid black;
  }
