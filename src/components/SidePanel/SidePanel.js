@@ -8,7 +8,7 @@ class SidePanel extends Component {
 		  <div className={`sliding-menu ${styles['sliding-menu']}`}>
 				<div className="container ">
 					<div className={`${styles['widget-header']} row justify-content-center`}>
-						<p><h4 className={`${styles['sidepanel-contrast-text']}`}>Widgets</h4></p>
+						<p><h4 className={`${styles['sidepanel-contrast-text']} pt-3`}>Widgets</h4></p>
 					</div>
 				</div>
 				<table className="table">

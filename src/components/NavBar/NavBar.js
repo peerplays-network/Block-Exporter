@@ -69,13 +69,13 @@ class Navigation extends React.Component {
 	render() {
 		const slideMenu = () => {
 			const menu = document.querySelector('.sliding-menu');
-			if(menu.style.left === '-200px') {
+			if(menu.style.left === '-250px') {
 				this.props.sideBarClicked(true);
 				menu.style.left = '0px';
 			}
 			else {
 				this.props.sideBarClicked(false);
-				menu.style.left = '-200px';
+				menu.style.left = '-250px';
 			}
 		};
 		return (
@@ -84,7 +84,7 @@ class Navigation extends React.Component {
 					<Nav navbar >
 						<UncontrolledDropdown nav inNavbar>
 							<DropdownToggle nav >
-								<i className={`${styles['header-contrast-text'] } fas fa-bars fa-1x`}></i>
+								<i className={`${styles['header-contrast-text'] } ${styles['size25']} fas fa-bars fa-1x`}></i>
 							</DropdownToggle>
 							<DropdownMenu >
 								<DropdownItem href="/account/">Account</DropdownItem>
@@ -96,12 +96,12 @@ class Navigation extends React.Component {
 						</UncontrolledDropdown>
 						<NavItem navbar>
 							<NavLink>
-								<i onClick={slideMenu.bind(this)} className={`${styles['cursor']}  ${styles['header-contrast-text']} fas fa-toolbox fa-1x`}></i>
+								<i onClick={slideMenu.bind(this)} className={`${styles['cursor']}  ${styles['header-contrast-text']} ${styles['size25']} fas fa-toolbox fa-1x pl-2`}></i>
 							</NavLink>
 						</NavItem>
 						
 					</Nav>
-					<div className={`${styles['header-contrast-text']}`}><a href="/" className={`${styles['link-no-decor']}`}>EXE EXPLORER</a></div>
+					<div className={`${styles['header-contrast-text']} ${styles['header-height']} pt-1`}><a href="/" className={`${styles['link-no-decor']} ${styles['bold']} ${styles['size30']} pl-3`}>EXE EXPLORER</a></div>
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar>
 						<Nav className="ml-auto" navbar>
