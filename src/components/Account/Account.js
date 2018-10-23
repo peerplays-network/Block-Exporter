@@ -103,11 +103,11 @@ class AccountSearch extends Component {
 						</tr>
 					</thead>
 					<tbody>
-						{temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((account, i) =>
+						{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((account, i) =>
 							<AccountDetail detail={account} key={i}/>
 						)}
 					</tbody>
-				</table>
+				</table>{temp_data.length===0 && <div> No Accounts Found </div>}
 			</div>
 		);
 	}	

@@ -100,9 +100,9 @@ class Contract extends Component {
 					<tbody>
 						{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((contract, i) =>
 							<ContractRow detail={contract} key={i}/>
-						)}{temp_data.length===0 && <div> No Contracts Found </div>}
+						)}
 					</tbody>
-				</table>
+				</table>{temp_data.length===0 && <div> No Contracts Found </div>}
 			</div>
 		);
 	}	

@@ -112,7 +112,7 @@ class WitnessViewer extends Component {
 							<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
 						</tr>
 					</thead>
-					<tbody>
+					{searchData && <tbody>
 						{searchData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((witness) => {
 							return <WitnessRow
 								key={witness.id}
@@ -123,8 +123,8 @@ class WitnessViewer extends Component {
 								lastBlock={witness.url}
 							/>;
 						})}
-					</tbody>
-				</table>
+					</tbody>}
+				</table>{searchData.length===0 && <div> No Witnesses Found </div>}
 			</Fragment>
 		);
 	}
