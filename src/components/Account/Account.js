@@ -50,13 +50,25 @@ class AccountSearch extends Component {
 	onAccountEnter(e) {
 		e.preventDefault();
 		this.setState({ account: e.target.value });
-		this.findAccount(e.target.value, this.state.data);
+		if(e.target.value.includes('1.2.'))
+			this.findAccountById(e.target.value, this.state.data);
+		else
+			this.findAccountByName(e.target.value, this.state.data);
 	}
 
-	findAccount(accountName, data) {
+	findAccountByName(accountName, data) {
 		var temp_data = [];
 		temp_data = data.filter(obj => {
 			return obj.account_name.includes(accountName);
+		  });
+		this.setState({ temp_data: temp_data });
+		this.refreshPagination(temp_data);
+	}
+
+	findAccountById(accountId, data) {
+		var temp_data = [];
+		temp_data = data.filter(obj => {
+			return obj.account_id === (accountId);
 		  });
 		this.setState({ temp_data: temp_data });
 		this.refreshPagination(temp_data);
@@ -79,7 +91,7 @@ class AccountSearch extends Component {
 		the witness rank is the appended to the data coming in from the sort API call.*/
 		axios.get(`/api/accounts?sort=${colType}&direction=${sortType}`, {
 		}).then(response => {
-			this.findAccount(this.state.account, response.data);
+			this.findAccountByName(this.state.account, response.data);
 		}).catch(error => {console.log('error fetching witness data', error);});
 	}
 
