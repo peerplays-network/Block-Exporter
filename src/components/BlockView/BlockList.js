@@ -18,7 +18,6 @@ class BlockList extends Component {
 	}
 
 	componentDidMount() {
-		debugger;
 		let lower=0;
 		let upper=1;
 		axios.get('api/blocks/last', {
