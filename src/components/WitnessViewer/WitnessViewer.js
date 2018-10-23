@@ -120,6 +120,7 @@ class WitnessViewer extends Component {
 								witness={witness.account_name}
 								votes={witness.total_votes}
 								misses={witness.total_missed}
+								account_id={witness.account_id}
 								lastBlock={witness.url}
 							/>;
 						})}
@@ -152,6 +153,7 @@ class WitnessViewer extends Component {
 								votes={witness.total_votes}
 								misses={witness.total_missed}
 								lastBlock={witness.url}
+								account_id={witness.account_id}
 							/>;
 						})}
 					</tbody>
