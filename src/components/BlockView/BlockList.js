@@ -24,14 +24,12 @@ class BlockList extends Component {
 		}).then(response => {
 			lower=response.data[0].block_number-(Constants.BLOCKS_PER_PAGE-1);
 			upper=response.data[0].block_number;
+			console.log('length 1: ', response.data[0].block_number);
+			this.setState({blockLength: response.data[0].block_number});
 			return axios.get(`api/blocks?start=${lower}&end=${upper}`);
 		}).then(response => {
-			this.setState({blockLength: response.data[0].block_number});
-			this.setState({blocks: response.data.reverse(), blockLength: response.data[0].block_number});
+			this.setState({blocks: response.data.reverse(), lower, upper});
 			return axios.get('api/blocks/length');
-		// .then(response => {
-		// 	this.setState({blockLength: response.data});
-		// 	console.log('block length',response.data);
 		}).catch(error => console.log('error fetching blocks: ', error));
 	}
 
