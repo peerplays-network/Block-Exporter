@@ -1,7 +1,3 @@
-.clickable {
-    cursor: pointer;
-}
-
 .header-background{
     background: black;
   }
@@ -9,7 +5,7 @@
     color: white;
   }
   
-  .accounts-header{
+  .blocks-header{
     background: rgb(61, 61, 61);
   }
   
