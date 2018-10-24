@@ -31,15 +31,9 @@ router.get('/balance/:name', function (req, res, next) {
 		return;
 	}
 
-	// Blockchain.getAccountBalanceFromName(req.params.name).then((r) => {
-	// 	res.send(r);
-	// 	console.log(r);
-	// })
-
-	// Blockchain.connect(config_server.BLOCKCHAIN_URL).then(async () => {
-	  
-	// });
-
+	Blockchain.getAccountBalanceFromName(req.params.name, []).then((r) => {
+		res.send(r);
+	});
 });
 
 // Search API

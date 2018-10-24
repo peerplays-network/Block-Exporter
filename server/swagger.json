@@ -1,486 +1,577 @@
 {
 	"openapi": "3.0.1",
 	"info": {
-		"title": "Exe Explorer",
-		"description": "The official API documentation for Exe Explorer.",
-		"version": "0.1"
+	  "title": "Exe Explorer",
+	  "description": "The official API documentation for Exe Explorer.",
+	  "version": "0.1"
 	},
-	"servers": [{
-			"url": "http://localhost:5000/api"
-		},
-		{
-			"url": "http://dev.5050labs.fun:5000/api"
-		}
+	"servers": [
+	  {
+		"url": "http://localhost:5000/api"
+	  },
+	  {
+		"url": "http://dev.5050labs.fun:5000/api"
+	  }
 	],
-	"tags": [{
-			"name": "Accounts",
-			"description": "Accounts"
-		},
-		{
-			"name": "Blocks",
-			"description": "Blocks"
-		},
-		{
-			"name": "Contracts",
-			"description": "Smart Contracts"
-		},
-		{
-			"name": "Operations",
-			"description": "Operations"
-		},
-		{
-			"name": "Transactions",
-			"description": "Transactions"
-		},
-		{
-			"name": "Witnesses/Committee",
-			"description": "Witnesses and Committee"
-		},
-		{
-			"name": "Other",
-			"description": "Other useful API calls"
-		}
+	"tags": [
+	  {
+		"name": "Accounts",
+		"description": "Accounts"
+	  },
+	  {
+		"name": "Blocks",
+		"description": "Blocks"
+	  },
+	  {
+		"name": "Contracts",
+		"description": "Smart Contracts"
+	  },
+	  {
+		"name": "Operations",
+		"description": "Operations"
+	  },
+	  {
+		"name": "Transactions",
+		"description": "Transactions"
+	  },
+	  {
+		"name": "Witnesses/Committee",
+		"description": "Witnesses and Committee"
+	  },
+	  {
+		"name": "Other",
+		"description": "Other useful API calls"
+	  }
 	],
 	"paths": {
-		"/accounts": {
-			"get": {
-				"tags": [
-					"Accounts"
-				],
-				"description": "Get a list of accounts",
-				"parameters": [{
-						"name": "sort",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						},
-						"example": "account_id",
-						"description": "Column name to sort by"
-					},
-					{
-						"name": "direction",
-						"in": "query",
-						"schema": {
-							"type": "string",
-							"enum": [
-								"ASC",
-								"DESC"
-							]
-						},
-						"example": "ASC"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"400": {
-						"description": "Invalid parameter"
-					}
-				}
+	  "/accounts": {
+		"get": {
+		  "tags": [
+			"Accounts"
+		  ],
+		  "description": "Get a list of accounts",
+		  "parameters": [
+			{
+			  "name": "sort",
+			  "in": "query",
+			  "schema": {
+				"type": "string"
+			  },
+			  "example": "account_id",
+			  "description": "Column name to sort by"
+			},
+			{
+			  "name": "direction",
+			  "in": "query",
+			  "schema": {
+				"type": "string",
+				"enum": [
+				  "ASC",
+				  "DESC"
+				]
+			  },
+			  "example": "ASC"
 			}
-		},
-		"/accounts/{name}": {
-			"get": {
-				"tags": [
-					"Accounts"
-				],
-				"description": "Find account by name",
-				"parameters": [{
-					"name": "name",
-					"in": "path",
-					"description": "user name",
-					"required": true,
-					"schema": {
-						"type": "string"
-					},
-					"example": "init1"
-				}],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"404": {
-						"description": "Not found"
-					}
-				}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"400": {
+			  "description": "Invalid parameter"
 			}
-		},
-		"/blocks": {
-			"get": {
-				"tags": [
-					"Blocks"
-				],
-				"description": "Get a list of blocks",
-				"parameters": [{
-						"name": "start",
-						"in": "query",
-						"schema": {
-							"type": "integer"
-						},
-						"example": 1,
-						"description": "Starting block number (inclusive)"
-					},
-					{
-						"name": "end",
-						"in": "query",
-						"schema": {
-							"type": "integer"
-						},
-						"example": 3,
-						"description": "Ending block number (inclusive)"
-					},
-					{
-						"name": "direction",
-						"in": "query",
-						"schema": {
-							"type": "string",
-							"enum": [
-								"ASC",
-								"DESC"
-							]
-						},
-						"example": "ASC"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"400": {
-						"description": "Invalid request"
-					},
-					"404": {
-						"description": "Not found"
-					}
-				}
-			}
-		},
-		"/blocks/last": {
-			"get": {
-				"tags": [
-					"Blocks"
-				],
-				"description": "Get the last block in the database",
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"404": {
-						"description": "No data available"
-					}
-				}
-			}
-		},
-		"/blocks/length": {
-			"get": {
-				"tags": [
-					"Blocks"
-				],
-				"description": "Get the length of the blockchain",
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					}
-				}
-			}
-		},
-		"/contracts": {
-			"get": {
-				"tags": [
-					"Contracts"
-				],
-				"description": "Get a list of smart contracts",
-				"parameters": [{
-						"name": "sort",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						},
-						"example": "account_id",
-						"description": "Column name to sort by"
-					},
-					{
-						"name": "direction",
-						"in": "query",
-						"schema": {
-							"type": "string",
-							"enum": [
-								"ASC",
-								"DESC"
-							]
-						},
-						"example": "ASC"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"400": {
-						"description": "Invalid request"
-					}
-				}
-			}
-		},
-		"/contracts/{name}": {
-			"get": {
-				"tags": [
-					"Contracts"
-				],
-				"description": "Find smart contract by name",
-				"parameters": [{
-					"name": "name",
-					"in": "path",
-					"description": "contract name",
-					"required": true,
-					"schema": {
-						"type": "string"
-					},
-					"example": "e.3"
-				}],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"404": {
-						"description": "Not found"
-					}
-				}
-			}
-		},
-		"/operations": {
-			"get": {
-				"tags": [
-					"Operations"
-				],
-				"description": "Get a list of operations",
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					}
-				}
-			}
-		},
-		"/operations/{id}": {
-			"get": {
-				"tags": [
-					"Operations"
-				],
-				"description": "Find operation from id",
-				"parameters": [{
-					"name": "id",
-					"in": "path",
-					"description": "blockchain op code",
-					"required": true,
-					"schema": {
-						"type": "integer"
-					},
-					"example": "init1"
-				}],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"404": {
-						"description": "Not found"
-					}
-				}
-			}
-		},
-		"/transactions": {
-			"get": {
-				"tags": [
-					"Transactions"
-				],
-				"description": "Get a list of transactions",
-				"parameters": [{
-						"name": "start",
-						"in": "query",
-						"schema": {
-							"type": "integer"
-						},
-						"example": 1,
-						"description": "Starting block number (inclusive)"
-					},
-					{
-						"name": "end",
-						"in": "query",
-						"schema": {
-							"type": "integer"
-						},
-						"example": 3,
-						"description": "Ending block number (inclusive)"
-					},
-					{
-						"name": "direction",
-						"in": "query",
-						"schema": {
-							"type": "string",
-							"enum": [
-								"ASC",
-								"DESC"
-							]
-						},
-						"example": "ASC"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"204": {
-						"description": "No content"
-					},
-					"400": {
-						"description": "Invalid request"
-					}
-				}
-			}
-		},
-		"/transactions/{id}": {
-			"get": {
-				"tags": [
-					"Transactions"
-				],
-				"description": "Find transactions by account id",
-				"parameters": [{
-					"name": "id",
-					"in": "path",
-					"description": "account id (1.2.x)",
-					"required": true,
-					"schema": {
-						"type": "string"
-					},
-					"example": "1.2.15"
-				}],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"404": {
-						"description": "Not found"
-					}
-				}
-			}
-		},
-		"/witnesses": {
-			"get": {
-				"tags": [
-					"Witnesses/Committee"
-				],
-				"description": "Get a list of witnesses",
-				"parameters": [{
-						"name": "sort",
-						"in": "query",
-						"schema": {
-							"type": "string"
-						},
-						"example": "account_id",
-						"description": "Column name to sort by"
-					},
-					{
-						"name": "direction",
-						"in": "query",
-						"schema": {
-							"type": "string",
-							"enum": [
-								"ASC",
-								"DESC"
-							]
-						},
-						"example": "ASC"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"400": {
-						"description": "Invalid request"
-					}
-				}
-			}
-		},
-		"/witnesses/{name}": {
-			"get": {
-				"tags": [
-					"Witnesses/Committee"
-				],
-				"description": "Find witness by account name",
-				"parameters": [{
-					"name": "name",
-					"in": "path",
-					"description": "user name",
-					"required": true,
-					"schema": {
-						"type": "string"
-					},
-					"example": "init1"
-				}],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"404": {
-						"description": "Not found"
-					}
-				}
-			}
-		},
-		"/committee/{id}": {
-			"get": {
-				"tags": [
-					"Witnesses/Committee"
-				],
-				"description": "Find committee member by account name",
-				"parameters": [{
-					"name": "id",
-					"in": "path",
-					"description": "user id (1.2.x)",
-					"required": true,
-					"schema": {
-						"type": "string"
-					},
-					"example": "1.2.15"
-				}],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"404": {
-						"description": "Not found"
-					}
-				}
-			}
-		},
-		"/search": {
-			"get": {
-				"tags": [
-					"Other"
-				],
-				"description": "Search for an object in the blockchain",
-				"parameters": [{
-					"name": "input",
-					"in": "query",
-					"schema": {
-						"type": "string"
-					},
-					"example": 1,
-					"description": "Name, Object ID, or Block number"
-				}],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"400": {
-						"description": "Invalid request"
-					},
-					"404": {
-						"description": "Not found"
-					}
-				}
-			}
+		  }
 		}
+	  },
+	  "/accounts/{name}": {
+		"get": {
+		  "tags": [
+			"Accounts"
+		  ],
+		  "description": "Find account by name",
+		  "parameters": [
+			{
+			  "name": "name",
+			  "in": "path",
+			  "description": "user name",
+			  "required": true,
+			  "schema": {
+				"type": "string"
+			  },
+			  "example": "init1"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"404": {
+			  "description": "Not found"
+			}
+		  }
+		}
+	  },
+	  "/blocks": {
+		"get": {
+		  "tags": [
+			"Blocks"
+		  ],
+		  "description": "Get a list of blocks",
+		  "parameters": [
+			{
+			  "name": "start",
+			  "in": "query",
+			  "schema": {
+				"type": "integer"
+			  },
+			  "example": 1,
+			  "description": "Starting block number (inclusive)"
+			},
+			{
+			  "name": "end",
+			  "in": "query",
+			  "schema": {
+				"type": "integer"
+			  },
+			  "example": 3,
+			  "description": "Ending block number (inclusive)"
+			},
+			{
+			  "name": "direction",
+			  "in": "query",
+			  "schema": {
+				"type": "string",
+				"enum": [
+				  "ASC",
+				  "DESC"
+				]
+			  },
+			  "example": "ASC"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"400": {
+			  "description": "Invalid request"
+			},
+			"404": {
+			  "description": "Not found"
+			}
+		  }
+		}
+	  },
+	  "/blocks/last": {
+		"get": {
+		  "tags": [
+			"Blocks"
+		  ],
+		  "description": "Get the last block in the database",
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"404": {
+			  "description": "No data available"
+			}
+		  }
+		}
+	  },
+	  "/blocks/length": {
+		"get": {
+		  "tags": [
+			"Blocks"
+		  ],
+		  "description": "Get the length of the blockchain",
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			}
+		  }
+		}
+	  },
+	  "/contracts": {
+		"get": {
+		  "tags": [
+			"Contracts"
+		  ],
+		  "description": "Get a list of smart contracts",
+		  "parameters": [
+			{
+			  "name": "sort",
+			  "in": "query",
+			  "schema": {
+				"type": "string"
+			  },
+			  "example": "account_id",
+			  "description": "Column name to sort by"
+			},
+			{
+			  "name": "direction",
+			  "in": "query",
+			  "schema": {
+				"type": "string",
+				"enum": [
+				  "ASC",
+				  "DESC"
+				]
+			  },
+			  "example": "ASC"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"400": {
+			  "description": "Invalid request"
+			}
+		  }
+		}
+	  },
+	  "/contracts/{name}": {
+		"get": {
+		  "tags": [
+			"Contracts"
+		  ],
+		  "description": "Find smart contract by name",
+		  "parameters": [
+			{
+			  "name": "name",
+			  "in": "path",
+			  "description": "contract name",
+			  "required": true,
+			  "schema": {
+				"type": "string"
+			  },
+			  "example": "e.3"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"404": {
+			  "description": "Not found"
+			}
+		  }
+		}
+	  },
+	  "/operations": {
+		"get": {
+		  "tags": [
+			"Operations"
+		  ],
+		  "description": "Get a list of operations",
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			}
+		  }
+		}
+	  },
+	  "/operations/{id}": {
+		"get": {
+		  "tags": [
+			"Operations"
+		  ],
+		  "description": "Find operation from id",
+		  "parameters": [
+			{
+			  "name": "id",
+			  "in": "path",
+			  "description": "blockchain op code",
+			  "required": true,
+			  "schema": {
+				"type": "integer"
+			  },
+			  "example": "init1"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"404": {
+			  "description": "Not found"
+			}
+		  }
+		}
+	  },
+	  "/transactions": {
+		"get": {
+		  "tags": [
+			"Transactions"
+		  ],
+		  "description": "Get a list of transactions",
+		  "parameters": [
+			{
+			  "name": "start",
+			  "in": "query",
+			  "schema": {
+				"type": "integer"
+			  },
+			  "example": 1,
+			  "description": "Starting block number (inclusive)"
+			},
+			{
+			  "name": "end",
+			  "in": "query",
+			  "schema": {
+				"type": "integer"
+			  },
+			  "example": 3,
+			  "description": "Ending block number (inclusive)"
+			},
+			{
+			  "name": "direction",
+			  "in": "query",
+			  "schema": {
+				"type": "string",
+				"enum": [
+				  "ASC",
+				  "DESC"
+				]
+			  },
+			  "example": "ASC"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"204": {
+			  "description": "No content"
+			},
+			"400": {
+			  "description": "Invalid request"
+			}
+		  }
+		}
+	  },
+	  "/transactions/{id}": {
+		"get": {
+		  "tags": [
+			"Transactions"
+		  ],
+		  "description": "Find transactions by account id",
+		  "parameters": [
+			{
+			  "name": "id",
+			  "in": "path",
+			  "description": "account id (1.2.x)",
+			  "required": true,
+			  "schema": {
+				"type": "string"
+			  },
+			  "example": "1.2.15"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"404": {
+			  "description": "Not found"
+			}
+		  }
+		}
+	  },
+	  "/transactions/recent": {
+		"get": {
+		  "tags": [
+			"Transactions"
+		  ],
+		  "description": "Find transactions by account id",
+		  "parameters": [
+			{
+			  "name": "id",
+			  "in": "query",
+			  "description": "database id",
+			  "schema": {
+				"type": "integer"
+			  },
+			  "example": 2127
+			},
+			{
+			  "name": "limit",
+			  "in": "query",
+			  "schema": {
+				"type": "integer"
+			  },
+			  "example": 3,
+			  "description": "How many elements to return from id"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"400": {
+			  "description": "Invalid request"
+			},
+			"404": {
+			  "description": "Not found"
+			}
+		  }
+		}
+	  },
+	  "/witnesses": {
+		"get": {
+		  "tags": [
+			"Witnesses/Committee"
+		  ],
+		  "description": "Get a list of witnesses",
+		  "parameters": [
+			{
+			  "name": "sort",
+			  "in": "query",
+			  "schema": {
+				"type": "string"
+			  },
+			  "example": "account_id",
+			  "description": "Column name to sort by"
+			},
+			{
+			  "name": "direction",
+			  "in": "query",
+			  "schema": {
+				"type": "string",
+				"enum": [
+				  "ASC",
+				  "DESC"
+				]
+			  },
+			  "example": "ASC"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"400": {
+			  "description": "Invalid request"
+			}
+		  }
+		}
+	  },
+	  "/witnesses/{name}": {
+		"get": {
+		  "tags": [
+			"Witnesses/Committee"
+		  ],
+		  "description": "Find witness by account name",
+		  "parameters": [
+			{
+			  "name": "name",
+			  "in": "path",
+			  "description": "user name",
+			  "required": true,
+			  "schema": {
+				"type": "string"
+			  },
+			  "example": "init1"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"404": {
+			  "description": "Not found"
+			}
+		  }
+		}
+	  },
+	  "/committee/{id}": {
+		"get": {
+		  "tags": [
+			"Witnesses/Committee"
+		  ],
+		  "description": "Find committee member by account name",
+		  "parameters": [
+			{
+			  "name": "id",
+			  "in": "path",
+			  "description": "user id (1.2.x)",
+			  "required": true,
+			  "schema": {
+				"type": "string"
+			  },
+			  "example": "1.2.15"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"404": {
+			  "description": "Not found"
+			}
+		  }
+		}
+	  },
+	  "/search": {
+		"get": {
+		  "tags": [
+			"Other"
+		  ],
+		  "description": "Search for an object in the blockchain",
+		  "parameters": [
+			{
+			  "name": "input",
+			  "in": "query",
+			  "schema": {
+				"type": "string"
+			  },
+			  "example": 1,
+			  "description": "Name, Object ID, or Block number"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"400": {
+			  "description": "Invalid request"
+			},
+			"404": {
+			  "description": "Not found"
+			}
+		  }
+		}
+	  },
+	  "/balance/{name}": {
+		"get": {
+		  "tags": [
+			"Other"
+		  ],
+		  "description": "Search for an object in the blockchain",
+		  "parameters": [
+			{
+			  "name": "name",
+			  "in": "path",
+			  "description": "user name",
+			  "required": true,
+			  "schema": {
+				"type": "string"
+			  },
+			  "example": "init1"
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			},
+			"400": {
+			  "description": "Invalid request"
+			},
+			"404": {
+			  "description": "Not found"
+			}
+		  }
+		}
+	  }
 	}
-}
+  }
