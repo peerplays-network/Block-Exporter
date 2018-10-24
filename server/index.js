@@ -261,7 +261,7 @@ connection.connect(function(err) {
 		console.log('Sync mode is ON');
 		await syncDatabase(connection);
 
-		let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
+		let sql = `SELECT block_number FROM explorer.blocks ORDER BY block_number DESC LIMIT 1`;
 		connection.query(sql, function (err, result) {
 			if (result[0]) {
 				result = result[0].block_number;
