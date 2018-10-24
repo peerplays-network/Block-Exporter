@@ -417,6 +417,19 @@
 		  }
 		}
 	  },
+	  "/transactions/length": {
+		"get": {
+		  "tags": [
+			"Transactions"
+		  ],
+		  "description": "Get # of transactions",
+		  "responses": {
+			"200": {
+			  "description": "successful operation"
+			}
+		  }
+		}
+	  },
 	  "/witnesses": {
 		"get": {
 		  "tags": [
