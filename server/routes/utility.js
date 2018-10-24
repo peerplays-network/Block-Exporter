@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const mysql = require('mysql');
 const db = require('../database/constants');
+const Blockchain = require('../api');
+const config_server = require('../config/main');
 
 function determineSearchType(term) {
 	if (!term.includes('.') && isNaN(term)) { 
@@ -21,6 +23,18 @@ function determineSearchType(term) {
 		return 'UNKNOWN';
 	}
 }
+
+// Balances API
+router.get('/balance/:name', function (req, res, next) {
+	if (!req.params.name) {
+		res.status(400).send('400 - Name required');
+		return;
+	}
+
+	Blockchain.getAccountBalanceFromName(req.params.name, []).then((r) => {
+		res.send(r);
+	});
+});
 
 // Search API
 router.get('/search', function (req, res) {
