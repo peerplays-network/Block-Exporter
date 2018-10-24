@@ -3,6 +3,43 @@ var router = express.Router();
 const mysql = require('mysql');
 const db = require('../database/constants');
 
+
+// Transactions API: GET # of transactions
+router.get('/transactions/length', function (req, res) {
+
+	const connection = mysql.createConnection({
+		host: db.HOST,
+		user: db.USER,
+		password: db.PASSWORD,
+		database: db.DATABASE
+	});
+
+	// Establish connection
+	connection.connect(function (err) {
+		if (err) {
+			console.error('error connecting to DB: ' + err.stack);
+			return;
+		}
+	});
+
+	const sql = 'SELECT COUNT(*) FROM transactions;';
+
+	// Perform Query
+	connection.query(sql, function (err, rows, fields) {
+		if (err) throw err;
+
+		if (rows) {
+			res.send(rows[0]['COUNT(*)'].toString());
+		} else {
+			res.send('0');
+		}
+	});
+
+	// Close connection
+	connection.end();
+});
+
+
 // Transactions API: GET recent transactions
 router.get('/transactions/recent', function (req, res) {
 	// Start and End are required.
