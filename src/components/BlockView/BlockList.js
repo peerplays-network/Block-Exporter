@@ -57,7 +57,8 @@ class BlockList extends Component {
 			<div className="container pt-1 pb-5 mt-5">
 				<div className="card mt-1">
 					<div className="card-block">
-						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3`}><span className="fa fa-cubes">&nbsp;</span> Browse Blocks</h1>
+						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3`}>
+						<span className="fa fa-cube">&nbsp;</span> Browse Blocks</h1>
 						<Table responsive>
 							<thead className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>
 								<tr>
