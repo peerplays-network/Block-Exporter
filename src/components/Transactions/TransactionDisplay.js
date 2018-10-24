@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
-import TransactionRow from './TransactionRow';
+import React, { Component, Fragment } from 'react';
+import {Table} from 'reactstrap'; 
+import Pagination from 'react-paginate';
 import axios from 'axios';
+import styles from './styles.css';
+import * as Constants from '../../constants/constants'; 
 //State will be removed once data feed is established
 
 class TransactionDisplay extends Component {
 	constructor() {
 		super();
 		this.state = {
-			transactionData:[
-				
-			]
+			transactionData:[], transactionLength: 0, currentPage: 0,
 		};
 	}
 
@@ -18,7 +19,11 @@ class TransactionDisplay extends Component {
 		}).then(response => {
 			return axios.get('/api/transactions/recent?id=&limit=10');
 		}).then(response => {
+			console.log('transaction data', response.data);
 			this.setState({transactionData: response.data});
+			return axios.get('/api/transactions/length')
+		}).then(response => {
+			this.setState({transactionLength: response.data});
 		}).catch(error => console.log('error fetching blocks: ', error));
 	}
 
@@ -28,44 +33,66 @@ class TransactionDisplay extends Component {
 		this.props.calculateComponentHeight(this.props.id, gridHeight);
 	}
 
-	computeTime(time) {
-		// assume time is in milliseconds for now
-		if (time < 1000) {
-			return 'less than a second ago...';
-		} else if ((1000 <= time) && (time < 60000)) {
-			return Math.floor(time/1000) + 'second(s) ago...';
-		} else {
-			return Math.floor(time/60000) + 'minute(s) ago...';
-		}
+	changePage(index) {
+		this.setState({currentPage: index.selected});
+		//this.loadNextBlocks(index.selected);
 	}
 	
 	findTransaction(transaction, data) {
-		var temp_data = [];
-		//if the data.id matches witness name add to data
-		for (var number in data) {
-			if (data[number].account.indexOf(transaction) >= 0 ) 
-				temp_data.push(data[number]);
+		
+	}
+
+	renderTransaction(transaction, i) {
+		const operationType = JSON.parse(transaction.operations)[0];
+		const parsedTransaction = JSON.parse(transaction.operations)[1];
+		if(operationType === 0) {
+			return (
+				<tr key={i}>
+					<td>{parsedTransaction.from} transfered {parsedTransaction.amount.amount} to {parsedTransaction.to}</td>
+				</tr> 
+				
+			);
 		}
-		if (temp_data.length <= 0)
-			temp_data = data;
-		this.setState({ searchData: temp_data });
+		else if(operationType === 37) {
+			return (
+				<tr key={i}>
+					<td>{parsedTransaction.total_claimed.amount} deposited to {parsedTransaction.deposit_to_account}</td>
+				</tr> 
+			);
+		}
+		else {
+
+		}
 	}
 
 	render() {
 		return (
-			<div>
-
-				{this.state.transactionData.map((transaction, i) => {
-					return <TransactionRow
-						account={transaction.account} 
-						action={transaction.action}
-						memo={transaction.memo}
-						time={this.computeTime(transaction.time)}
-						transactionID={(transaction.transactionID).toString(16)} /* must convert the hex to string to display properly */
-						key={i}
-					/>;
-				})}
-
+			<div className="pl-1">
+				<Pagination
+					breakClassName={`${styles['pagination']}`}
+					breakLabel={<a className="page-link">...</a>}
+					pageClassName={`${styles['pagination']}`}
+					previousClassName={`${styles['pagination']}`}
+					nextClassName={`${styles['pagination']}`}
+					pageLinkClassName="page-link"
+					previousLinkClassName="page-link"
+					nextLinkClassName="page-link"
+					pageCount={this.state.transactionLength/Constants.TRANSACTIONS_PER_PAGE}
+					pageRangeDisplayed={2}
+					onPageChange={this.changePage.bind(this)}
+				/>
+				<Table responsive>
+					<thead>
+						<tr>
+							<th style={{cursor:'default'}}>Transaction</th>
+						</tr>
+					</thead>
+					<tbody className="text-center">
+						{this.state.transactionData.map((transaction, i) => {
+							return this.renderTransaction(transaction, i);
+						})}
+					</tbody>
+				</Table>
 			</div>
 		);
 	}
