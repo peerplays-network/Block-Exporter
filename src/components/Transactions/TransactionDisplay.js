@@ -8,30 +8,17 @@ class TransactionDisplay extends Component {
 		super();
 		this.state = {
 			transactionData:[
-				{account: 'codepuncher57', action: 'cancels staking action', time: 8, memo: '', transactionID: 0x39e2b580}, 
-				{account: 'speculationman', action: 'wants 200 eXe for 0.43 BTC', time: 800, memo: '', transactionID: 0x52d11dee},
-				{account: 'trenchcoattester', action: 'sent 128 eXe to debughero', time: 8000, memo: 'payment for killer work', transactionID: 0x0339afbb},
-				{account: 'pebkacspecialist', action: 'cancels trade order', time: 10000, memo: '', transactionID: 0x2fef3d58},
-				{account: 'exewatcher', action: 'recieved 5 eXe for producing a block', time: 60000, memo: 'Witness Reward', transactionID: 0xf2c1f6a6},
-				{account: 'codepuncher57', action: 'stakes 407 eXe', time: 80000, memo: '', transactionID: 0x9b3e0a9b},
+				
 			]
 		};
 	}
 
 	fetchData() {
-		//API call to search for transactions
-		let lower=0;
-		let upper=1;
-		axios.get('/api/blocks/last', {
+		axios.get('/api/transactions/recent?id=&limit=1', {
 		}).then(response => {
-			lower=response.data[0].block_number-9;
-			upper=response.data[0].block_number;
-			return axios.get(`api/transactions?start=${lower}&end=${upper}`);
+			return axios.get('/api/transactions/recent?id=&limit=10');
 		}).then(response => {
-			const transactionData = response.data;
-			
-			this.setState({transactionData: transactionData});
-			return axios.get('api/blocks/length');
+			this.setState({transactionData: response.data});
 		}).catch(error => console.log('error fetching blocks: ', error));
 	}
 
