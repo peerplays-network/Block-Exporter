@@ -27,10 +27,10 @@ class Panel extends Component {
 		return (
 			<div>
 				<div className="card border-dark" style={{maxHeight: `${this.calculateHeight()}`}}>
-					<div className="card-header pr-1">
+					<div className={`${styles['header-widget-background']} ${styles['header-contrast-text']} card-header pr-1`}>
 						<span>
 							<h5 className="card-title float-left">{this.props.headerText}</h5>
-							<Button type="button" className="close" onClick={this.props.onClose(this.props.componentId)}> <span aria-hidden="true">&times;</span> </Button>
+							<Button type="button" className={`${styles['header-contrast-text']} close`} onClick={this.props.onClose(this.props.componentId)}> <span aria-hidden="true">&times;</span> </Button>
 						</span>
 					</div>
 					<div className={`${styles['box-shadow']} p-1 panel-body`}>

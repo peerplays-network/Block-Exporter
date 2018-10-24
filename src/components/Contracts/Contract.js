@@ -49,7 +49,7 @@ class Contract extends Component {
 		var temp_data = [];
 		//if the data name matches contract name, add to data
 		for (var contract in data) {
-			if (data[contract].name.indexOf(contractName) >= 0 ) 
+			if (data[contract].name.indexOf(contractName) >= 0 || data[contract].object_id.indexOf(contractName) >= 0) 
 				temp_data.push(data[contract]);
 		}
 		// if (temp_data.length <= 0)
@@ -100,9 +100,9 @@ class Contract extends Component {
 					<tbody>
 						{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((contract, i) =>
 							<ContractRow detail={contract} key={i}/>
-						)}{temp_data.length===0 && <div> No Contracts Found </div>}
+						)}
 					</tbody>
-				</table>
+				</table>{temp_data.length===0 && <div> No Contracts Found </div>}
 			</div>
 		);
 	}	

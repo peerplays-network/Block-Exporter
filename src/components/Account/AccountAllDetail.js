@@ -19,13 +19,13 @@ class AccountAllDetail extends Component {
 	}
 
 	getAccount() {
-		this.account = this.props.match.url.substring(18);
+		this.account = this.props.match.params[0].split('/');
 	}
 
 	findData(e) {
 		this.getAccount();
 		//API call to search for Account
-		axios.get(`/api/accounts/${this.account}`, {
+		axios.get(`/api/accounts/${this.account[0]}`, {
 		}).then(response => {
 			this.setState({ Account: response.data });
 		}).catch(error => {console.log('error is fetching account data', error);});
@@ -34,7 +34,7 @@ class AccountAllDetail extends Component {
 	findTransactions() {
 		let account_id = '';
 
-		axios.get(`/api/accounts/${this.account}`, {
+		axios.get(`/api/accounts/${this.account[0]}`, {
 		}).then(response => {
 			account_id = response.data[0].account_id;
 			return axios.get(`/api/transactions/${account_id}`);
@@ -45,7 +45,7 @@ class AccountAllDetail extends Component {
 	}
 
 	findWitnesses(e) {
-		const account = this.account;
+		const account = this.account[0];
 		//API call to search for Account
 		axios.get('/api/witnesses/', {
 		}).then(response => {
@@ -59,7 +59,7 @@ class AccountAllDetail extends Component {
 	findCommittee(e) {
 		let account_id = '';
 		//API call to search for Account
-		axios.get(`/api/accounts/${this.account}`, {
+		axios.get(`/api/accounts/${this.account[0]}`, {
 		}).then(response => {
 			account_id = response.data[0].account_id;
 			return axios.get(`/api/committee/${account_id}`);
@@ -73,6 +73,9 @@ class AccountAllDetail extends Component {
 		this.findTransactions();
 		this.findWitnesses();
 		this.findCommittee();
+
+		if(!!this.account[1] && this.account[1].includes('1.6'))
+			this.setState({activeTab: '3'});
 	}
 
 	toggle(tab) {
@@ -99,8 +102,8 @@ class AccountAllDetail extends Component {
 		
 		return (
 			<NavItem>
-				<NavLink className={classnames({ active: this.state.activeTab === index })} onClick={() => { this.toggle(index); }}>
-					{ type } Details ({ this.account })
+				<NavLink className={classnames({ active: this.state.activeTab === index })} style={{cursor:'pointer'}} onClick={() => { this.toggle(index); }}>
+					{ type } Details ({ this.account[0] })
 				</NavLink>
 			</NavItem>
 		);

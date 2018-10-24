@@ -24,12 +24,12 @@ class BlockList extends Component {
 		}).then(response => {
 			lower=response.data[0].block_number-(Constants.BLOCKS_PER_PAGE-1);
 			upper=response.data[0].block_number;
+			console.log('length 1: ', response.data[0].block_number);
+			this.setState({blockLength: response.data[0].block_number});
 			return axios.get(`api/blocks?start=${lower}&end=${upper}`);
 		}).then(response => {
 			this.setState({blocks: response.data.reverse(), lower, upper});
 			return axios.get('api/blocks/length');
-		}).then(response => {
-			this.setState({blockLength: response.data});
 		}).catch(error => console.log('error fetching blocks: ', error));
 	}
 
@@ -54,18 +54,18 @@ class BlockList extends Component {
 		console.log('history', this.props.history);
 		const {blocks, blockLength} = this.state;
 		return (
-			<div className="container pt-4 pb-5 mt-5">
-				<div className="card mt-3">
+			<div className="container pt-1 pb-5 mt-5">
+				<div className="card mt-1">
 					<div className="card-block">
-						<h1 className="display-5 text-center mt-3"><span className="fa fa-cubes">&nbsp;</span> Browse Blocks</h1>
+						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3`}><span className="fa fa-cubes">&nbsp;</span> Browse Blocks</h1>
 						<Table responsive>
-							<thead className="text-center">
+							<thead className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>
 								<tr>
-									<th>Height</th>
-									<th>Time</th>
-									<th>Witness</th>
-									<th>Transactions</th>
-									<th>Operations</th>
+									<th style={{cursor:'default'}}>Height</th>
+									<th style={{cursor:'default'}}>Time</th>
+									<th style={{cursor:'default'}}>Witness</th>
+									<th style={{cursor:'default'}}>Transactions</th>
+									<th style={{cursor:'default'}}>Operations</th>
 								</tr>
 							</thead>
 							<tbody className="text-center">
@@ -107,4 +107,3 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps)(BlockList);
-

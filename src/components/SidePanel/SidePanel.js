@@ -6,9 +6,9 @@ class SidePanel extends Component {
 	render() {
 		return (
 		  <div className={`sliding-menu ${styles['sliding-menu']}`}>
-				<div className="container">
-					<div className="row justify-content-center">
-						<p>Widgets</p>
+				<div className="container ">
+					<div className={`${styles['widget-header']} row justify-content-center`}>
+						<p><h4 className={`${styles['sidepanel-contrast-text']} pt-3`}>Widgets</h4></p>
 					</div>
 				</div>
 				<table className="table">

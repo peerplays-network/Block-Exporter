@@ -2,3 +2,11 @@
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);
   overflow: auto;
 }
+
+.header-widget-background{
+  background:  rgb(61, 61, 61);
+}
+
+.header-contrast-text{
+  color: rgb(255, 255, 255);
+}
