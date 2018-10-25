@@ -5,7 +5,6 @@ import {
 	Navbar,
 	Collapse,
 	NavbarToggler,
-	NavbarBrand,
 	Nav,
 	NavItem,
 	NavLink,
@@ -94,11 +93,13 @@ class Navigation extends React.Component {
 								<DropdownItem href="/block-list">Blocks</DropdownItem>
 							</DropdownMenu>
 						</UncontrolledDropdown>
-						<NavItem navbar>
-							<NavLink>
-								<i onClick={slideMenu.bind(this)} className={`${styles['cursor']}  ${styles['header-contrast-text']} ${styles['size25']} fas fa-toolbox fa-1x pl-2`}></i>
-							</NavLink>
-						</NavItem>
+						{this.props.history.location.pathname === '/' ? 
+							<NavItem navbar>
+								<NavLink>
+									<i onClick={slideMenu.bind(this)} className={`${styles['cursor']} ${styles['header-contrast-text']} ${styles['size25']} fas fa-toolbox fa-1x pl-2`}></i>
+								</NavLink>
+							</NavItem>
+							: null}
 						
 					</Nav>
 					<div className={`${styles['header-contrast-text']} ${styles['header-height']} pt-1`}><a href="/" className={`${styles['link-no-decor']} ${styles['bold']} ${styles['size30']} pl-3`}>EXE EXPLORER</a></div>
@@ -107,7 +108,8 @@ class Navigation extends React.Component {
 						<Nav className="ml-auto" navbar>
 							<NavItem>
 								<InputGroup size="sm">
-									<Input id="searchBar" onChange={this.textChanged.bind(this)} onKeyPress={this.onKeyPress.bind(this)} value={this.state.searchText} placeholder="Search for name or id"></Input>
+									<Input id="searchBar" onChange={this.textChanged.bind(this)} onKeyPress={this.onKeyPress.bind(this)} value={this.state.searchText} 
+										placeholder="Search for name or id"></Input>
 									<InputGroupAddon addonType="prepend"><Button onClick={this.search.bind(this)}>Search</Button></InputGroupAddon>
 								</InputGroup>
 							</NavItem>
