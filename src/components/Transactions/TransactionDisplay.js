@@ -32,7 +32,8 @@ class TransactionDisplay extends Component {
 	componentDidMount() {
 		this.fetchData();
 		const gridHeight=32;
-		this.props.calculateComponentHeight(this.props.id, gridHeight);
+		if(!!this.props.calculateComponentHeight)
+			this.props.calculateComponentHeight(this.props.id, gridHeight);
 	}
 
 	changePage(index) {
@@ -42,10 +43,6 @@ class TransactionDisplay extends Component {
 		}).then(response => {
 			this.setState({transactionData: response.data});
 		}).catch(error => console.log('error fetching transactions'));
-	}
-	
-	findTransaction(transaction, data) {
-		
 	}
 
 	findAccountName(id) {
