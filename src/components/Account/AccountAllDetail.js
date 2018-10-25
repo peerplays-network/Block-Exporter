@@ -12,7 +12,8 @@ class AccountAllDetail extends Component {
 			Transactions: [],
 			Witnesses: [],
 			Committee: [],
-			activeTab: '1'
+			activeTab: '1',
+			accountBalance: 0
 		};
 		this.toggle = this.toggle.bind(this);
 		this.account = '';
@@ -28,6 +29,9 @@ class AccountAllDetail extends Component {
 		axios.get(`/api/accounts/${this.account[0]}`, {
 		}).then(response => {
 			this.setState({ Account: response.data });
+			return axios.get(`/api/balance/${this.account[0]}`);
+		}).then(response => { 
+			this.setState({accountBalance: response.data[0].amount});
 		}).catch(error => {console.log('error is fetching account data', error);});
 	}
 
@@ -152,7 +156,8 @@ class AccountAllDetail extends Component {
 									<Row key={i}>
 										<Col sm="2"> Name: <strong>{ account.account_name }</strong></Col>
 										<Col sm="2"> Account ID: <strong>{ account.account_id }</strong></Col>
-										<Col sm="2"> Lifetime fees paid: <strong>{ account.lifetime_fees_paid }</strong></Col>
+										<Col sm="2"> Account Balance: <strong>{ this.state.accountBalance }</strong></Col>
+										<Col sm="2"> Lifetime fees paid: <strong>{ !!account.lifetime_fees_paid && account.lifetime_fees_paid.length > 0 ? account.lifetime_fees_paid : 0 }</strong></Col>
 										<Col sm="2"> Registrar: <strong>{ account.referrer }</strong></Col>
 									</Row>
 								)}
