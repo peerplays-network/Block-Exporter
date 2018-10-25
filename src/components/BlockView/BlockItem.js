@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Card, CardBody, Row, Col, Button, Table} from 'reactstrap';
+import styles from '../WitnessViewer/styles.css';
 
 export default class BlockItem extends Component {
 	renderBlockTable() {
@@ -11,7 +12,7 @@ export default class BlockItem extends Component {
 					<CardBody>
 						<Row>
 							<Col md="12">
-								<h1 className="display-5 text-center mt-3"><span className="fa fa-cubes">&nbsp;</span>Block {currentBlock.block_number}</h1>
+								<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3`}><span className="fa fa-cube">&nbsp;</span>Block {currentBlock.block_number}</h1>
 							</Col>
 						</Row>
 						<Row className="mb-3">
