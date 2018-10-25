@@ -30,7 +30,7 @@ class Welcome extends Component {
 								   {name: 'Account Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: 15, y: 0, w: 4.5, h: 20}},
 								   {name: 'Current Transactions', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id:3, gridPlacement: {i: '3', x: 15, y: 0, w: 4.5, h: 20}},
 								   {name: 'Fee Directory', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 15, y: 0, w: 4.5, h: 20}},
-								   {name: 'Contract Feed', image: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 5, gridPlacement: {i: '5', x: 15, y: 0, w: 4.5, h: 20}}
+								   {name: 'Contract Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 5, gridPlacement: {i: '5', x: 15, y: 0, w: 4.5, h: 20}}
 		], 
 								  layout : [{i: '-1', x: 0, y: 0, w: 12, h: 90, static: true}],
 		};
