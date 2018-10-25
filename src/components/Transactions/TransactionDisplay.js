@@ -1,8 +1,11 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import {Table} from 'reactstrap'; 
 import Pagination from 'react-paginate';
 import axios from 'axios';
 import styles from './styles.css';
+import { NavLink } from 'reactstrap';
+import { NavLink as RRNavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 import * as Constants from '../../constants/constants'; 
 //State will be removed once data feed is established
 
@@ -19,12 +22,11 @@ class TransactionDisplay extends Component {
 		}).then(response => {
 			return axios.get('/api/transactions/recent?id=&limit=10');
 		}).then(response => {
-			console.log('transaction data', response.data);
 			this.setState({transactionData: response.data});
-			return axios.get('/api/transactions/length')
+			return axios.get('/api/transactions/length');
 		}).then(response => {
 			this.setState({transactionLength: response.data});
-		}).catch(error => console.log('error fetching blocks: ', error));
+		}).catch(error => console.log('error fetching transactions', error));
 	}
 
 	componentDidMount() {
@@ -34,23 +36,33 @@ class TransactionDisplay extends Component {
 	}
 
 	changePage(index) {
+		const {transactionData} = this.state;
 		this.setState({currentPage: index.selected});
-		//this.loadNextBlocks(index.selected);
+		axios.get(`/api/transactions/recent?id=${transactionData[transactionData.length - 1]}&limit=10`, {
+		}).then(response => {
+			this.setState({transactionData: response.data});
+		}).catch(error => console.log('error fetching transactions'));
 	}
 	
 	findTransaction(transaction, data) {
 		
 	}
 
+	findAccountName(id) {
+		const accountName = this.props.accounts.find(el => el.account_id === id);
+		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName.account_name}`}>{accountName.account_name}</NavLink></span>  : id;
+	}
+
 	renderTransaction(transaction, i) {
 		const operationType = JSON.parse(transaction.operations)[0];
 		const parsedTransaction = JSON.parse(transaction.operations)[1];
 		if(operationType === 0) {
+			const senderAccount = this.findAccountName(parsedTransaction.from);
+			const receiverAccount = this.findAccountName(parsedTransaction.to);
 			return (
 				<tr key={i}>
-					<td>{parsedTransaction.from} transfered {parsedTransaction.amount.amount} to {parsedTransaction.to}</td>
+					<td>{senderAccount} transfered {parsedTransaction.amount.amount} to {receiverAccount}</td>
 				</tr> 
-				
 			);
 		}
 		else if(operationType === 37) {
@@ -61,7 +73,7 @@ class TransactionDisplay extends Component {
 			);
 		}
 		else {
-
+			
 		}
 	}
 
@@ -98,4 +110,8 @@ class TransactionDisplay extends Component {
 	}
 }
 
-export default TransactionDisplay;
+const mapStateToProps = (state) => ({
+	accounts: state.accounts.accountList
+});
+
+export default connect(mapStateToProps)(TransactionDisplay);
