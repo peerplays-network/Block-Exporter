@@ -2,6 +2,7 @@
 import React,  { Component } from 'react';
 import { Nav, NavItem, NavLink, Row, Col, TabContent, TabPane, Card, CardBody } from 'reactstrap';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 
 class AccountAllDetail extends Component {
@@ -137,13 +138,42 @@ class AccountAllDetail extends Component {
 			return 'No';
 	}
 
+	findAccountName(id) {
+		const accountName = this.props.accounts.find(el => el.account_id === id);
+		return !!accountName ? accountName.account_name : id;
+	}
+
+	renderTransaction(transaction, i) {
+		const operationType = JSON.parse(transaction.operations)[0];
+		const parsedTransaction = JSON.parse(transaction.operations)[1];
+		if(operationType === 0) {
+			const senderAccount = this.findAccountName(parsedTransaction.from);
+			const receiverAccount = this.findAccountName(parsedTransaction.to);
+			return (
+				<Row key={i}>
+					<Col>{senderAccount} transfered {parsedTransaction.amount.amount} to {receiverAccount}</Col>
+				</Row> 
+			);
+		}
+		else if(operationType === 37) {
+			return (
+				<Row key={i}>
+					<Col>{parsedTransaction.total_claimed.amount} deposited to {parsedTransaction.deposit_to_account}</Col>
+				</Row> 
+			);
+		}
+		else {
+			
+		}
+	}
+
 	render() {
 		this.getAccount();
 		return (
 			<div>
 				<Nav tabs>
 					{ this.tabNavBuild('1', 'Account') }
-					{ this.tabNavBuild('2', 'Transactions') }
+					{ this.tabNavBuild('2', 'Transaction') }
 					{ this.tabNavBuild('3', 'Witness') }
 					{ this.tabNavBuild('4', 'Committee') }
 				</Nav>
@@ -165,12 +195,7 @@ class AccountAllDetail extends Component {
 							<TabPane tabId="2">
 								<h4>Transactions</h4>
 								{this.state.Transactions.map((transaction, i) =>
-									<Row key={i}>
-										<Col sm="2"> Name: <strong>{ transaction.account_name }</strong></Col>
-										<Col sm="2"> Account ID: <strong>{ transaction.account_id }</strong></Col>
-										<Col sm="2"> Lifetime fees paid: <strong>{ transaction.lifetime_fees_paid }</strong></Col>
-										<Col sm="2"> Registrar: <strong>{ transaction.referrer }</strong></Col>
-									</Row>
+									this.renderTransaction(transaction, i)
 								)}
 							</TabPane>
 							<TabPane tabId="3">
@@ -205,4 +230,8 @@ class AccountAllDetail extends Component {
 	}
 }
 
-export default AccountAllDetail;
+const mapStateToProps = (state) => ({
+	accounts: state.accounts.accountList
+});
+
+export default connect(mapStateToProps)(AccountAllDetail);
