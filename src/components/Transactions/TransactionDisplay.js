@@ -1,87 +1,114 @@
 import React, { Component } from 'react';
-import TransactionRow from './TransactionRow';
+import {Table} from 'reactstrap'; 
+import Pagination from 'react-paginate';
 import axios from 'axios';
+import styles from './styles.css';
+import { NavLink } from 'reactstrap';
+import { NavLink as RRNavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as Constants from '../../constants/constants'; 
 //State will be removed once data feed is established
 
 class TransactionDisplay extends Component {
 	constructor() {
 		super();
 		this.state = {
-			transactionData:[
-				{account: 'codepuncher57', action: 'cancels staking action', time: 8, memo: '', transactionID: 0x39e2b580}, 
-				{account: 'speculationman', action: 'wants 200 eXe for 0.43 BTC', time: 800, memo: '', transactionID: 0x52d11dee},
-				{account: 'trenchcoattester', action: 'sent 128 eXe to debughero', time: 8000, memo: 'payment for killer work', transactionID: 0x0339afbb},
-				{account: 'pebkacspecialist', action: 'cancels trade order', time: 10000, memo: '', transactionID: 0x2fef3d58},
-				{account: 'exewatcher', action: 'recieved 5 eXe for producing a block', time: 60000, memo: 'Witness Reward', transactionID: 0xf2c1f6a6},
-				{account: 'codepuncher57', action: 'stakes 407 eXe', time: 80000, memo: '', transactionID: 0x9b3e0a9b},
-			]
+			transactionData:[], transactionLength: 0, currentPage: 0,
 		};
 	}
 
 	fetchData() {
-		//API call to search for transactions
-		let lower=0;
-		let upper=1;
-		axios.get('/api/blocks/last', {
+		axios.get('/api/transactions/recent?id=&limit=1', {
 		}).then(response => {
-			lower=response.data[0].block_number-9;
-			upper=response.data[0].block_number;
-			return axios.get(`api/transactions?start=${lower}&end=${upper}`);
+			return axios.get('/api/transactions/recent?id=&limit=10');
 		}).then(response => {
-			const transactionData = response.data;
-			
-			this.setState({transactionData: transactionData});
-			return axios.get('api/blocks/length');
-		}).catch(error => console.log('error fetching blocks: ', error));
+			this.setState({transactionData: response.data});
+			return axios.get('/api/transactions/length');
+		}).then(response => {
+			this.setState({transactionLength: response.data});
+		}).catch(error => console.log('error fetching transactions', error));
 	}
 
 	componentDidMount() {
 		this.fetchData();
 		const gridHeight=32;
-		this.props.calculateComponentHeight(this.props.id, gridHeight);
+		if(!!this.props.calculateComponentHeight)
+			this.props.calculateComponentHeight(this.props.id, gridHeight);
 	}
 
-	computeTime(time) {
-		// assume time is in milliseconds for now
-		if (time < 1000) {
-			return 'less than a second ago...';
-		} else if ((1000 <= time) && (time < 60000)) {
-			return Math.floor(time/1000) + 'second(s) ago...';
-		} else {
-			return Math.floor(time/60000) + 'minute(s) ago...';
-		}
+	changePage(index) {
+		const {transactionData} = this.state;
+		this.setState({currentPage: index.selected});
+		axios.get(`/api/transactions/recent?id=${transactionData[transactionData.length - 1]}&limit=10`, {
+		}).then(response => {
+			this.setState({transactionData: response.data});
+		}).catch(error => console.log('error fetching transactions'));
 	}
-	
-	findTransaction(transaction, data) {
-		var temp_data = [];
-		//if the data.id matches witness name add to data
-		for (var number in data) {
-			if (data[number].account.indexOf(transaction) >= 0 ) 
-				temp_data.push(data[number]);
+
+	findAccountName(id) {
+		const accountName = this.props.accounts.find(el => el.account_id === id);
+		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName.account_name}`}>{accountName.account_name}</NavLink></span>  : id;
+	}
+
+	renderTransaction(transaction, i) {
+		const operationType = JSON.parse(transaction.operations)[0];
+		const parsedTransaction = JSON.parse(transaction.operations)[1];
+		if(operationType === 0) {
+			const senderAccount = this.findAccountName(parsedTransaction.from);
+			const receiverAccount = this.findAccountName(parsedTransaction.to);
+			return (
+				<tr key={i}>
+					<td>{senderAccount} transfered {parsedTransaction.amount.amount} to {receiverAccount}</td>
+				</tr> 
+			);
 		}
-		if (temp_data.length <= 0)
-			temp_data = data;
-		this.setState({ searchData: temp_data });
+		else if(operationType === 37) {
+			return (
+				<tr key={i}>
+					<td>{parsedTransaction.total_claimed.amount} deposited to {parsedTransaction.deposit_to_account}</td>
+				</tr> 
+			);
+		}
+		else {
+			
+		}
 	}
 
 	render() {
 		return (
-			<div>
-
-				{this.state.transactionData.map((transaction, i) => {
-					return <TransactionRow
-						account={transaction.account} 
-						action={transaction.action}
-						memo={transaction.memo}
-						time={this.computeTime(transaction.time)}
-						transactionID={(transaction.transactionID).toString(16)} /* must convert the hex to string to display properly */
-						key={i}
-					/>;
-				})}
-
+			<div className="pl-1">
+				<Pagination
+					breakClassName={`${styles['pagination']}`}
+					breakLabel={<a className="page-link">...</a>}
+					pageClassName={`${styles['pagination']}`}
+					previousClassName={`${styles['pagination']}`}
+					nextClassName={`${styles['pagination']}`}
+					pageLinkClassName="page-link"
+					previousLinkClassName="page-link"
+					nextLinkClassName="page-link"
+					pageCount={this.state.transactionLength/Constants.TRANSACTIONS_PER_PAGE}
+					pageRangeDisplayed={2}
+					onPageChange={this.changePage.bind(this)}
+				/>
+				<Table responsive>
+					<thead>
+						<tr>
+							<th style={{cursor:'default'}}>Transaction</th>
+						</tr>
+					</thead>
+					<tbody className="text-center">
+						{this.state.transactionData.map((transaction, i) => {
+							return this.renderTransaction(transaction, i);
+						})}
+					</tbody>
+				</Table>
 			</div>
 		);
 	}
 }
 
-export default TransactionDisplay;
+const mapStateToProps = (state) => ({
+	accounts: state.accounts.accountList
+});
+
+export default connect(mapStateToProps)(TransactionDisplay);
