@@ -119,3 +119,14 @@
     border-bottom-right-radius: 3px;
     border-top-right-radius: 3px;
   }
+
+  .header-background{
+    background: black;
+  }
+  .header-contrast-text{
+    color: white;
+  }
+  
+  .blocks-header{
+    background: rgb(61, 61, 61);
+  }

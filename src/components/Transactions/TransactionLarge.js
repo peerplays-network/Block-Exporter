@@ -5,13 +5,7 @@ import TransactionDisplay from './TransactionDisplay';
 class TransactionLarge extends Component {
 	render() {
 		return (
-			<Col sm={{ size: '9', offset: 1 }} >
-				<Card>
-					<CardBody>
-						<TransactionDisplay />
-					</CardBody>
-				</Card>
-			</Col>
+			<TransactionDisplay history={this.props.history} />
 		);
 	}
 }
