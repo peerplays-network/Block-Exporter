@@ -81,6 +81,8 @@ class AccountAllDetail extends Component {
 
 		if(!!this.account[1] && this.account[1].includes('1.6'))
 			this.setState({activeTab: '3'});
+		else if(!!this.account[1] && this.account[1].includes('1.5'))
+			this.setState({activeTab: '4'});
 	}
 
 	toggle(tab) {

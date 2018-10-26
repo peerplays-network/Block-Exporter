@@ -119,8 +119,11 @@ class AccountSearch extends Component {
 						</InputGroup>
 						<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 					</div>
+
+					{!!this.props.history ? 
 					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3`}>
 						<span className="fa fa-address-book">&nbsp;</span> Browse Accounts</h1>
+					: null}
 						
 					<table className="table" >
 						<thead className={`${styles['clickable']} ${styles['accounts-header']} ${styles['header-contrast-text']}`}>

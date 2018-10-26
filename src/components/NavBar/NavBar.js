@@ -108,7 +108,8 @@ class Navigation extends React.Component {
 						<Nav className="ml-auto" navbar>
 							<NavItem>
 								<InputGroup size="sm">
-									<Input id="searchBar" onChange={this.textChanged.bind(this)} onKeyPress={this.onKeyPress.bind(this)} value={this.state.searchText} 
+									<Input id="searchBar" maxlength="64" onChange={this.textChanged.bind(this)} onKeyPress={this.onKeyPress.bind(this)} 
+										value={this.state.searchText} 
 										placeholder="Search for name or id"></Input>
 									<InputGroupAddon addonType="prepend"><Button onClick={this.search.bind(this)}>Search</Button></InputGroupAddon>
 								</InputGroup>
