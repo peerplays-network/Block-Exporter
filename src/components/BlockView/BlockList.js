@@ -53,11 +53,29 @@ class BlockList extends Component {
 	render() {
 		const {blocks, blockLength} = this.state;
 		return (
-			<div className="container pt-1 pb-5 mt-5">
-				<div className="card mt-1">
+			<div className="container pt-1 pb-5 mt-4">
+				
 					<div className="card-block">
+
+						<Pagination
+							breakClassName={`${styles['pagination']}`}
+							breakLabel={<a className="page-link">...</a>}
+							pageClassName={`${styles['pagination']}`}
+							previousClassName={`${styles['pagination']}`}
+							nextClassName={`${styles['pagination']}`}
+							pageLinkClassName="page-link"
+							previousLinkClassName="page-link"
+							nextLinkClassName="page-link"
+							pageCount={blockLength/Constants.BLOCKS_PER_PAGE}
+							pageRangeDisplayed={2}
+							onPageChange={this.changePage.bind(this)}
+          				/>
+
+
+
+
 						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3`}>
-							<span className="fa fa-cube">&nbsp;</span> Browse Blocks</h1>
+							<span className="fa fa-cubes">&nbsp;</span> Browse Blocks</h1>
 						<Table responsive>
 							<thead className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>
 								<tr>
@@ -96,7 +114,7 @@ class BlockList extends Component {
 							onPageChange={this.changePage.bind(this)}
           				/>
 					</div>
-				</div>
+				
 			</div>
 		);
 	}
