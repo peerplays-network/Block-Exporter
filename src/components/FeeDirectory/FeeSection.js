@@ -31,7 +31,7 @@ class FeeSection extends Component {
 								return (<div>
 									<span>{key}</span>
 									<span> : </span>
-									<span>{current_fees[key]}</span>
+									<span>{Object.keys(JSON.parse(current_fees[key])).length === 0 && JSON.parse(current_fees[key]).constructor === Object ? current_fees[key] : 'No Information Available'}</span>
 								</div>
 								);
 							})}

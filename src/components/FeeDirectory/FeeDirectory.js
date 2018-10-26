@@ -80,6 +80,7 @@ class FeeDirectory extends Component {
     
 	render() 
 	{
+		console.log('history: ', this.props.history);
 		const {
 			onClick,
           	state: { openSections, searchFee },
@@ -87,15 +88,10 @@ class FeeDirectory extends Component {
 		const fullPage = this.props.id === undefined;
 		return (
 			<div className="container" style={{height:'320px'}}>
-
-
+				{!!this.props.history ? 
 					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
-					<span className="fa fa-credit-card">&nbsp;</span>Fee Structure</h1>
-
-
-
-
-
+						<span className="fa fa-credit-card">&nbsp;</span>Fee Structure</h1>
+					: null}
 				{fullPage && <InputGroup className={`${styles['input-group']}`}>
 					<InputGroupAddon className={`${styles['input-group-prepend']}`} addonType="prepend"><span className={`fa fa-search ${styles['icon']}`}></span></InputGroupAddon>
 					<Input type="text" value={searchFee} onChange={this.onFeeTextChanged.bind(this)} placeholder="Operation" />
