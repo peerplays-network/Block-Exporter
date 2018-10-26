@@ -3,6 +3,7 @@ const blockchainWS = require('peerplaysjs-ws');
 const Exeblock = require('peerplaysjs-lib');
 const db = require('../database/constants');
 const ChainStore = Exeblock.ChainStore;
+const chalk = require('chalk');
 
 const accList = [];
 const witnessList = [];
@@ -24,7 +25,7 @@ const api = {
 				ChainStore
 					.init()
 					.then(() => {
-				  console.log(`Exeplorer Server> Connected to ${BLOCKCHAIN_URL}`);
+				  console.log(chalk.green(`Exeplorer Server> Connected to ${BLOCKCHAIN_URL}`));
 				  resolve();
 					});
 				
@@ -51,10 +52,10 @@ const api = {
 		}
 
 		blockchainWS.Apis.instance().db_api().exec('get_block', [start]).then(block => {
-			console.log(start);
+			console.log(chalk.cyan(start));
 			// When a block is not found we assume we are up to date.
 			if (!block) {
-				console.log('Exeplorer Server> DONE inserting blocks - no block found');
+				console.log(chalk.green('Exeplorer Server> DONE inserting blocks - no block found'));
 				api.startMonitor(connection);
 				return;
 			}
@@ -112,7 +113,7 @@ const api = {
 	*/
 
 	startMonitor: (connection) => {
-		console.log('Exeplorer Server> Monitoring for new blocks!');
+		console.log(chalk.green('Exeplorer Server> Monitoring for new blocks!'));
 		ChainStore.subscribe(() => api.updateDatabase(connection));
 	  },
 
@@ -137,7 +138,7 @@ const api = {
 				// console.log('Result: ' + JSON.stringify(result));
 			});
 
-
+			api.backtrackChain(connection, dynamicGlobal.head_block_number);
 			// Get the latest block reference in the dynamicGlobal.
 			api.insertBlock(connection, dynamicGlobal, (error, block) => {
 				if (error) {
@@ -146,15 +147,53 @@ const api = {
 			});
 		});
 
-		/* Fetch and insert block into DB
+		/* Fetch and insert block into DB DYNAMICALLY
 			connection: A valid MYSQL connection
 			dynamicGlobal: the block obj
 		*/
 	  },
 
+
+	/* Catch and fix desync
+			connection: A valid MYSQL connection
+			blockNum: starting point
+		*/
+	  backtrackChain: (connection, blockNum) => {
+		const block_number = blockNum; // head block # from CHAIN
+		const dynamicGlobal = {head_block_id: '', head_block_number: block_number-1};
+		connection.query(`SELECT * FROM explorer.blocks WHERE block_number=${block_number-1}`, function (err, rows, result) { // check the -1
+			if (err) {
+				throw err;
+			}
+
+			if (rows.length < 1) { // if it doesnt exist then get it + populate
+				console.log(chalk.red(`DESYNC DETECTED - Backtracking block ${block_number-1}`));
+				api.insertBlock(connection, dynamicGlobal, (error, block) => {
+					if (error) {
+						  return console.error(`Error inserting block : ${error.message}`);
+					}
+				});
+				api.backtrackChain(connection, block_number-1);
+			}
+		});
+	  },
+
 	  insertBlock: (connection, dynamicGlobal, callback) => {
 		  const block_id = dynamicGlobal.head_block_id;
 		  const block_number = dynamicGlobal.head_block_number;
+
+		//   connection.query(`SELECT * FROM explorer.blocks WHERE block_number=${block_number-1}`, function (err, rows, result) {
+		// 	if (err) {
+		// 		throw err;
+		// 	}
+
+		// 	if (rows.length < 1) {
+		// 		blockchainWS.Apis.instance().db_api().exec('get_block', [block_number-1]).then(block => { 
+					
+		// 		});
+		// 	}
+		// });
+
 
 		  blockchainWS.Apis.instance().db_api().exec('get_block', [block_number]).then(block => {
 		  // When a block is not found we assume we are up to date.
@@ -163,7 +202,6 @@ const api = {
 				return callback(null);
 		  }
 		  // Build block object to be inserted
-
 		  const transaction_count = block.transactions.length;
 		  const operation_count = block.extensions.length;
 		  const witness = block.witness;
@@ -236,7 +274,6 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 					VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '${member_since}', '${account_id}')`;
 		
 				connection.query(sql, function(err, result) {
-		
 					if (err) {
 						throw err;
 					}
@@ -560,14 +597,14 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 
     */
 	getCommittee: () => {
-		let committeeAry = [];
+		const committeeAry = [];
 		return new Promise(async (resolve, reject) => {
 			const com = await api.listCommittee();
 			com.map((c) => {
 				if (c.length > 1) {
 					committeeAry.push(c[1]);
 				}
-			})
+			});
 
 			blockchainWS.Apis.instance().db_api().exec('get_committee_members', [committeeAry]).then(w => {
 				resolve(w);
