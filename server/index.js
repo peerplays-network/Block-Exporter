@@ -254,7 +254,7 @@ connection.connect(function(err) {
 	return;
 }
   
-	console.log(chalk.blue(`Connected to DB: ${connection.threadId}`));
+	console.log(chalk.blueBright(`Exeplorer Server> Connected to DB: ${connection.threadId}`));
 	});
 
   Blockchain.connect(config_server.BLOCKCHAIN_URL).then(async () => {
@@ -275,7 +275,7 @@ connection.connect(function(err) {
 			if (err) {
 				throw err;
 			}
-			console.log('\x1b[36m Exeplorer Server> Starting from block #: ' + result+1)
+			console.log(chalk.blueBright(`Exeplorer Server> Starting from block #: ${result+1}`))
 			Blockchain.populateBlocks(connection, result, '');
 			
 		});
