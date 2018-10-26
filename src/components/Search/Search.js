@@ -21,6 +21,10 @@ class Search extends Component {
 		return !!this.props.witnesses? this.props.witnesses.find(el => el.account_id === witnessId).account_name : '';
 	}
 
+	getAccountName(accountId) {
+		return !!this.props.accounts? this.props.accounts.find(el => el.account_id === accountId).account_name : '';
+	}
+
 	componentDidMount() {
 		console.log('history: ', this.props.history);
 		axios.get(`/api/search?input=${this.state.searchString}`, {
@@ -55,8 +59,10 @@ class Search extends Component {
 			else
 				this.props.history.push(`/accountAllDetail/${responseObj.account_name}`);
 		}
-		else if(!!responseObj.committee_id)
-			this.props.history.push(`/accountAllDetail/${responseObj.committee_id}`);
+		else if(!!responseObj.committee_id) {
+			const accountName = this.getAccountName(responseObj.committee_member_account);
+			this.props.history.push(`/accountAllDetail/${accountName}/${responseObj.committee_id}`);
+		}
 		else
 			console.log('no matches');
 	}
@@ -188,7 +194,8 @@ class Search extends Component {
 }
 
 const mapStateToProps = (state) => ({
-	witnesses: state.witnesses.witnessList
+	witnesses: state.witnesses.witnessList,
+	accounts: state.accounts.accountList
 });
 
 export default connect(mapStateToProps)(Search);
