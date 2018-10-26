@@ -11,7 +11,7 @@ class FeeSection extends Component {
 		  onClick,
 		  props: { isOpen, label, fullPage}
 		} = this;
-		const current_fees = JSON.parse(this.props.fee.current_fees);
+		const current_fees = JSON.stringify(JSON.parse(this.props.fee.current_fees)) === JSON.stringify({}) ? {data: 'not available'} : JSON.parse(this.props.fee.current_fees);
 		return (
 		  	<div>
 			  	{!fullPage && <div className={`${styles['operation-layout']} row`}
