@@ -75,12 +75,9 @@ class TransactionDisplay extends Component {
 	}
 
 	render() {
-		
 		return (
-
 			<div className="container pt-1 pb-5 mt-4">
-				
-					<div className="card-block">
+				<div className="card-block">
 
 					<Pagination
 						breakClassName={`${styles['pagination']}`}
@@ -96,10 +93,10 @@ class TransactionDisplay extends Component {
 						onPageChange={this.changePage.bind(this)}
 					/>
 
-				{!!this.props.history ? 
-					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3 mt-2 mb-2s`}>
-					<span className="fa fa-inbox">&nbsp;</span>Browse Transactions</h1>
-				: null}
+					{!!this.props.history ? 
+						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3 mt-2 mb-2s`}>
+							<span className="fa fa-inbox">&nbsp;</span>Browse Transactions</h1>
+						: null}
 				
 
 					

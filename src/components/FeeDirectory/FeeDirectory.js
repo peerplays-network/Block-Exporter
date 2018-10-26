@@ -80,7 +80,6 @@ class FeeDirectory extends Component {
     
 	render() 
 	{
-		console.log('history: ', this.props.history);
 		const {
 			onClick,
           	state: { openSections, searchFee },
