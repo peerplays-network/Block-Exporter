@@ -10,7 +10,7 @@ class Directory extends Component {
 			<div className="container">
 
 				<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
-				<span className="fa fa-map-signs">&nbsp;</span>Directory Links</h1>
+				<span className="fa fa-map-signs">&nbsp;</span>Useful Resources</h1>
 
 			<Col >
 				<Card>
