@@ -186,19 +186,29 @@ class AccountAllDetail extends Component {
 			const receiverAccount = this.findAccountName(parsedTransaction.to);
 			return (
 				<Row key={i}>
-					<Col>{senderAccount} transfered {parsedTransaction.amount.amount} to {receiverAccount}</Col>
+					<Col sm="3"><strong>{senderAccount}</strong> transfered {parsedTransaction.amount.amount} to <strong>{receiverAccount}</strong></Col> 
+					-{this.getTimeSince(transaction.expiration)}
+					{transaction.id}
 				</Row> 
 			);
 		}
 		else if(operationType === 37) {
 			return (
 				<Row key={i}>
-					<Col>{parsedTransaction.total_claimed.amount} deposited to {parsedTransaction.deposit_to_account}</Col>
+					<Col sm="3">{parsedTransaction.total_claimed.amount} deposited to <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
+					-{this.getTimeSince(transaction.expiration)}
+					{transaction.id}
 				</Row> 
 			);
 		}
 		else {
-			
+			return (
+				<Row key={i}>
+					<Col sm="3">{parsedTransaction.total_claimed.amount} {this.displayOperation(operationType)} <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
+					-{this.getTimeSince(transaction.expiration)}
+					{transaction.id}
+				</Row> 
+			);
 		}
 	}
 
