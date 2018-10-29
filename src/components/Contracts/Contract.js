@@ -4,6 +4,7 @@ import PaginationCall from '../Account/PaginationCall';
 import { Input, InputGroup } from 'reactstrap';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import styles from './styles.css';
 
 class Contract extends Component {
 	constructor(e) {
@@ -90,7 +91,7 @@ class Contract extends Component {
 					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 				</div>
 				<table className="table">
-					<thead className="thead-light">
+					<thead className={`${styles['clickable']} ${styles['smart-contracts-header']} ${styles['header-contrast-text']}`}>
 						<tr>
 							<th onClick={this.sortByColumn.bind(this, 'object_id')}>ID</th>
 							<th onClick={this.sortByColumn.bind(this, 'name')}>Name</th>
