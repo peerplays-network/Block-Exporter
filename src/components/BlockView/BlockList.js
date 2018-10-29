@@ -57,22 +57,6 @@ class BlockList extends Component {
 				
 					<div className="card-block">
 
-						<Pagination
-							breakClassName={`${styles['pagination']}`}
-							breakLabel={<a className="page-link">...</a>}
-							pageClassName={`${styles['pagination']}`}
-							previousClassName={`${styles['pagination']}`}
-							nextClassName={`${styles['pagination']}`}
-							pageLinkClassName="page-link"
-							previousLinkClassName="page-link"
-							nextLinkClassName="page-link"
-							pageCount={blockLength/Constants.BLOCKS_PER_PAGE}
-							pageRangeDisplayed={2}
-							onPageChange={this.changePage.bind(this)}
-          				/>
-
-
-
 
 						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3`}>
 							<span className="fa fa-cubes">&nbsp;</span> Browse Blocks</h1>
