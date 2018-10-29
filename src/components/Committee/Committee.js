@@ -4,6 +4,7 @@ import axios from 'axios';
 import styles from './styles.css';
 import PaginationCall from '../Account/PaginationCall';
 import { Input, InputGroup} from 'reactstrap';
+import { connect } from 'react-redux'; 
 
 class Committee extends Component {
 	constructor(props) {
@@ -13,17 +14,12 @@ class Committee extends Component {
 	}
 
 	componentDidMount() {
-		debugger;
 		axios.get('/api/committee', {
 		}).then(response => {
 			this.setState({committeeData: response.data});
 			const newState = response.data;
-			response.data.map( (el, index) => {return el.rank = index+1;});
-			// newState = response.data.sort((a, b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)).reverse();
-			// if(this.state.sortType === 'ASC')
-			// {
-			// 	newState = newState.reverse();
-			// }
+			newState.map( (el, index) => {return el.rank = index+1;});
+			newState.map(el => {return el.account_name = this.props.accounts.find(account => account.account_id === el.committee_member_account).account_name;});
 
 			this.setState({searchData: newState});
 			this.refreshPagination(response.data);
@@ -35,9 +31,7 @@ class Committee extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		debugger;
 		if(this.state.committee !== prevState.committee && this.state.committee.length < 1) {
-			debugger;
 			this.setState({searchData: this.state.committeeData});
 			this.refreshPagination(this.state.committeeData);
 		}
@@ -58,16 +52,15 @@ class Committee extends Component {
 	}
 
 	findAccountByName(committee, data) {
-		// var temp_data = [];
-		// temp_data = data.filter(obj => {
-		// 	return obj.account_name.includes(committee);
-		//   });
-		// this.setState({ searchData: temp_data });
-		// this.refreshPagination(temp_data);
+		var temp_data = [];
+		temp_data = data.filter(obj => {
+			return obj.account_name.includes(committee);
+		  });
+		this.setState({ searchData: temp_data });
+		this.refreshPagination(temp_data);
 	}
 
 	findAccountById(committee, data) {
-		debugger;
 		var temp_data = [];
 		temp_data = data.filter(obj => {
 			return obj.committee_id === (committee);
@@ -84,7 +77,6 @@ class Committee extends Component {
 	sortByColumn(colType) {
 		let sortType = this.state.sortType;
 
-		debugger;
 		if(this.state.sortBy === colType)
 		{
 			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
@@ -105,8 +97,11 @@ class Committee extends Component {
 		}).catch(error => {console.log('error fetching committee data', error);});
 	}
 
+	getAccountName(accountId) {
+		return !!this.props.accounts? this.props.accounts.find(el => el.account_id === accountId).account_name : '';
+	}
+
 	sortByRank() {
-		debugger;
 		let sortType = this.state.sortType;
 		if(this.state.sortBy === 'rank')
 		{
@@ -128,7 +123,7 @@ class Committee extends Component {
 			<Fragment>
 				<div className="pagination-wrapper"> 
 					<InputGroup>
-						<Input type="text" value={committee} onChange={this.onCommitteeEnter.bind(this)} placeholder="Committee Id" />
+						<Input type="text" value={committee} onChange={this.onCommitteeEnter.bind(this)} placeholder="Committee Name or Id" />
 					</InputGroup>
 					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 				</div>
@@ -146,6 +141,7 @@ class Committee extends Component {
 							return <CommitteeRow
 								key={committee.id}
 								rank={committee.rank}
+								committee_name = {committee.account_name}
 								committee={committee.committee_id}
 								votes={committee.total_votes}
 								url={committee.url}
@@ -176,6 +172,7 @@ class Committee extends Component {
 							return <CommitteeRow
 								key={committee.id}
 								rank={committee.rank}
+								committee_name = {this.getAccountName(committee.committee_member_account)}
 								committee={committee.committee_id}
 								votes={committee.total_votes}
 								url={committee.url}
@@ -201,4 +198,8 @@ class Committee extends Component {
 	}
 }
 
-export default Committee;
+const mapStateToProps = (state) => ({
+	accounts: state.accounts.accountList
+});
+
+export default connect(mapStateToProps)(Committee);
