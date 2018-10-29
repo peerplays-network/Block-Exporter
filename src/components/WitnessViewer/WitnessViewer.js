@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 class WitnessViewer extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {witnessData: this.props.witnesses, searchData: this.props.witnesses, witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'rank'};
+		this.state = {witnessData: !!this.props.witnesses ? this.props.witnesses : [], searchData: !!this.props.witnesses ? this.props.witnesses : [], witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'rank'};
 		this.gridHeight = 40;
 	}
 
@@ -21,8 +21,17 @@ class WitnessViewer extends Component {
 			newState = newState.reverse();
 		}
 		this.setState({searchData: newState});
-		this.refreshPagination(this.props.witnesses);
-		this.props.calculateComponentHeight(this.props.id, this.gridHeight);
+		!!this.props.witnesses ? this.refreshPagination(this.props.witnesses) : this.refreshPagination([]);
+		
+		if(this.props.history ===undefined)
+			this.props.calculateComponentHeight(this.props.id, this.gridHeight);
+	}
+
+	componentDidUpdate(prevProps) {
+		if(this.props.witnesses !== prevProps.witnesses) {
+			this.setState({witnessData: this.props.witnesses, searchData: this.props.witnesses});
+			this.refreshPagination(this.props.witnesses);
+		}
 	}
 
 	refreshPagination (data) {

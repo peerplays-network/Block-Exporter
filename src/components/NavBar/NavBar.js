@@ -88,6 +88,8 @@ class Navigation extends React.Component {
 							<DropdownMenu >
 								<DropdownItem href="/account/">Account</DropdownItem>
 								<DropdownItem href="/transactions/">Transactions</DropdownItem>
+								<DropdownItem href="/witnesses">Witnesses</DropdownItem>
+								<DropdownItem href="/committee">Committee</DropdownItem>
 								<DropdownItem href="/feeDirectory">Fee Directory</DropdownItem>
 								<DropdownItem href="/directory">Site Directory</DropdownItem>
 								<DropdownItem href="/block-list">Blocks</DropdownItem>
@@ -108,7 +110,7 @@ class Navigation extends React.Component {
 						<Nav className="ml-auto" navbar>
 							<NavItem>
 								<InputGroup size="sm">
-									<Input id="searchBar" maxlength="64" onChange={this.textChanged.bind(this)} onKeyPress={this.onKeyPress.bind(this)} 
+									<Input id="searchBar" maxLength="64" onChange={this.textChanged.bind(this)} onKeyPress={this.onKeyPress.bind(this)} 
 										value={this.state.searchText} 
 										placeholder="Search for name or id"></Input>
 									<InputGroupAddon addonType="prepend"><Button onClick={this.search.bind(this)}>Search</Button></InputGroupAddon>
