@@ -1,5 +1,7 @@
 /* eslint-disable */
 require('dotenv').config()
+const chalk = require('chalk');
+
 
 const path = require('path');
 
@@ -237,7 +239,7 @@ app.listen(port, err => {
 	if (err) {
 		return console.error(err);
 	} 
-  console.log('App is listening on', port); 
+  console.log(chalk.green(`App is listening on: ${port}`)); 
 
   const connection = mysql.createConnection({
 	host     : db.HOST,
@@ -252,11 +254,11 @@ connection.connect(function(err) {
 	return;
 }
   
-	console.log('Connected to DB: id ' + connection.threadId);
+	console.log(chalk.blueBright(`Exeplorer Server> Connected to DB: ${connection.threadId}`));
 	});
 
   Blockchain.connect(config_server.BLOCKCHAIN_URL).then(async () => {
-	  
+
 	if (process.env.SYNC == 'true') {
 		console.log('Sync mode is ON');
 		await syncDatabase(connection);
@@ -273,7 +275,7 @@ connection.connect(function(err) {
 			if (err) {
 				throw err;
 			}
-			console.log('\x1b[36m Exeplorer Server> Starting from block #: ' + result+1)
+			console.log(chalk.blueBright(`Exeplorer Server> Starting from block #: ${result+1}`))
 			Blockchain.populateBlocks(connection, result, '');
 			
 		});

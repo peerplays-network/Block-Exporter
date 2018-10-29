@@ -2,6 +2,7 @@
 import React,  { Component } from 'react';
 import { Nav, NavItem, NavLink, Row, Col, TabContent, TabPane, Card, CardBody } from 'reactstrap';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 
 class AccountAllDetail extends Component {
@@ -12,7 +13,8 @@ class AccountAllDetail extends Component {
 			Transactions: [],
 			Witnesses: [],
 			Committee: [],
-			activeTab: '1'
+			activeTab: '1',
+			accountBalance: 0
 		};
 		this.toggle = this.toggle.bind(this);
 		this.account = '';
@@ -28,6 +30,9 @@ class AccountAllDetail extends Component {
 		axios.get(`/api/accounts/${this.account[0]}`, {
 		}).then(response => {
 			this.setState({ Account: response.data });
+			return axios.get(`/api/balance/${this.account[0]}`);
+		}).then(response => { 
+			this.setState({accountBalance: response.data[0].amount});
 		}).catch(error => {console.log('error is fetching account data', error);});
 	}
 
@@ -76,6 +81,8 @@ class AccountAllDetail extends Component {
 
 		if(!!this.account[1] && this.account[1].includes('1.6'))
 			this.setState({activeTab: '3'});
+		else if(!!this.account[1] && this.account[1].includes('1.5'))
+			this.setState({activeTab: '4'});
 	}
 
 	toggle(tab) {
@@ -166,13 +173,42 @@ class AccountAllDetail extends Component {
 			return 'No';
 	}
 
+	findAccountName(id) {
+		const accountName = this.props.accounts.find(el => el.account_id === id);
+		return !!accountName ? accountName.account_name : id;
+	}
+
+	renderTransaction(transaction, i) {
+		const operationType = JSON.parse(transaction.operations)[0];
+		const parsedTransaction = JSON.parse(transaction.operations)[1];
+		if(operationType === 0) {
+			const senderAccount = this.findAccountName(parsedTransaction.from);
+			const receiverAccount = this.findAccountName(parsedTransaction.to);
+			return (
+				<Row key={i}>
+					<Col>{senderAccount} transfered {parsedTransaction.amount.amount} to {receiverAccount}</Col>
+				</Row> 
+			);
+		}
+		else if(operationType === 37) {
+			return (
+				<Row key={i}>
+					<Col>{parsedTransaction.total_claimed.amount} deposited to {parsedTransaction.deposit_to_account}</Col>
+				</Row> 
+			);
+		}
+		else {
+			
+		}
+	}
+
 	render() {
 		this.getAccount();
 		return (
 			<div>
 				<Nav tabs>
 					{ this.tabNavBuild('1', 'Account') }
-					{ this.tabNavBuild('2', 'Transactions') }
+					{ this.tabNavBuild('2', 'Transaction') }
 					{ this.tabNavBuild('3', 'Witness') }
 					{ this.tabNavBuild('4', 'Committee') }
 				</Nav>
@@ -185,7 +221,8 @@ class AccountAllDetail extends Component {
 									<Row key={i}>
 										<Col sm="2"> Name: <strong>{ account.account_name }</strong></Col>
 										<Col sm="2"> Account ID: <strong>{ account.account_id }</strong></Col>
-										<Col sm="2"> Lifetime fees paid: <strong>{ account.lifetime_fees_paid }</strong></Col>
+										<Col sm="2"> Account Balance: <strong>{ this.state.accountBalance }</strong></Col>
+										<Col sm="2"> Lifetime fees paid: <strong>{ !!account.lifetime_fees_paid && account.lifetime_fees_paid.length > 0 ? account.lifetime_fees_paid : 0 }</strong></Col>
 										<Col sm="2"> Registrar: <strong>{ account.referrer }</strong></Col>
 									</Row>
 								)}
@@ -193,12 +230,7 @@ class AccountAllDetail extends Component {
 							<TabPane tabId="2">
 								<h4>Transactions</h4>
 								{this.state.Transactions.map((transaction, i) =>
-									<Row key={i}>
-										<Col sm="2"> <strong>{ this.account }</strong></Col>
-										<Col sm="2"> Account ID: { this.displayOperation(transaction.operations)} </Col>
-										{ this.getTimeSince(transaction.expiration) }
-										<Col sm="2"><strong>{ transaction.id }</strong></Col>
-									</Row>
+									this.renderTransaction(transaction, i)
 								)}
 							</TabPane>
 							<TabPane tabId="3">
@@ -233,4 +265,8 @@ class AccountAllDetail extends Component {
 	}
 }
 
-export default AccountAllDetail;
+const mapStateToProps = (state) => ({
+	accounts: state.accounts.accountList
+});
+
+export default connect(mapStateToProps)(AccountAllDetail);

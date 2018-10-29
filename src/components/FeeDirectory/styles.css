@@ -42,3 +42,19 @@ th{
 td{
     text-align: center;
 }
+
+.header-background{
+    background: black;
+  }
+  .header-contrast-text{
+    color: white;
+  }
+  
+  .blocks-header{
+    background: rgb(61, 61, 61);
+  }
+  
+  
+  .text-center{
+    text-align: center!important;
+  }
