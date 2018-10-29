@@ -17,3 +17,11 @@
   .text-center{
     text-align: center!important;
   }
+
+  .header-contrast-text{
+    color: white;
+  }
+  
+  .witness-header{
+    background: rgb(61, 61, 61);
+  }
