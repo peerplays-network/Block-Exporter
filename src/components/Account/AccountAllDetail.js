@@ -129,6 +129,19 @@ class AccountAllDetail extends Component {
 		return (<Col sm="2"><strong>{today.getSeconds()-secs[0]}</strong> minute(s) ago</Col>);
 	}
 
+	displayOperation( operation ) {
+		const operationID = JSON.parse(operation);
+		const OpId = operationID[0];
+		console.log('the id', OpId);
+		//API call to search for Account
+		return ( 
+			axios.get(`/api/operations/${ OpId }`, {
+			}).then(response => {
+				return( response.data.friendly_name );
+			}).catch(error => {console.log('error is fetching witness data', error);})
+		);
+	}
+
 	tabPaneBuild( index, type ) {
 		return (
 			<TabPane tabId="1">
@@ -181,8 +194,8 @@ class AccountAllDetail extends Component {
 								<h4>Transactions</h4>
 								{this.state.Transactions.map((transaction, i) =>
 									<Row key={i}>
-										<Col sm="2"> Name: <strong>{ transaction.account_name }</strong></Col>
-										<Col sm="2"> Account ID: <strong>{ transaction.account_id }</strong></Col>
+										<Col sm="2"> <strong>{ this.account }</strong></Col>
+										<Col sm="2"> Account ID: { this.displayOperation(transaction.operations)} </Col>
 										{ this.getTimeSince(transaction.expiration) }
 										<Col sm="2"><strong>{ transaction.id }</strong></Col>
 									</Row>
