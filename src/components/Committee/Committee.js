@@ -27,7 +27,8 @@ class Committee extends Component {
 			console.log('error', error);
 		});
 
-		this.props.calculateComponentHeight(this.props.id, this.gridHeight);
+		if(this.props.history ===undefined)
+			this.props.calculateComponentHeight(this.props.id, this.gridHeight);
 	}
 
 	componentDidUpdate(prevProps, prevState) {
