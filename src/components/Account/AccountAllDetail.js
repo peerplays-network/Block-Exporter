@@ -116,6 +116,39 @@ class AccountAllDetail extends Component {
 		);
 	}
 
+	getTimeSince( timeCode ) {
+		//return timeCode;
+		var today = new Date();
+		//split timeCode
+		var timeArray = timeCode.split('T');
+		//days
+		var dateArray = timeArray[0].split('-');
+		if (dateArray[0] !== today.getFullYear().toString()) return (<Col sm="2"><strong>{today.getFullYear()-dateArray[0]}</strong> year(s) ago</Col>);
+		if (dateArray[1] !== (today.getMonth()+1).toString()) return (<Col sm="2"><strong>{today.getMonth()-dateArray[1]}</strong> month(s) ago</Col>);
+		if (dateArray[2] !== today.getDate().toString()) return (<Col sm="2"><strong>{today.getDate()-dateArray[2]}</strong> day(s) ago</Col>);
+		//hours
+		var clockArray = timeArray[1].split(':');
+		if (clockArray[0] !== today.getHours().toString()) return (<Col sm="2"><strong>{today.getHours()-clockArray[0]}</strong> hour(s) ago</Col>);
+		//minutes
+		if (clockArray[1] !== today.getMinutes().toString()) return (<Col sm="2"><strong>{today.getMinutes()-clockArray[1]}</strong> minute(s) ago</Col>);
+		//sec
+		var secs = clockArray[2].split('.');
+		return (<Col sm="2"><strong>{today.getSeconds()-secs[0]}</strong> minute(s) ago</Col>);
+	}
+
+	displayOperation( operation ) {
+		const operationID = JSON.parse(operation);
+		const OpId = operationID[0];
+		console.log('the id', OpId);
+		//API call to search for Account
+		return ( 
+			axios.get(`/api/operations/${ OpId }`, {
+			}).then(response => {
+				return( response.data.friendly_name );
+			}).catch(error => {console.log('error is fetching witness data', error);})
+		);
+	}
+
 	tabPaneBuild( index, type ) {
 		return (
 			<TabPane tabId="1">
@@ -153,19 +186,29 @@ class AccountAllDetail extends Component {
 			const receiverAccount = this.findAccountName(parsedTransaction.to);
 			return (
 				<Row key={i}>
-					<Col>{senderAccount} transfered {parsedTransaction.amount.amount} to {receiverAccount}</Col>
+					<Col sm="3"><strong>{senderAccount}</strong> transfered {parsedTransaction.amount.amount} to <strong>{receiverAccount}</strong></Col> 
+					-{this.getTimeSince(transaction.expiration)}
+					{transaction.id}
 				</Row> 
 			);
 		}
 		else if(operationType === 37) {
 			return (
 				<Row key={i}>
-					<Col>{parsedTransaction.total_claimed.amount} deposited to {parsedTransaction.deposit_to_account}</Col>
+					<Col sm="3">{parsedTransaction.total_claimed.amount} deposited to <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
+					-{this.getTimeSince(transaction.expiration)}
+					{transaction.id}
 				</Row> 
 			);
 		}
 		else {
-			
+			return (
+				<Row key={i}>
+					<Col sm="3">{parsedTransaction.total_claimed.amount} {this.displayOperation(operationType)} <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
+					-{this.getTimeSince(transaction.expiration)}
+					{transaction.id}
+				</Row> 
+			);
 		}
 	}
 
