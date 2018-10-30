@@ -90,27 +90,57 @@ class Contract extends Component {
 		const { temp_data, contract, currentPage, pageSize } = this.state;
 		
 		return(
-			<div className="table-responsive">
-				<div className="pagination-wrapper">
-					<InputGroup>
-						<Input type="text" value={contract} onChange={this.onContractEnter.bind(this)} placeholder="Contract" />
-					</InputGroup>
-					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
-				</div>
-				<table className="table">
-					<thead className={`${styles['clickable']} ${styles['smart-contracts-header']} ${styles['header-contrast-text']}`}>
-						<tr>
-							<th onClick={this.sortByColumn.bind(this, 'object_id')}>ID</th>
-							<th onClick={this.sortByColumn.bind(this, 'name')}>Name</th>
-							<th onClick={this.sortByColumn.bind(this, 'balances')}>Balance</th>
-						</tr>
-					</thead>
-					<tbody>
-						{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((contract, i) =>
-							<ContractRow detail={contract} key={i}/>
-						)}
-					</tbody>
-				</table>{temp_data.length===0 && <div> No Contracts Found </div>}
+
+			<div>
+				{!!this.props.history ? // page
+					<div className="container pt-0 pb-5 mt-5">
+						<div className="pagination-wrapper">
+							<InputGroup>
+								<Input type="text" value={contract} onChange={this.onContractEnter.bind(this)} placeholder="Contract" />
+							</InputGroup>
+							<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
+						</div>
+						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-0`}>
+							<span className="fa fa-address-card">&nbsp;</span>Browse Smart Contracts</h1>
+						<table className="table">
+							<thead className={`${styles['clickable']} ${styles['smart-contracts-header']} ${styles['header-contrast-text']}`}>
+								<tr>
+									<th onClick={this.sortByColumn.bind(this, 'object_id')}>ID</th>
+									<th onClick={this.sortByColumn.bind(this, 'name')}>Name</th>
+									<th onClick={this.sortByColumn.bind(this, 'balances')}>Balance</th>
+								</tr>
+							</thead>
+							<tbody>
+								{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((contract, i) =>
+									<ContractRow detail={contract} key={i}/>
+								)}
+							</tbody>
+						</table>{temp_data.length===0 && <div> No Contracts Found </div>}
+					</div>
+					:// widget
+					<div className="container pt-0 pb-5 mt-0">
+						<div className="pagination-wrapper">
+							<InputGroup>
+								<Input type="text" value={contract} onChange={this.onContractEnter.bind(this)} placeholder="Contract" />
+							</InputGroup>
+							<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
+						</div>
+						
+						<table className="table">
+							<thead className={`${styles['clickable']} ${styles['smart-contracts-header']} ${styles['header-contrast-text']}`}>
+								<tr>
+									<th onClick={this.sortByColumn.bind(this, 'object_id')}>ID</th>
+									<th onClick={this.sortByColumn.bind(this, 'name')}>Name</th>
+									<th onClick={this.sortByColumn.bind(this, 'balances')}>Balance</th>
+								</tr>
+							</thead>
+							<tbody>
+								{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((contract, i) =>
+									<ContractRow detail={contract} key={i}/>
+								)}
+							</tbody>
+						</table>{temp_data.length===0 && <div> No Contracts Found </div>}
+					</div>}
 			</div>
 		);
 	}	
