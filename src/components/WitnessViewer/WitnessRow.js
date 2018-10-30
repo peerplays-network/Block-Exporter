@@ -3,7 +3,6 @@ import { NavLink as RRNavLink } from 'react-router-dom';
 import {NavLink} from 'reactstrap';
 
 class WitnessRow extends Component {
-
 	render() {
 		return (
 			<tr>

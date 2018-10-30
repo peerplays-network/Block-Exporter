@@ -4,6 +4,7 @@ import { Nav, NavItem, NavLink, Row, Col, TabContent, TabPane, Card, CardBody } 
 import axios from 'axios';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import styles from './styles.css';
 
 class AccountAllDetail extends Component {
 	constructor(e) {
@@ -109,10 +110,43 @@ class AccountAllDetail extends Component {
 		
 		return (
 			<NavItem>
-				<NavLink className={classnames({ active: this.state.activeTab === index })} style={{cursor:'pointer'}} onClick={() => { this.toggle(index); }}>
+				<NavLink className={classnames({ active: this.state.activeTab === index}) } style={{cursor:'pointer',background:'#3d3d3d',color:'white'}} onClick={() => { this.toggle(index); }}>
 					{ type } Details ({ this.account[0] })
 				</NavLink>
 			</NavItem>
+		);
+	}
+
+	getTimeSince( timeCode ) {
+		//return timeCode;
+		var today = new Date();
+		//split timeCode
+		var timeArray = timeCode.split('T');
+		//days
+		var dateArray = timeArray[0].split('-');
+		if (dateArray[0] !== today.getFullYear().toString()) return (<Col sm="2"><strong>{today.getFullYear()-dateArray[0]}</strong> year(s) ago</Col>);
+		if (dateArray[1] !== (today.getMonth()+1).toString()) return (<Col sm="2"><strong>{today.getMonth()-dateArray[1]}</strong> month(s) ago</Col>);
+		if (dateArray[2] !== today.getDate().toString()) return (<Col sm="2"><strong>{today.getDate()-dateArray[2]}</strong> day(s) ago</Col>);
+		//hours
+		var clockArray = timeArray[1].split(':');
+		if (clockArray[0] !== today.getHours().toString()) return (<Col sm="2"><strong>{today.getHours()-clockArray[0]}</strong> hour(s) ago</Col>);
+		//minutes
+		if (clockArray[1] !== today.getMinutes().toString()) return (<Col sm="2"><strong>{today.getMinutes()-clockArray[1]}</strong> minute(s) ago</Col>);
+		//sec
+		var secs = clockArray[2].split('.');
+		return (<Col sm="2"><strong>{today.getSeconds()-secs[0]}</strong> minute(s) ago</Col>);
+	}
+
+	displayOperation( operation ) {
+		const operationID = JSON.parse(operation);
+		const OpId = operationID[0];
+		console.log('the id', OpId);
+		//API call to search for Account
+		return ( 
+			axios.get(`/api/operations/${ OpId }`, {
+			}).then(response => {
+				return( response.data.friendly_name );
+			}).catch(error => {console.log('error is fetching witness data', error);})
 		);
 	}
 
@@ -153,26 +187,38 @@ class AccountAllDetail extends Component {
 			const receiverAccount = this.findAccountName(parsedTransaction.to);
 			return (
 				<Row key={i}>
-					<Col>{senderAccount} transfered {parsedTransaction.amount.amount} to {receiverAccount}</Col>
+					<Col sm="3"><strong>{senderAccount}</strong> transfered {parsedTransaction.amount.amount} to <strong>{receiverAccount}</strong></Col> 
+					-{this.getTimeSince(transaction.expiration)}
+					{transaction.id}
 				</Row> 
 			);
 		}
 		else if(operationType === 37) {
 			return (
 				<Row key={i}>
-					<Col>{parsedTransaction.total_claimed.amount} deposited to {parsedTransaction.deposit_to_account}</Col>
+					<Col sm="3">{parsedTransaction.total_claimed.amount} deposited to <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
+					-{this.getTimeSince(transaction.expiration)}
+					{transaction.id}
 				</Row> 
 			);
 		}
 		else {
-			
+			return (
+				<Row key={i}>
+					<Col sm="3">{parsedTransaction.total_claimed.amount} {this.displayOperation(operationType)} <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
+					-{this.getTimeSince(transaction.expiration)}
+					{transaction.id}
+				</Row> 
+			);
 		}
 	}
 
 	render() {
 		this.getAccount();
 		return (
-			<div>
+			<div className="container">
+			<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
+				<span className="fa fa-address-card">&nbsp;</span>Account Information</h1>
 				<Nav tabs>
 					{ this.tabNavBuild('1', 'Account') }
 					{ this.tabNavBuild('2', 'Transaction') }

@@ -1,16 +1,19 @@
 import React,  { Component } from 'react';
 import { NavLink, Card, CardBody, CardHeader, Col } from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
+import styles from './styles.css';
 
 class Directory extends Component {
     
 	render() {
 		return (
-			<Col sm={{ size: '9', offset: 1 }} >
+			<div className="container">
+
+				<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
+				<span className="fa fa-map-signs">&nbsp;</span>Useful Resources</h1>
+
+			<Col >
 				<Card>
-					<CardHeader>
-						<span>Directory Links </span>
-					</CardHeader>
 					<CardBody>
 						<NavLink tag={RRNavLink} to="/account/">Account &nbsp; - A list of current accounts in the database</NavLink>
 						<NavLink tag={RRNavLink} to="/feeDirectory">Fee Directory &nbsp; - A list of current fees applied to accounts</NavLink>
@@ -20,6 +23,7 @@ class Directory extends Component {
 					</CardBody>
 				</Card>
 			</Col>
+			</div>
 		);
 	}
 }

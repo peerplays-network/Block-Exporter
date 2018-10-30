@@ -13,14 +13,14 @@ class TransactionDisplay extends Component {
 	constructor() {
 		super();
 		this.state = {
-			transactionData:[], transactionLength: 0, currentPage: 0,
+			transactionData:[], transactionLength: 0, currentPage: 0, pageSize: 10,
 		};
 	}
 
 	fetchData() {
 		axios.get('/api/transactions/recent?id=&limit=1', {
 		}).then(response => {
-			return axios.get('/api/transactions/recent?id=&limit=10');
+			return axios.get('/api/transactions/recent?id=&limit=100');
 		}).then(response => {
 			this.setState({transactionData: response.data});
 			return axios.get('/api/transactions/length');
@@ -39,10 +39,10 @@ class TransactionDisplay extends Component {
 	changePage(index) {
 		const {transactionData} = this.state;
 		this.setState({currentPage: index.selected});
-		axios.get(`/api/transactions/recent?id=${transactionData[transactionData.length - 1]}&limit=10`, {
-		}).then(response => {
-			this.setState({transactionData: response.data});
-		}).catch(error => console.log('error fetching transactions'));
+		// axios.get(`/api/transactions/recent?id=${transactionData[transactionData.length - 1].id}&limit=10`, {
+		// }).then(response => {
+		// 	this.setState({transactionData: response.data});
+		// }).catch(error => console.log('error fetching transactions'));
 	}
 
 	findAccountName(id) {
@@ -69,44 +69,44 @@ class TransactionDisplay extends Component {
 				</tr> 
 			);
 		}
+		else if(operationType === 47) {
+			if(!!parsedTransaction.fee) {
+				return (
+					<tr key={i}><td>{parsedTransaction.fee.amount} paid by registrar {parsedTransaction.registrar}</td></tr>
+				);
+			}
+			else {
+				return (
+					<tr>
+						<td>{parsedTransaction.operation}</td>
+					</tr>
+				);
+			}
+		}
 		else {
-			
+			return (
+				<tr><td>{parsedTransaction.operation}</td></tr>
+			);
 		}
 	}
 
 	render() {
+		console.log(this.state.transactionData);
+		const {transactionData, currentPage, pageSize} = this.state;
 		return (
 			<div className="container pt-1 pb-5 mt-4">
 				<div className="card-block">
 
 					{!!this.props.history ? //display on browse transaction page, hides it onthe transaction widget
-						<div><Pagination
-						breakClassName={`${styles['pagination']}`}
-						breakLabel={<a className="page-link">...</a>}
-						pageClassName={`${styles['pagination']}`}
-						previousClassName={`${styles['pagination']}`}
-						nextClassName={`${styles['pagination']}`}
-						pageLinkClassName="page-link"
-						previousLinkClassName="page-link"
-						nextLinkClassName="page-link"
-						pageCount={this.state.transactionLength/Constants.TRANSACTIONS_PER_PAGE}
-						pageRangeDisplayed={2}
-						onPageChange={this.changePage.bind(this)}
-					/>
-					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3 mt-2 mb-2s`}>
-							<span className="fa fa-inbox">&nbsp;</span>Browse Transactions</h1></div>
+						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3 mt-2 mb-2s`}>
+							<span className="fa fa-inbox">&nbsp;</span>Browse Transactions</h1>
 						: null//display on browse transaction page, hides it onthe transaction widget
 					}
 						
 					
 					<Table responsive>
-						<thead>
-							<tr>
-								<th style={{cursor:'default'}} className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>Transaction</th>
-							</tr>
-						</thead>
 						<tbody className="text-center">
-							{this.state.transactionData.map((transaction, i) => {
+							{transactionData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((transaction, i) => {
 								return this.renderTransaction(transaction, i);
 							})}
 						</tbody>
@@ -126,8 +126,6 @@ class TransactionDisplay extends Component {
 						onPageChange={this.changePage.bind(this)}
 					/>
 				</div>
-			
-			
 			</div>
 		);
 	}
