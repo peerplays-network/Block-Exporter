@@ -105,11 +105,6 @@ class TransactionDisplay extends Component {
 						
 					
 					<Table responsive>
-						<thead>
-							<tr>
-								<th style={{cursor:'default'}} className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>Transaction</th>
-							</tr>
-						</thead>
 						<tbody className="text-center">
 							{transactionData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((transaction, i) => {
 								return this.renderTransaction(transaction, i);
@@ -131,8 +126,6 @@ class TransactionDisplay extends Component {
 						onPageChange={this.changePage.bind(this)}
 					/>
 				</div>
-			
-			
 			</div>
 		);
 	}
