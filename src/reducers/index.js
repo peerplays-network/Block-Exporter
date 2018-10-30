@@ -6,6 +6,7 @@ import WitnessReducer from './WitnessReducer';
 import AccountReducer from './AccountReducer';
 import ContractReducer from './ContractReducer';
 import GridReducer from './GridReducer';
+import NavigationReducer from './NavigationReducer';
 
 const rootReducer = combineReducers({
 	routing: routerReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
 	accounts: AccountReducer,
 	contracts: ContractReducer,
 	grid: GridReducer,
+	nav: NavigationReducer,
 });
 
 export default rootReducer;
