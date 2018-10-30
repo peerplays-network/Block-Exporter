@@ -52,6 +52,10 @@ class BlockList extends Component {
 
 	render() {
 		const {blocks, blockLength} = this.state;
+		let nextStyle = `${styles['pagination']}`;
+		if (this.state.currentPage === Math.floor(blockLength/Constants.BLOCKS_PER_PAGE)) {
+			nextStyle = `${styles['disabled']}`;
+		}
 		return (
 			<div className="container pt-1 pb-5 mt-4">
 				
@@ -85,17 +89,20 @@ class BlockList extends Component {
 							</tbody>
 						</Table>
 						<Pagination
+							disabledClassName={`${styles['disabled']}`}
 							breakClassName={`${styles['pagination']}`}
 							breakLabel={<a className="page-link">...</a>}
 							pageClassName={`${styles['pagination']}`}
 							previousClassName={`${styles['pagination']}`}
-							nextClassName={`${styles['pagination']}`}
+							nextClassName={nextStyle}
 							pageLinkClassName="page-link"
 							previousLinkClassName="page-link"
 							nextLinkClassName="page-link"
 							pageCount={blockLength/Constants.BLOCKS_PER_PAGE}
 							pageRangeDisplayed={2}
 							onPageChange={this.changePage.bind(this)}
+							nextLabel=">>"
+							previousLabel="<<"
           				/>
 					</div>
 				
