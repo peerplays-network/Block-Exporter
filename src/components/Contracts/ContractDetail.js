@@ -2,6 +2,7 @@ import React,  { Component } from 'react';
 import { Nav, NavItem, NavLink, Row, Col, TabContent, TabPane, Card, CardBody } from 'reactstrap';
 import axios from 'axios';
 import classnames from 'classnames';
+import styles from './styles.css';
 
 class ContractDetail extends Component {
 	constructor(e) {
@@ -72,7 +73,7 @@ class ContractDetail extends Component {
 		}
 		return (
 			<NavItem>
-				<NavLink className={classnames({ active: this.state.activeTab === index })} onClick={() => { this.toggle(index); }}>
+				<NavLink className={classnames({ active: this.state.activeTab === index })} style={{cursor:'pointer',background:'#3d3d3d',color:'white'}} onClick={() => { this.toggle(index); }}>
 					{ type } ({ this.contract })
 				</NavLink>
 			</NavItem>
@@ -90,7 +91,10 @@ class ContractDetail extends Component {
 	render() {
 		this.getContract();
 		return (
-			<div>
+			<div className="container"> 
+
+				<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
+					<span className="fa fa-cogs">&nbsp;</span>Smart Contract Information</h1>
 				<Nav tabs>
 					{ this.tabNavBuild('1', 'Contract') }
 					{ this.tabNavBuild('2', 'Transactions') }
