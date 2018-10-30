@@ -48,6 +48,13 @@ class WitnessViewer extends Component {
 			this.findAccountByName(e.target.value, this.state.witnessData);
 	}
 
+	sortSearch(witness, data) {
+		if(witness.includes('1.6.'))
+			this.findAccountById(witness, data);
+		else
+			this.findAccountByName(witness, data);
+	}
+
 	findAccountByName(witness, data) {
 		var temp_data = [];
 		temp_data = data.filter(obj => {
@@ -88,13 +95,10 @@ class WitnessViewer extends Component {
 				const rankObject = this.state.witnessData.find(el => el.id === object.id);
 				return rankObject;
 			});
-			this.setState({searchData: sortedWitnessData});
-			this.refreshPagination(sortedWitnessData);
+			//this.setState({searchData: sortedWitnessData});
+			this.sortSearch(this.state.witness, sortedWitnessData);
+			//this.refreshPagination(sortedWitnessData);
 		}).catch(error => {console.log('error fetching witness data', error);});
-	}
-
-	changeSortType() {
-		this.state.sortType === 'DESC' ? this.setState({sortType: 'ASC'}) : this.setState({sortType: 'DESC'});
 	}
 
 	sortByRank() {
