@@ -120,38 +120,86 @@ class WitnessViewer extends Component {
 		const { currentPage, witness, searchData, pageSize } = this.state;
 
 		return (
-			<Fragment>
-				<div className="pagination-wrapper"> 
-					<InputGroup>
-						<Input type="text" value={witness} onChange={this.onWitnessEnter.bind(this)} placeholder="Witness" />
-					</InputGroup>
-					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
-				</div>
-				<table className="table">
-					<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
-						<tr>
-							<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
-							<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness</th>
-							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
-							<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
-							<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
-						</tr>
-					</thead>
-					{searchData && <tbody>
-						{searchData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((witness) => {
-							return <WitnessRow
-								key={witness.id}
-								rank={witness.rank}
-								witness={witness.account_name}
-								votes={witness.total_votes}
-								misses={witness.total_missed}
-								account_id={witness.account_id}
-								lastBlock={witness.url}
-							/>;
-						})}
-					</tbody>}
-				</table>{searchData.length===0 && <div> No Witnesses Found </div>}
-			</Fragment>
+
+			<div>
+				{!!this.props.history ? // browse all witness page
+					<div className="container pt-0 pb-5 mt-5">
+						<Fragment>
+							<div className="pagination-wrapper"> 
+								<InputGroup>
+									<Input type="text" value={witness} onChange={this.onWitnessEnter.bind(this)} placeholder="Witness" />
+								</InputGroup>
+								<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
+							</div>
+							<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-0`}>
+								<span className="fa fa-balance-scale">&nbsp;</span>Browse Witnesses</h1>
+
+							<table className="table">
+								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
+									<tr>
+										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
+										<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness</th>
+										<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
+										<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
+										<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
+									</tr>
+								</thead>
+								{searchData && <tbody>
+									{searchData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((witness) => {
+										return <WitnessRow
+											key={witness.id}
+											rank={witness.rank}
+											witness={witness.account_name}
+											votes={witness.total_votes}
+											misses={witness.total_missed}
+											account_id={witness.account_id}
+											lastBlock={witness.url}
+										/>;
+									})}
+								</tbody>}
+							</table>{searchData.length===0 && <div> No Witnesses Found </div>}
+						</Fragment>
+					</div>
+					:// witness widget
+					<div className="container pt-0 pb-5 mt-0">
+						<Fragment>
+							<div className="pagination-wrapper mt-0"> 
+								<InputGroup>
+									<Input type="text" value={witness} onChange={this.onWitnessEnter.bind(this)} placeholder="Witness" />
+								</InputGroup>
+								<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
+							</div>
+							
+
+							<table className="table">
+								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
+									<tr>
+										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
+										<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness</th>
+										<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
+										<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
+										<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
+									</tr>
+								</thead>
+								{searchData && <tbody>
+									{searchData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((witness) => {
+										return <WitnessRow
+											key={witness.id}
+											rank={witness.rank}
+											witness={witness.account_name}
+											votes={witness.total_votes}
+											misses={witness.total_missed}
+											account_id={witness.account_id}
+											lastBlock={witness.url}
+										/>;
+									})}
+								</tbody>}
+							</table>{searchData.length===0 && <div> No Witnesses Found </div>}
+						</Fragment>
+					</div>}
+			</div>
+						
+			
 		);
 	}
 
