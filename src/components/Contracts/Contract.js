@@ -10,8 +10,8 @@ class Contract extends Component {
 	constructor(e) {
 		super(e);
 		this.state = {
-			data: this.props.contracts,
-			temp_data: this.props.contracts,
+			data: !!this.props.contracts ? this.props.contracts : [],
+			temp_data: !!this.props.contracts ? this.props.contracts : [],
 			contract : '',
 			currentPage: 0,
 			pageSize: 5,
@@ -28,6 +28,13 @@ class Contract extends Component {
 		this.findData();
 		if(this.props.id !== '') {
 			this.props.calculateComponentHeight(this.props.id, this.gridHeight);
+		}
+	}
+
+	componentDidUpdate(prevProps) {
+		if(this.props.contracts !== prevProps.contracts) {
+			this.setState({data: this.props.contracts, temp_data: this.props.contracts});
+			this.refreshPagination(this.props.contracts);
 		}
 	}
 

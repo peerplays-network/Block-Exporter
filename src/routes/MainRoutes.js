@@ -15,7 +15,7 @@ import Directory from '../components/Directory/Directory';
 import Search from '../components/Search/Search';
 import Witnesses from '../components/WitnessViewer/WitnessViewer';
 import Committee from '../components/Committee/Committee';
-
+import Contracts from '../components/Contracts/Contract';
 
 export default (
 	<div>
@@ -33,6 +33,7 @@ export default (
 			<Route exact path="/directory" component={Directory} />
 			<Route exact path="/witnesses" component={Witnesses} />
 			<Route exact path="/committee" component={Committee} />
+			<Route exact path="/contracts" component={Contracts} />			
 			<Route exact path="/search/*" component={Search} />
 		</Switch>
 	</div>
