@@ -121,94 +121,82 @@ class Committee extends Component {
 		const { currentPage, committee, searchData, pageSize } = this.state;
 
 		return (
-
 			<div>
-			{!!this.props.history ? // browse all account page
+				{!!this.props.history ? // browse all account page
+					<div className="container pt-0 pb-5 mt-5">
+						<Fragment>
+							<div className="pagination-wrapper"> 
+								<InputGroup>
+									<Input type="text" value={committee} onChange={this.onCommitteeEnter.bind(this)} placeholder="Committee Name or Id" />
+								</InputGroup>
+								<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
+							</div>
+							<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-0`}>
+								<span className="fa fa-address-card">&nbsp;</span>Browse Committee Members</h1>
+							<table className="table">
+								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
+									<tr>
+										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
+										<th onClick={this.sortByColumn.bind(this, 'committee_id')} scope="col">Committee Member</th>
+										<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
+										<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
+									</tr>
+								</thead>
+								{searchData && <tbody>
+									{searchData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((committee) => {
+										return <CommitteeRow
+											key={committee.id}
+											rank={committee.rank}
+											committee_name = {committee.account_name}
+											committee={committee.committee_id}
+											votes={committee.total_votes}
+											url={committee.url}
+											account_id={committee.committee_member_account}
+										/>;
+									})}
+								</tbody>}
+							</table>{searchData.length===0 && <div> No Committee Members Found </div>}
+						</Fragment>
+					</div>
 
-<div className="container pt-0 pb-5 mt-5">
-<Fragment>
-<div className="pagination-wrapper"> 
-		<InputGroup>
-			<Input type="text" value={committee} onChange={this.onCommitteeEnter.bind(this)} placeholder="Committee Name or Id" />
-		</InputGroup>
-		<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
-	</div>
+					:// committee widget
 
-
-<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-0`}>
-	<span className="fa fa-address-card">&nbsp;</span>Browse Committee Members</h1>
-
-	
-	<table className="table">
-		<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
-			<tr>
-				<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
-				<th onClick={this.sortByColumn.bind(this, 'committee_id')} scope="col">Committee Member</th>
-				<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
-				<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
-			</tr>
-		</thead>
-		{searchData && <tbody>
-			{searchData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((committee) => {
-				return <CommitteeRow
-					key={committee.id}
-					rank={committee.rank}
-					committee_name = {committee.account_name}
-					committee={committee.committee_id}
-					votes={committee.total_votes}
-					url={committee.url}
-					account_id={committee.committee_member_account}
-				/>;
-			})}
-		</tbody>}
-	</table>{searchData.length===0 && <div> No Committee Members Found </div>}
-</Fragment>
-</div>
-
-:// committee widget
-
-<div className="container pt-0 pb-5 mt-0">
-			<Fragment>
-			<div className="pagination-wrapper"> 
-					<InputGroup>
-						<Input type="text" value={committee} onChange={this.onCommitteeEnter.bind(this)} placeholder="Committee Name or Id" />
-					</InputGroup>
-					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
-				</div>
-				
-				<table className="table">
-					<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
-						<tr>
-							<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
-							<th onClick={this.sortByColumn.bind(this, 'committee_id')} scope="col">Committee Member</th>
-							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
-							<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
-						</tr>
-					</thead>
-					{searchData && <tbody>
-						{searchData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((committee) => {
-							return <CommitteeRow
-								key={committee.id}
-								rank={committee.rank}
-								committee_name = {committee.account_name}
-								committee={committee.committee_id}
-								votes={committee.total_votes}
-								url={committee.url}
-								account_id={committee.committee_member_account}
-							/>;
-						})}
-					</tbody>}
-				</table>{searchData.length===0 && <div> No Committee Members Found </div>}
-			</Fragment>
+					<div className="container pt-0 pb-5 mt-0">
+						<Fragment>
+							<div className="pagination-wrapper"> 
+								<InputGroup>
+									<Input type="text" value={committee} onChange={this.onCommitteeEnter.bind(this)} placeholder="Committee Name or Id" />
+								</InputGroup>
+								<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
+							</div>
+							
+							<table className="table">
+								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
+									<tr>
+										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
+										<th onClick={this.sortByColumn.bind(this, 'committee_id')} scope="col">Committee Member</th>
+										<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
+										<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
+									</tr>
+								</thead>
+								{searchData && <tbody>
+									{searchData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((committee) => {
+										return <CommitteeRow
+											key={committee.id}
+											rank={committee.rank}
+											committee_name = {committee.account_name}
+											committee={committee.committee_id}
+											votes={committee.total_votes}
+											url={committee.url}
+											account_id={committee.committee_member_account}
+										/>;
+									})}
+								</tbody>}
+							</table>{searchData.length===0 && <div> No Committee Members Found </div>}
+						</Fragment>
+					</div>
+				}
 			</div>
-			}
-			</div>
-
-
-
-
-
-			
 		);
 	}
 
