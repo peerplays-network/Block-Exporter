@@ -52,59 +52,60 @@ class BlockList extends Component {
 
 	render() {
 		const {blocks, blockLength} = this.state;
-		let nextStyle = `${styles['pagination']}`;
+		let nextStyle = `${styles['pagination']} page-item`;
 		if (this.state.currentPage === Math.floor(blockLength/Constants.BLOCKS_PER_PAGE)) {
-			nextStyle = `${styles['disabled']}`;
+			nextStyle = `${styles['pagination']} page-item disabled`;
 		}
 		return (
 			<div className="container pt-1 pb-5 mt-4">
 				
-					<div className="card-block">
+				<div className="card-block">
 
 
-						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3`}>
-							<span className="fa fa-cubes">&nbsp;</span> Browse Blocks</h1>
-						<Table responsive>
-							<thead className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>
-								<tr>
-									<th style={{cursor:'default'}}>Height</th>
-									<th style={{cursor:'default'}}>Time</th>
-									<th style={{cursor:'default'}}>Witness</th>
-									<th style={{cursor:'default'}}>Transactions</th>
-									<th style={{cursor:'default'}}>Operations</th>
-								</tr>
-							</thead>
-							<tbody className="text-center">
-								{blocks.map((block) => {
-									return(
-										<tr key={block.id}>
-											<td><NavLink tag={RRNavLink} to={`/block-view/${block.block_number}`}>{block.block_number}</NavLink></td>
-											<td>{new Date(block.timestamp).toLocaleTimeString()}</td>
-											<td>{this.getWitnessName(block.witness)}</td>
-											<td>{block.transaction_count}</td>
-											<td>{block.operation_count}</td>
-										</tr>
-									);
-								})}
-							</tbody>
-						</Table>
-						<Pagination
-							disabledClassName={`${styles['disabled']}`}
-							breakClassName={`${styles['pagination']}`}
-							breakLabel={<a className="page-link">...</a>}
-							pageClassName={`${styles['pagination']}`}
-							previousClassName={`${styles['pagination']}`}
-							nextClassName={nextStyle}
-							pageLinkClassName="page-link"
-							previousLinkClassName="page-link"
-							nextLinkClassName="page-link"
-							pageCount={blockLength/Constants.BLOCKS_PER_PAGE}
-							pageRangeDisplayed={2}
-							onPageChange={this.changePage.bind(this)}
-							nextLabel=">>"
-							previousLabel="<<"
+					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3`}>
+						<span className="fa fa-cubes">&nbsp;</span> Browse Blocks</h1>
+					<Table responsive>
+						<thead className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>
+							<tr>
+								<th style={{cursor:'default'}}>Height</th>
+								<th style={{cursor:'default'}}>Time</th>
+								<th style={{cursor:'default'}}>Witness</th>
+								<th style={{cursor:'default'}}>Transactions</th>
+								<th style={{cursor:'default'}}>Operations</th>
+							</tr>
+						</thead>
+						<tbody className="text-center">
+							{blocks.map((block) => {
+								return(
+									<tr key={block.id}>
+										<td><NavLink tag={RRNavLink} to={`/block-view/${block.block_number}`}>{block.block_number}</NavLink></td>
+										<td>{new Date(block.timestamp).toLocaleTimeString()}</td>
+										<td>{this.getWitnessName(block.witness)}</td>
+										<td>{block.transaction_count}</td>
+										<td>{block.operation_count}</td>
+									</tr>
+								);
+							})}
+						</tbody>
+					</Table>
+					<Pagination
+						activeClassName="active"
+						disabledClassName="disabled"
+						breakClassName={`${styles['pagination']}`}
+						breakLabel={<a className="page-link">...</a>}
+						pageClassName={`${styles['pagination']} page-item`}
+						previousClassName={`${styles['pagination']} page-item`}
+						nextClassName={nextStyle}
+						pageLinkClassName="page-link"
+						previousLinkClassName="page-link"
+						nextLinkClassName="page-link"
+						pageCount={blockLength/Constants.BLOCKS_PER_PAGE}
+						pageRangeDisplayed={2}
+						onPageChange={this.changePage.bind(this)}
+						nextLabel="»"
+						previousLabel="«"
           				/>
-					</div>
+				</div>
 				
 			</div>
 		);
