@@ -96,7 +96,7 @@ class Navigation extends React.Component {
 								<DropdownItem href="/block-list">Blocks</DropdownItem>
 							</DropdownMenu>
 						</UncontrolledDropdown>
-						{this.props.history.location.pathname === '/' ? 
+						{this.props.nav ? 
 							<NavItem navbar>
 								<NavLink>
 									<i onClick={slideMenu.bind(this)} className={`${styles['cursor']} ${styles['header-contrast-text']} ${styles['size25']} fas fa-toolbox fa-1x pl-2`}></i>
@@ -136,4 +136,8 @@ function mapDispatchToProps(dispatch) {
 	return bindActionCreators({ sideBarClicked }, dispatch);
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(Navigation));
+const mapStateToProps = (state) => ({
+	nav: state.nav.sideBarHidden
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Navigation));

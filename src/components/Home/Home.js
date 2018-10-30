@@ -9,6 +9,9 @@ and feeding it to calculateComponentHeight()
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { showSideBarIcon } from '../../actions/NavigationActions';
+
 import Panel from '../Panel/Panel';
 import MaintenanceCD from '../MaintenanceCD/MaintenanceCD';
 import SidePanel from '../SidePanel/SidePanel';
@@ -36,6 +39,10 @@ class Welcome extends Component {
 		], 
 								  layout : [{i: '-1', x: 0, y: 0, w: 12, h: 90, static: true}, {i: '0', x: 15, y: 5, w: 24, h: 40}, {i: '1', x: 15, y: 50, w: 21, h: 40}, {i: '3', x: 40, y: 5, w: 24, h: 40}],
 		};
+	}
+
+	componentDidMount() {
+		this.props.showSideBarIcon(true);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -186,11 +193,18 @@ class Welcome extends Component {
 			</div>
 		);
 	}
+	componentWillUnmount() {
+		this.props.showSideBarIcon(false);
+	}
+}
+
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({ showSideBarIcon }, dispatch);
 }
 
 const mapStateToProps = (state) => ({
 	sideBarOpen: state.grid.sideBarOpen,
 });
 
-export default connect(mapStateToProps)(Welcome);
+export default connect(mapStateToProps, mapDispatchToProps)(Welcome);
 
