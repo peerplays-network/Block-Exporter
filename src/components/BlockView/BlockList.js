@@ -80,7 +80,7 @@ class BlockList extends Component {
 									<tr key={block.id}>
 										<td><NavLink tag={RRNavLink} to={`/block-view/${block.block_number}`}>{block.block_number}</NavLink></td>
 										<td>{new Date(block.timestamp).toLocaleTimeString()}</td>
-										<td>{this.getWitnessName(block.witness)}</td>
+										<td><NavLink tag={RRNavLink} to={`/accountAllDetail/${this.getWitnessName(block.witness)}`}>{this.getWitnessName(block.witness)}</NavLink></td>
 										<td>{block.transaction_count}</td>
 										<td>{block.operation_count}</td>
 									</tr>
