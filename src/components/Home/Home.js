@@ -29,13 +29,13 @@ const Grid = widthProvider(GridLayout);
 class Welcome extends Component {
 	constructor() {
 		super();
-		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: 'large', visible: true, id: 0, gridPlacement: {i: '0', x: 14, y: 5, w: 24, h: 40}},
+		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: 'large', visible: true, id: 0, gridPlacement: {i: '0', x: 15, y: 5, w: 24, h: 40}},
 								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: 'medium', visible: true, id: 1, gridPlacement: {i: '1', x: 15, y: 50, w: 21, h: 40}},
-								   {name: 'Account Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: 16, y: 4, w: 4.5, h: 20}},
+								   {name: 'Account Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: 15, y: 0, w: 4.5, h: 20}},
 								   {name: 'Current Transactions', img: 'https://via.placeholder.com/50x50', minSize:'large', size: 'large', visible: true, id:3, gridPlacement: {i: '3', x: 40, y: 5, w: 24, h: 40}},
-								   {name: 'Fee Directory', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 17, y: 1, w: 4.5, h: 20}},
-								   {name: 'Contract Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 5, gridPlacement: {i: '5', x: 18, y: 2, w: 4.5, h: 20}},
-								   {name: 'Committee Feed', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id: 6, gridPlacement: {i: '6', x: 19, y: 3, w: 4.5, h: 20}},
+								   {name: 'Fee Directory', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 15, y: 0, w: 4.5, h: 20}},
+								   {name: 'Contract Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 5, gridPlacement: {i: '5', x: 15, y: 0, w: 4.5, h: 20}},
+								   {name: 'Committee Feed', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id: 6, gridPlacement: {i: '6', x: 15, y: 0, w: 4.5, h: 20}},
 		], 
 								  layout : [{i: '-1', x: 0, y: 0, w: 12, h: 90, static: true}, {i: '0', x: 15, y: 5, w: 24, h: 40}, {i: '1', x: 15, y: 50, w: 21, h: 40}, {i: '3', x: 40, y: 5, w: 24, h: 40}],
 		};
