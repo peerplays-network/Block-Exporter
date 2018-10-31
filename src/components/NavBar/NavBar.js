@@ -66,8 +66,12 @@ class Navigation extends React.Component {
 	}
 
 	render() {
+		// const menu = document.querySelector('.sliding-menu');
+		// menu.style.height = (window.innerHeight - 76).toString() + 'px';
+
 		const slideMenu = () => {
 			const menu = document.querySelector('.sliding-menu');
+			menu.style.height = (window.innerHeight - 76).toString() + 'px';
 			if(menu.style.left === '-250px') {
 				this.props.sideBarClicked(true);
 				menu.style.left = '0px';

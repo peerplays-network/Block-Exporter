@@ -3,6 +3,12 @@ import SidePanelItem from './SidePanelItem';
 import styles from './styles.css';
 
 class SidePanel extends Component {
+
+	componentDidMount() {
+		const gridHeight = (window.innerHeight - 76)/10;
+		this.props.calculateComponentHeight(-1, gridHeight);//we want 930px
+	}
+
 	render() {
 		return (
 		  <div className={`sliding-menu ${styles['sliding-menu']}`}>
