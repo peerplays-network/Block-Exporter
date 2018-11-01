@@ -1,0 +1,11 @@
+
+.header-background{
+    background: black;
+  }
+  .header-contrast-text{
+    color: white;
+  }
+  
+  .search-results-header{
+    background: rgb(61, 61, 61);
+  }
