@@ -6,6 +6,7 @@ import styles from './styles.css';
 import { NavLink } from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PaginationCall from '../Account/PaginationCall';
 import * as Constants from '../../constants/constants'; 
 //State will be removed once data feed is established
 
@@ -13,14 +14,14 @@ class TransactionDisplay extends Component {
 	constructor() {
 		super();
 		this.state = {
-			transactionData:[], transactionLength: 0, currentPage: 0, pageSize: 10,
+			transactionData:[], transactionLength: 10, currentPage: 0,
 		};
 	}
 
 	fetchData() {
 		axios.get('/api/transactions/recent?id=&limit=1', {
 		}).then(response => {
-			return axios.get('/api/transactions/recent?id=&limit=100');
+			return axios.get('/api/transactions/recent?id=&limit=10');
 		}).then(response => {
 			this.setState({transactionData: response.data});
 			return axios.get('/api/transactions/length');
@@ -37,13 +38,27 @@ class TransactionDisplay extends Component {
 			this.props.calculateComponentHeight(this.props.id, gridHeight);
 	}
 
-	changePage(index) {
+	changePage(e, index) {
+		e.preventDefault();
+		index > this.state.currentPage ? this.loadNextTransactions(index) : this.loadPreviousTransactions(index);
+	}
+
+	loadNextTransactions(index) {
 		const {transactionData} = this.state;
-		this.setState({currentPage: index.selected});
-		// axios.get(`/api/transactions/recent?id=${transactionData[transactionData.length - 1].id}&limit=10`, {
-		// }).then(response => {
-		// 	this.setState({transactionData: response.data});
-		// }).catch(error => console.log('error fetching transactions'));
+		this.setState({currentPage: index});
+		axios.get(`/api/transactions/recent?id=${transactionData[transactionData.length - 1].id-1}&limit=10`, {
+		}).then(response => {
+			this.setState({transactionData: response.data});
+		}).catch(error => console.log('error fetching transactions'));
+	}
+
+	loadPreviousTransactions(index) {
+		const {transactionData} = this.state;
+		this.setState({currentPage: index});
+		axios.get(`/api/transactions/recent?id=${transactionData[0].id+11}&limit=10`, {
+		}).then(response => {
+			this.setState({transactionData: response.data});
+		}).catch(error => console.log('error fetching transactions'));
 	}
 
 	findAccountName(id) {
@@ -92,8 +107,8 @@ class TransactionDisplay extends Component {
 	}
 
 	render() {
-		console.log(this.state.transactionData);
-		const {transactionData, currentPage, pageSize} = this.state;
+		const {transactionData, currentPage, transactionLength} = this.state;
+
 		return (
 			<div className="container pt-1 pb-5 mt-4">
 				<div className="card-block">
@@ -101,31 +116,17 @@ class TransactionDisplay extends Component {
 					{!!this.props.history ? //display on browse transaction page, hides it onthe transaction widget
 						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3 mt-2 mb-2s`}>
 							<span className="fa fa-inbox">&nbsp;</span>Browse Transactions</h1>
-						: null//display on browse transaction page, hides it onthe transaction widget
+						: null//display on browse transaction page, hides it on the transaction widget
 					}
-						
-					
+	
+					<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={Math.ceil(transactionLength/Constants.TRANSACTIONS_PER_PAGE)} />
 					<Table responsive>
 						<tbody className="text-center">
-							{transactionData.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((transaction, i) => {
+							{transactionData.map((transaction, i) => {
 								return this.renderTransaction(transaction, i);
 							})}
 						</tbody>
 					</Table>
-
-					<Pagination
-						breakClassName={`${styles['pagination']}`}
-						breakLabel={<a className="page-link">...</a>}
-						pageClassName={`${styles['pagination']}`}
-						previousClassName={`${styles['pagination']}`}
-						nextClassName={`${styles['pagination']}`}
-						pageLinkClassName="page-link"
-						previousLinkClassName="page-link"
-						nextLinkClassName="page-link"
-						pageCount={this.state.transactionLength/Constants.TRANSACTIONS_PER_PAGE}
-						pageRangeDisplayed={2}
-						onPageChange={this.changePage.bind(this)}
-					/>
 				</div>
 			</div>
 		);
