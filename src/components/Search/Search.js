@@ -4,6 +4,7 @@ import {Card, CardBody, Row, Col, Table} from 'reactstrap';
 import { connect } from 'react-redux';
 import { NavLink} from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
+import styles from './styles.css';
 
 class Search extends Component {
 	constructor(props) {
@@ -121,11 +122,11 @@ class Search extends Component {
 					<CardBody>
 						<Row>
 							<Col md="12">
-								<h1 className="display-5 text-center mt-3"><span className="fa fa-user-alt">&nbsp;</span>Accounts</h1>
+								<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-3`}><span className="fa fa-user-alt">&nbsp;</span>Accounts</h1>
 							</Col>
 						</Row>
 						<Table responsive>
-							<thead className="text-center">
+							<thead className={`${styles['header-contrast-text']} ${styles['search-results-header']} text-center`}>
 								<tr>
 									<th scope="col">Account Name</th>
 									<th scope="col">Account Id</th>
