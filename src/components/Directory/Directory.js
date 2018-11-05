@@ -16,7 +16,7 @@ class Directory extends Component {
 				<Card>
 					<CardBody>
 						<NavLink tag={RRNavLink} to="/account/">Account &nbsp; - A list of current accounts in the database</NavLink>
-						<NavLink tag={RRNavLink} to="/feeDirectory">Fee Directory &nbsp; - A list of current fees applied to accounts</NavLink>
+						<NavLink tag={RRNavLink} to="/feeDirectory">Fee Structure &nbsp; - A list of current fees applied to accounts</NavLink>
 						<NavLink tag={RRNavLink} to="/">Home &nbsp; - Landing age with access to all widgets</NavLink>
 						<NavLink tag={RRNavLink} to="/transactions/">Transactions &nbsp; - List of the most recent transactions</NavLink>
 						<NavLink tag={RRNavLink} to="test/">Test &nbsp; - A test page</NavLink>
