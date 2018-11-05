@@ -233,12 +233,12 @@ class AccountAllDetail extends Component {
 							<TabPane tabId="1">
 								<h4>Account Information</h4>
 								{this.state.Account.map((account, i) =>
-									<Row key={i}>
-										<Col sm="2"> Name: <strong>{ account.account_name }</strong></Col>
-										<Col sm="2"> Account ID: <strong>{ account.account_id }</strong></Col>
-										<Col sm="2"> Account Balance: <strong>{ this.state.accountBalance }</strong></Col>
-										<Col sm="2"> Lifetime fees paid: <strong>{ !!account.lifetime_fees_paid && account.lifetime_fees_paid.length > 0 ? account.lifetime_fees_paid : 0 }</strong></Col>
-										<Col sm="2"> Registrar: <strong>{ account.referrer }</strong></Col>
+									<Row className="" key={i}>
+										<Col className="text-center" sm="2"> Name: <strong>{ account.account_name }</strong></Col>
+										<Col className="text-center" sm="2"> Account ID: <strong>{ account.account_id }</strong></Col>
+										<Col className="d-inline-flex justify-content-sm-center" sm="3"> Account Balance: <strong>{ this.state.accountBalance }</strong></Col>
+										<Col className="text-center" sm="2"> Lifetime fees paid: <strong>{ !!account.lifetime_fees_paid && account.lifetime_fees_paid.length > 0 ? account.lifetime_fees_paid : 0 }</strong></Col>
+										<Col className="text-center" sm="2"> Registrar: <strong>{ account.referrer }</strong></Col>
 									</Row>
 								)}
 							</TabPane>
@@ -255,8 +255,8 @@ class AccountAllDetail extends Component {
 										<Col sm="2"> Account ID: <strong>{ witness.account_id }</strong></Col>
 										<Col sm="2"> Active: <strong>{ this.returnActive(witness.is_active) }</strong></Col>
 										<Col sm="2"> Total Votes: <strong>{ witness.total_votes }</strong></Col>
-										<Col sm="2"> Missed Blocks: <strong>{ witness.total_missed }</strong></Col>
-										<Col sm="2"> Url: <strong>{ witness.url }</strong></Col>
+										<Col className="d-inline-flex" sm="3"> Missed Blocks: <strong> {witness.total_missed }</strong></Col>
+										<Col sm="3"> Url: <strong>{ witness.url }</strong></Col>
 									</Row>	
 								)}
 							</TabPane>
