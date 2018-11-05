@@ -1,5 +1,5 @@
 import React,  { Component } from 'react';
-import { NavLink, Card, CardBody, CardHeader, Col } from 'reactstrap';
+import { NavLink, Card, CardBody, Col } from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
 import styles from './styles.css';
 
@@ -17,7 +17,7 @@ class Directory extends Component {
 						<CardBody>
 							<NavLink tag={RRNavLink} to="/account/">Account &nbsp; - A list of current accounts in the database</NavLink>
 							<NavLink tag={RRNavLink} to="/feeDirectory">Fee Schedule &nbsp; - A list of current fees applied to accounts</NavLink>
-							<NavLink tag={RRNavLink} to="/">Home &nbsp; - Landing age with access to all widgets</NavLink>
+							<NavLink tag={RRNavLink} to="/">Home &nbsp; - Landing page with access to all widgets</NavLink>
 							<NavLink tag={RRNavLink} to="/transactions/">Transactions &nbsp; - List of the most recent transactions</NavLink>
 							<NavLink tag={RRNavLink} to="test/">Test &nbsp; - A test page</NavLink>
 						</CardBody>

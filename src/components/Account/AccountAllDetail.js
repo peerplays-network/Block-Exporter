@@ -125,7 +125,7 @@ class AccountAllDetail extends Component {
 		//days
 		var dateArray = timeArray[0].split('-');
 		if (dateArray[0] !== today.getFullYear().toString()) return (<Col><strong>{today.getFullYear()-dateArray[0]}</strong> year(s) ago</Col>);
-		if (dateArray[1] !== (today.getMonth()+1).toString()) return (<Col><strong>{today.getMonth()-dateArray[1]}</strong> month(s) ago</Col>);
+		if (dateArray[1] !== (today.getMonth()+1).toString()) return (<Col><strong>{(today.getMonth()+1)-dateArray[1]}</strong> month(s) ago</Col>);
 		if (dateArray[2] !== today.getDate().toString()) return (<Col><strong>{today.getDate()-dateArray[2]}</strong> day(s) ago</Col>);
 		//hours
 		var clockArray = timeArray[1].split(':');
