@@ -124,14 +124,14 @@ class AccountAllDetail extends Component {
 		var timeArray = timeCode.split('T');
 		//days
 		var dateArray = timeArray[0].split('-');
-		if (dateArray[0] !== today.getFullYear().toString()) return (<Col sm="2"><strong>{today.getFullYear()-dateArray[0]}</strong> year(s) ago</Col>);
-		if (dateArray[1] !== (today.getMonth()+1).toString()) return (<Col sm="2"><strong>{today.getMonth()-dateArray[1]}</strong> month(s) ago</Col>);
-		if (dateArray[2] !== today.getDate().toString()) return (<Col sm="2"><strong>{today.getDate()-dateArray[2]}</strong> day(s) ago</Col>);
+		if (dateArray[0] !== today.getFullYear().toString()) return (<Col><strong>{today.getFullYear()-dateArray[0]}</strong> year(s) ago</Col>);
+		if (dateArray[1] !== (today.getMonth()+1).toString()) return (<Col><strong>{today.getMonth()-dateArray[1]}</strong> month(s) ago</Col>);
+		if (dateArray[2] !== today.getDate().toString()) return (<Col><strong>{today.getDate()-dateArray[2]}</strong> day(s) ago</Col>);
 		//hours
 		var clockArray = timeArray[1].split(':');
-		if (clockArray[0] !== today.getHours().toString()) return (<Col sm="2"><strong>{today.getHours()-clockArray[0]}</strong> hour(s) ago</Col>);
+		if (clockArray[0] !== today.getHours().toString()) return (<Col><strong>{today.getHours()-clockArray[0]}</strong> hour(s) ago</Col>);
 		//minutes
-		if (clockArray[1] !== today.getMinutes().toString()) return (<Col sm="2"><strong>{today.getMinutes()-clockArray[1]}</strong> minute(s) ago</Col>);
+		if (clockArray[1] !== today.getMinutes().toString()) return (<Col><strong>{today.getMinutes()-clockArray[1]}</strong> minute(s) ago</Col>);
 		//sec
 		var secs = clockArray[2].split('.');
 		return (<Col sm="2"><strong>{today.getSeconds()-secs[0]}</strong> minute(s) ago</Col>);
@@ -187,27 +187,27 @@ class AccountAllDetail extends Component {
 			const receiverAccount = this.findAccountName(parsedTransaction.to);
 			return (
 				<Row key={i}>
-					<Col sm="3"><strong>{senderAccount}</strong> transfered {parsedTransaction.amount.amount} to <strong>{receiverAccount}</strong></Col> 
-					-{this.getTimeSince(transaction.expiration)}
-					{transaction.id}
+					<Col sm="5"><strong>{senderAccount}</strong> transfered {parsedTransaction.amount.amount} to <strong>{receiverAccount}</strong></Col> 
+					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
+					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
 				</Row> 
 			);
 		}
 		else if(operationType === 37) {
 			return (
 				<Row key={i}>
-					<Col sm="3">{parsedTransaction.total_claimed.amount} deposited to <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
-					-{this.getTimeSince(transaction.expiration)}
-					{transaction.id}
+					<Col sm="5">{parsedTransaction.total_claimed.amount} deposited to <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
+					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
+					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
 				</Row> 
 			);
 		}
 		else {
 			return (
 				<Row key={i}>
-					<Col sm="3">{parsedTransaction.total_claimed.amount} {this.displayOperation(operationType)} <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
-					-{this.getTimeSince(transaction.expiration)}
-					{transaction.id}
+					<Col sm="5">{parsedTransaction.total_claimed.amount} {this.displayOperation(operationType)} <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
+					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
+					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
 				</Row> 
 			);
 		}
@@ -217,8 +217,8 @@ class AccountAllDetail extends Component {
 		this.getAccount();
 		return (
 			<div className="container">
-			<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
-				<span className="fa fa-address-card">&nbsp;</span>Account Information</h1>
+				<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
+					<span className="fa fa-address-card">&nbsp;</span>Account Information</h1>
 				<Nav tabs>
 					{ this.tabNavBuild('1', 'Account') }
 					{ this.tabNavBuild('2', 'Transaction') }
