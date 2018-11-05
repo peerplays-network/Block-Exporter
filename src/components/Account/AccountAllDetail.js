@@ -14,11 +14,13 @@ class AccountAllDetail extends Component {
 			Transactions: [],
 			Witnesses: [],
 			Committee: [],
+			Operations: [],
 			activeTab: '1',
-			accountBalance: 0
+			accountBalance: 0,
 		};
 		this.toggle = this.toggle.bind(this);
 		this.account = '';
+		this.friendly_description = '';
 	}
 
 	getAccount() {
@@ -73,12 +75,19 @@ class AccountAllDetail extends Component {
 			this.setState({ Committee: response.data });
 		}).catch(error => {console.log('error is fetching committee data', error);});
 	}
+	findOperations(e) {
+		axios.get('/api/operations/', {
+		}).then(response => {
+			this.setState({ Operations: response.data });
+		}).catch(error => {console.log('error is fetching operation data', error);});
+	}
 
 	componentDidMount() {
 		this.findData();
 		this.findTransactions();
 		this.findWitnesses();
 		this.findCommittee();
+		this.findOperations();
 
 		if(!!this.account[1] && this.account[1].includes('1.6'))
 			this.setState({activeTab: '3'});
@@ -138,16 +147,7 @@ class AccountAllDetail extends Component {
 	}
 
 	displayOperation( operation ) {
-		const operationID = JSON.parse(operation);
-		const OpId = operationID[0];
-		console.log('the id', OpId);
-		//API call to search for Account
-		return ( 
-			axios.get(`/api/operations/${ OpId }`, {
-			}).then(response => {
-				return( response.data.friendly_name );
-			}).catch(error => {console.log('error is fetching witness data', error);})
-		);
+		return this.state.Operations[operation].friendly_name;
 	}
 
 	tabPaneBuild( index, type ) {
@@ -187,7 +187,7 @@ class AccountAllDetail extends Component {
 			const receiverAccount = this.findAccountName(parsedTransaction.to);
 			return (
 				<Row key={i}>
-					<Col sm="5"><strong>{senderAccount}</strong> transfered {parsedTransaction.amount.amount} to <strong>{receiverAccount}</strong></Col> 
+					<Col sm="5"><strong>{senderAccount}</strong> {this.displayOperation(operationType)} {parsedTransaction.amount.amount} to <strong>{receiverAccount}</strong></Col> 
 					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
 					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
 				</Row> 
@@ -203,15 +203,13 @@ class AccountAllDetail extends Component {
 			);
 		}
 		else {
-			if(!!parsedTransaction.total_claimed) {
-				return (
-					<Row key={i}>
-						<Col sm="5">{parsedTransaction.total_claimed.amount} {this.displayOperation(operationType)} <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
-						<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
-						<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
-					</Row> 
-				);
-			}
+			return (
+				<Row key={i}>
+					<Col sm="5">{this.displayOperation(operationType)} costs <strong> {parsedTransaction.fee.amount}</strong> in fees</Col> 
+					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
+					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
+				</Row> 
+			);
 		}
 	}
 
