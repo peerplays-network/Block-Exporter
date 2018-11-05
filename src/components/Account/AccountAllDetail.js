@@ -125,7 +125,7 @@ class AccountAllDetail extends Component {
 		//days
 		var dateArray = timeArray[0].split('-');
 		if (dateArray[0] !== today.getFullYear().toString()) return (<Col sm="2"><strong>{today.getFullYear()-dateArray[0]}</strong> year(s) ago</Col>);
-		if (dateArray[1] !== (today.getMonth()+1).toString()) return (<Col sm="2"><strong>{today.getMonth()-dateArray[1]}</strong> month(s) ago</Col>);
+		if (dateArray[1] !== (today.getMonth()+1).toString()) return (<Col sm="2"><strong>{(today.getMonth()+1)-dateArray[1]}</strong> month(s) ago</Col>);
 		if (dateArray[2] !== today.getDate().toString()) return (<Col sm="2"><strong>{today.getDate()-dateArray[2]}</strong> day(s) ago</Col>);
 		//hours
 		var clockArray = timeArray[1].split(':');
@@ -217,8 +217,8 @@ class AccountAllDetail extends Component {
 		this.getAccount();
 		return (
 			<div className="container">
-			<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
-				<span className="fa fa-address-card">&nbsp;</span>Account Information</h1>
+				<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
+					<span className="fa fa-address-card">&nbsp;</span>Account Information</h1>
 				<Nav tabs>
 					{ this.tabNavBuild('1', 'Account') }
 					{ this.tabNavBuild('2', 'Transaction') }
