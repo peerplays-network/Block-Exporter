@@ -250,7 +250,7 @@ class AccountAllDetail extends Component {
 								<h4>Witness Information</h4>
 								{this.state.Witnesses.map((witness, i) =>
 									<Row key={i}>
-										<Col sm="2"> Account ID: <strong>{ witness.account_id }</strong></Col>
+										<Col sm="2"> Witness ID: <strong>{ witness.account_id }</strong></Col>
 										<Col sm="2"> Active: <strong>{ this.returnActive(witness.is_active) }</strong></Col>
 										<Col sm="2"> Total Votes: <strong>{ witness.total_votes }</strong></Col>
 										<Col className="d-inline-flex" sm="3"> Missed Blocks: <strong> {witness.total_missed }</strong></Col>
