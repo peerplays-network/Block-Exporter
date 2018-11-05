@@ -75,6 +75,13 @@ class Committee extends Component {
 		this.setState({ currentPage: index  });
 	}
 
+	sortSearch(committee, data) {
+		if(committee.includes('1.5.'))
+			this.findAccountById(committee, data);
+		else
+			this.findAccountByName(committee, data);
+	}
+
 	sortByColumn(colType) {
 		let sortType = this.state.sortType;
 
@@ -93,8 +100,9 @@ class Committee extends Component {
 				const rankObject = this.state.committeeData.find(el => el.id === object.id);
 				return rankObject;
 			});
-			this.setState({searchData: sortedcommitteeData});
-			this.refreshPagination(sortedcommitteeData);
+			//this.setState({searchData: sortedcommitteeData});
+			this.sortSearch(this.state.committee, sortedcommitteeData);
+			//this.refreshPagination(sortedcommitteeData);
 		}).catch(error => {console.log('error fetching committee data', error);});
 	}
 
