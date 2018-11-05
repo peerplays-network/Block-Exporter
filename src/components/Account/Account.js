@@ -103,66 +103,66 @@ class AccountSearch extends Component {
 		return(
 			<div className="table-responsive">
 				
-			{!!this.props.history ? // browse all account page
-				<div className="container pt-0 pb-5 mt-5">
-					<div className="pagination-wrapper">
-						<InputGroup>
-							<Input type="text" value={account} onChange={this.onAccountEnter.bind(this)} placeholder="Account" />
-						</InputGroup>
-						<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
-					</div>
+				{!!this.props.history ? // browse all account page
+					<div className="container pt-0 pb-5 mt-5">
+						<div className="pagination-wrapper">
+							<InputGroup>
+								<Input type="text" value={account} onChange={this.onAccountEnter.bind(this)} placeholder="Account" />
+							</InputGroup>
+							<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
+						</div>
 
 					
-					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3`}>
-						<span className="fa fa-address-book">&nbsp;</span> Browse Accounts</h1>
+						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3`}>
+							<span className="fa fa-address-book">&nbsp;</span> Browse Accounts</h1>
 					
 						
-					<table className="table" >
-						<thead className={`${styles['clickable']} ${styles['accounts-header']} ${styles['header-contrast-text']}`}>
-							<tr>
-								<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Account Name</th>
-								<th onClick={this.sortByColumn.bind(this, 'account_id')} scope="col">Account ID</th>
-								<th onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</th>
-							</tr>
-						</thead>
-						<tbody>
-							{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((account, i) =>
-								<AccountDetail detail={account} key={i}/>
-							)}
-						</tbody>
-					</table>{temp_data.length===0 && <div> No Accounts Found </div>}
+						<table className="table" >
+							<thead className={`${styles['clickable']} ${styles['accounts-header']} ${styles['header-contrast-text']}`}>
+								<tr>
+									<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Account Name</th>
+									<th onClick={this.sortByColumn.bind(this, 'account_id')} scope="col">Account ID</th>
+									<th onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</th>
+								</tr>
+							</thead>
+							<tbody>
+								{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((account, i) =>
+									<AccountDetail detail={account} key={i}/>
+								)}
+							</tbody>
+						</table>{temp_data.length===0 && <div> No Accounts Found </div>}
 
-				</div>
+					</div>
 
-			: 
-		// account feed widget
-			<div className="container pt-0 pb-5 mt-0">
-			<div className="pagination-wrapper">
-				<InputGroup>
-					<Input type="text" value={account} onChange={this.onAccountEnter.bind(this)} placeholder="Account" />
-				</InputGroup>
-				<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
-			</div>
+					: 
+					// account feed widget
+					<div className="container pt-0 pb-5 mt-0">
+						<div className="pagination-wrapper">
+							<InputGroup>
+								<Input type="text" value={account} onChange={this.onAccountEnter.bind(this)} placeholder="Account" />
+							</InputGroup>
+							<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
+						</div>
 
-			<table className="table" >
-				<thead className={`${styles['clickable']} ${styles['accounts-header']} ${styles['header-contrast-text']}`}>
-					<tr>
-						<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Account Name</th>
-						<th onClick={this.sortByColumn.bind(this, 'account_id')} scope="col">Account ID</th>
-						<th onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</th>
-					</tr>
-				</thead>
-				<tbody>
-					{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((account, i) =>
-						<AccountDetail detail={account} key={i}/>
-					)}
-				</tbody>
-			</table>{temp_data.length===0 && <div> No Accounts Found </div>}
+						<table className="table" >
+							<thead className={`${styles['clickable']} ${styles['accounts-header']} ${styles['header-contrast-text']}`}>
+								<tr>
+									<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Account Name</th>
+									<th onClick={this.sortByColumn.bind(this, 'account_id')} scope="col">Account ID</th>
+									<th onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</th>
+								</tr>
+							</thead>
+							<tbody>
+								{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((account, i) =>
+									<AccountDetail detail={account} key={i}/>
+								)}
+							</tbody>
+						</table>{temp_data.length===0 && <div> No Accounts Found </div>}
 
-		</div>
+					</div>
 
-		// end of account feed widget
-		}
+				// end of account feed widget
+				}
 
 
 
