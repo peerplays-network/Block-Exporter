@@ -127,7 +127,7 @@ class Committee extends Component {
 						<Fragment>
 							<div className="pagination-wrapper"> 
 								<InputGroup>
-									<Input type="text" value={committee} onChange={this.onCommitteeEnter.bind(this)} placeholder="Committee Name or Id" />
+									<Input type="text" value={committee} onChange={this.onCommitteeEnter.bind(this)} placeholder="Committee Member" />
 								</InputGroup>
 								<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 							</div>
@@ -165,7 +165,7 @@ class Committee extends Component {
 						<Fragment>
 							<div className="pagination-wrapper"> 
 								<InputGroup>
-									<Input type="text" value={committee} onChange={this.onCommitteeEnter.bind(this)} placeholder="Committee Name or Id" />
+									<Input type="text" value={committee} onChange={this.onCommitteeEnter.bind(this)} placeholder="Committee Member" />
 								</InputGroup>
 								<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 							</div>
