@@ -24,11 +24,11 @@ export default class BlockItem extends Component {
 						<Table responsive>
 							<tbody>
 								<tr>
-									<th>Time: </th>
+									<th style={{cursor:'initial'}}>Time: </th>
 									<td>{time.toString()}</td>
 								</tr>
 								<tr>
-									<th>Witness Name: </th>
+									<th style={{cursor:'initial'}}>Witness Name: </th>
 									<td>{witnessName}</td>
 								</tr>
 								<tr>
@@ -36,15 +36,15 @@ export default class BlockItem extends Component {
 									<td>{currentBlock.id}</td>
 								</tr>
 								<tr>
-									<th>Transaction Count: </th>
+									<th style={{cursor:'initial'}}>Transaction Count: </th>
 									<td>{currentBlock.transaction_count}</td>
 								</tr>
 								<tr>
-									<th>Operation Count: </th>
+									<th style={{cursor:'initial'}}>Operation Count: </th>
 									<td>{currentBlock.operation_count}</td>
 								</tr>
 								<tr>
-									<th>Previous Block Hash: </th>
+									<th style={{cursor:'initial'}}>Previous Block Hash: </th>
 									<td>{currentBlock.previous_block_hash}</td>
 								</tr>
 							</tbody>
