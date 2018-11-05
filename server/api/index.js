@@ -524,7 +524,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     returns: date
     */
 	getRegDate: (name, start) => {
-		return blockchainWS.Apis.instance().history_api().exec('get_account_history', [name, '1.11.0', 100, start]).then(r => {
+		return blockchainWS.Apis.instance().history_api().exec('get_account_history', [name, start, 100, '1.11.0']).then(r => {
 			for (const op of r) {
 				if (op.op[0] == 5) {
 					return api.convertNumberToDate(op.block_num).then((blockTime) => {
@@ -535,8 +535,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			if (r.length <= 1) {
 				return '1900-01-01 00:00:00';
 			}
-
-			return api.getRegDate(name, r[r.length - 1].id);
+			return api.getRegDate(name, r[0].id);
 		});
 	},
 
