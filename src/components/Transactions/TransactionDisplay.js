@@ -14,7 +14,7 @@ class TransactionDisplay extends Component {
 	constructor() {
 		super();
 		this.state = {
-			transactionData:[], transactionLength: 10, currentPage: 0,
+			transactionData:[], operations: [], transactionLength: 10, currentPage: 0,
 		};
 	}
 
@@ -30,9 +30,16 @@ class TransactionDisplay extends Component {
 		}).catch(error => console.log('error fetching transactions', error));
 	}
 
-	componentDidMount() {
+	findOperations(e) {
+		axios.get('/api/operations/', {
+		}).then(response => {
+			this.setState({ Operations: response.data });
+		}).catch(error => {console.log('error is fetching operation data', error);});
+	}
 
+	componentDidMount() {
 		this.fetchData();
+		this.findOperations();
 		const gridHeight=60;
 		if(!!this.props.calculateComponentHeight)
 			this.props.calculateComponentHeight(this.props.id, gridHeight);
@@ -66,6 +73,10 @@ class TransactionDisplay extends Component {
 		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName.account_name}`}>{accountName.account_name}</NavLink></span>  : id;
 	}
 
+	displayOperation( operation ) {
+		return this.state.Operations[operation].friendly_name;
+	}
+
 	renderTransaction(transaction, i) {
 		const operationType = JSON.parse(transaction.operations)[0];
 		const parsedTransaction = JSON.parse(transaction.operations)[1];
@@ -74,34 +85,25 @@ class TransactionDisplay extends Component {
 			const receiverAccount = this.findAccountName(parsedTransaction.to);
 			return (
 				<tr key={i}>
-					<td>{senderAccount} transfered {parsedTransaction.amount.amount} to {receiverAccount}</td>
+					<td>{senderAccount} {this.displayOperation(operationType)} {parsedTransaction.amount.amount} {receiverAccount}</td>
 				</tr> 
 			);
 		}
 		else if(operationType === 37) {
 			return (
 				<tr key={i}>
-					<td>{parsedTransaction.total_claimed.amount} deposited to {parsedTransaction.deposit_to_account}</td>
+					<td>{parsedTransaction.total_claimed.amount} {this.displayOperation(operationType)} {parsedTransaction.deposit_to_account}</td>
 				</tr> 
 			);
 		}
 		else if(operationType === 47) {
-			if(!!parsedTransaction.fee) {
-				return (
-					<tr key={i}><td>{parsedTransaction.fee.amount} paid by registrar {parsedTransaction.registrar}</td></tr>
-				);
-			}
-			else {
-				return (
-					<tr>
-						<td>{parsedTransaction.operation}</td>
-					</tr>
-				);
-			}
+			return (
+				<tr key={i}><td>{parsedTransaction.fee.amount} {this.displayOperation(operationType)} {parsedTransaction.registrar}</td></tr>
+			);
 		}
 		else {
 			return (
-				<tr><td>{parsedTransaction.operation}</td></tr>
+				<tr><td>{this.displayOperation(operationType)}</td></tr>
 			);
 		}
 	}
