@@ -147,7 +147,7 @@ class AccountAllDetail extends Component {
 	}
 
 	displayOperation( operation ) {
-		return this.state.Operations[operation].friendly_description;
+		return this.state.Operations[operation].friendly_name;
 	}
 
 	tabPaneBuild( index, type ) {
