@@ -95,7 +95,7 @@ class Navigation extends React.Component {
 								<DropdownItem href="/witnesses">Witnesses</DropdownItem>
 								<DropdownItem href="/committee">Committee</DropdownItem>
 								<DropdownItem href="/contracts">Contracts</DropdownItem>
-								<DropdownItem href="/feeDirectory">Fee Directory</DropdownItem>
+								<DropdownItem href="/feeDirectory">Fee Schedule</DropdownItem>
 								<DropdownItem href="/directory">Useful Resources</DropdownItem>
 								<DropdownItem href="/block-list">Blocks</DropdownItem>
 							</DropdownMenu>

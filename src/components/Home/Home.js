@@ -33,7 +33,7 @@ class Welcome extends Component {
 								   {name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: 'large', visible: true, id: 1, gridPlacement: {i: '1', x: 15, y: 52, w: 21, h: 40}},
 								   {name: 'Account Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: 15, y: 0, w: 4.5, h: 20}},
 								   {name: 'Current Transactions', img: 'https://via.placeholder.com/50x50', minSize:'large', size: 'large', visible: true, id:3, gridPlacement: {i: '3', x: 40, y: 5, w: 24, h: 40}},
-								   {name: 'Fee Directory', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 15, y: 0, w: 4.5, h: 20}},
+								   {name: 'Fee Schedule', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: 15, y: 0, w: 4.5, h: 20}},
 								   {name: 'Contract Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 5, gridPlacement: {i: '5', x: 15, y: 0, w: 4.5, h: 20}},
 								   {name: 'Committee Feed', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id: 6, gridPlacement: {i: '6', x: 15, y: 0, w: 4.5, h: 20}},
 		], 
