@@ -187,7 +187,7 @@ class AccountAllDetail extends Component {
 			const receiverAccount = this.findAccountName(parsedTransaction.to);
 			return (
 				<Row key={i}>
-					<Col sm="5"><strong>{senderAccount}</strong> {this.displayOperation(operationType)} {parsedTransaction.amount.amount} to <strong>{receiverAccount}</strong></Col> 
+					<Col sm="5"><strong>{parsedTransaction.amount.amount}</strong> {this.displayOperation(operationType)} <strong>{receiverAccount}</strong> from <strong>{senderAccount}</strong> </Col> 
 					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
 					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
 				</Row> 
@@ -196,7 +196,7 @@ class AccountAllDetail extends Component {
 		else if(operationType === 37) {
 			return (
 				<Row key={i}>
-					<Col sm="5">{parsedTransaction.total_claimed.amount} deposited to <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
+					<Col sm="5"><strong>{parsedTransaction.total_claimed.amount}</strong> {this.displayOperation(operationType)} <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
 					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
 					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
 				</Row> 
@@ -205,7 +205,7 @@ class AccountAllDetail extends Component {
 		else {
 			return (
 				<Row key={i}>
-					<Col sm="5">{this.displayOperation(operationType)} costs <strong> {parsedTransaction.fee.amount}</strong> in fees</Col> 
+					<Col sm="5"> <strong> {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} {parsedTransaction.registrar}</Col> 
 					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
 					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
 				</Row> 
