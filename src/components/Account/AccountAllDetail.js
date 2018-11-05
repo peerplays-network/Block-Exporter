@@ -203,13 +203,15 @@ class AccountAllDetail extends Component {
 			);
 		}
 		else {
-			return (
-				<Row key={i}>
-					<Col sm="5">{parsedTransaction.total_claimed.amount} {this.displayOperation(operationType)} <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
-					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
-					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
-				</Row> 
-			);
+			if(!!parsedTransaction.total_claimed) {
+				return (
+					<Row key={i}>
+						<Col sm="5">{parsedTransaction.total_claimed.amount} {this.displayOperation(operationType)} <strong>{parsedTransaction.deposit_to_account}</strong></Col> 
+						<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
+						<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
+					</Row> 
+				);
+			}
 		}
 	}
 
