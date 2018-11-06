@@ -24,6 +24,44 @@ function determineSearchType(term) {
 	}
 }
 
+
+// Resources API
+router.get('/resources', function (req, res) {
+	// const colNames = ['id', 'committee_id', 'committee_member_account', 'vote_id', 'total_votes', 'url'];
+
+	const connection = mysql.createConnection({
+		host     : db.HOST,
+		user     : db.USER,
+		password : db.PASSWORD,
+		database : db.DATABASE
+		  });
+
+		  // Establish connection
+		  connection.connect(function(err) {
+		if (err) {
+			console.error('error connecting to DB: ' + err.stack);
+			return;
+		}
+	});
+    
+	const sql = 'SELECT * FROM explorer.resources';
+
+
+	// Perform Query
+	connection.query(sql, function (err, rows, fields) {
+		if (err) throw err;
+		  
+		if (rows.length < 1) {
+			res.status(204).send('204 - No content (DB empty?)');
+		} else {
+			res.send(rows);
+		}
+		  });
+
+	// Close connection
+	connection.end();
+});
+
 // Balances API
 router.get('/balance/:name', function (req, res, next) {
 	if (!req.params.name) {
