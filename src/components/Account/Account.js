@@ -20,22 +20,23 @@ class AccountSearch extends Component {
 			sortType: 'DESC',
 			sortBy: 'account_name',
 		};
-		this.gridHeight = 43;
+		this.gridHeight = 48;
 		//pagination set page length
 		this.onAccountEnter = this.onAccountEnter.bind(this);
 	}
 
 	componentDidMount() {
 		this.findData();
-		if(this.props.id !== '') {
-			this.props.calculateComponentHeight(this.props.id, this.gridHeight);
-		}
 	}
 	
 	componentDidUpdate(prevProps) {        
 		if(prevProps.accounts !== this.props.accounts) {           
 			this.setState({data: this.props.accounts, temp_data: this.props.accounts});
 			this.refreshPagination(this.props.accounts);    
+		}
+
+		if(this.props.id !== '' && this.props.visible !== prevProps.visible) {
+			this.props.calculateComponentHeight(this.props.id, this.gridHeight);
 		}
 	}
 
