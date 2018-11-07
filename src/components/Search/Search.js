@@ -12,7 +12,8 @@ class Search extends Component {
 		this.state = { 
 			searchString: props.match.params[0], 
 			accounts: [],
-			//witnesses: [],
+			witnesses: [],
+			committee: [],
 			//blocks: [],
 			//transactions: [],
 		};
@@ -32,9 +33,36 @@ class Search extends Component {
 		}).then(response => {
 			if(response.data.length === 1)
 				this.redirectToPage(response.data[0]);
-			else
+			else{
 				this.setState({accounts: response.data});
+				this.getCommitteeName(response.data);
+				this.getWitnessesName(response.data);
+			}
 		}).catch(error => {console.log('error fetching search data', error); this.setState({accounts:[]});});
+	}
+
+	getCommitteeName(accounts) {
+		axios.get('/api/committee', {
+		}).then(response => {
+			const newState = response.data;
+			newState.map(el => {return el.account_name = accounts.find(account => account.account_id === el.committee_member_account).account_name;});
+			this.setState({committee: newState});
+		}).catch(error => {
+			console.log('error', error);
+			this.setState({committee:[]});
+		});
+	}
+
+	getWitnessesName(accounts) {
+		axios.get('/api/witnesses', {
+		}).then(response => {
+			const newState = response.data;
+			newState.map(el => {return el.account_name = accounts.find(account => account.account_id === el.witness).account_name;});
+			this.setState({witnesses: newState});
+		}).catch(error => {
+			console.log('error', error);
+			this.setState({witnesses:[]});
+		});
 	}
 
 	componentDidUpdate() {
@@ -46,8 +74,9 @@ class Search extends Component {
 		}).then(response => {
 			if(response.data.length === 1)
 				this.redirectToPage(response.data[0]);
-			else
+			else{
 				this.setState({accounts: response.data});
+			}
 		}).catch(error => {console.log('error fetching search data', error); this.setState({accounts:[]});});
 	}
 
@@ -149,39 +178,75 @@ class Search extends Component {
 		);
 	}
 
-	// renderWitnessesTable() {
-	// 	return (
-	// 		<div>
-	// 			<Card>
-	// 				<CardBody>
-	// 					<Row>
-	// 						<Col md="12">
-	// 							<h1 className="display-5 text-center mt-3"><span className="fa fa-cogs">&nbsp;</span>Witnesses</h1>
-	// 						</Col>
-	// 					</Row>
-	// 					<Table responsive>
-	// 						<thead className="text-center">
-	// 							<tr>
-	// 								<th scope="col">Witness Id</th>
-	// 								<th scope="col">Witness Name</th>
-	// 							</tr>
-	// 						</thead>
-	// 						<tbody className="text-center">
-	// 							{this.state.witnesses.map((witness) => {
-	// 								return (
-	// 									<tr key={witness.account_id}>
-	// 										<td>{witness.account_name}</td>
-	// 										<td>{witness.account_id}</td>
-	// 									</tr>
-	// 								);
-	// 							})}
-	// 						</tbody>
-	// 					</Table>
-	// 				</CardBody>
-	// 			</Card>
-	// 		</div>
-	// 	);
-	// }
+	renderWitnessesTable() {
+		return (
+			<div>
+				<Card>
+					<CardBody>
+						<Row>
+							<Col md="12">
+								<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-3`}><span className="fa fa-cogs">&nbsp;</span>Witnesses</h1>
+							</Col>
+						</Row>
+						<Table responsive>
+							<thead className={`${styles['header-contrast-text']} ${styles['search-results-header']} text-center`}>
+								<tr>
+									<th scope="col">Witness Name</th>
+									<th scope="col">Witness Id</th>
+								</tr>
+							</thead>
+							<tbody className="text-center">
+								{this.state.witnesses.map((witness) => {
+									return (
+										<tr key={witness.account_id}>
+											<td><NavLink tag={RRNavLink} to={`/accountAllDetail/${witness.account_name}/${witness.account_id}`}>{witness.account_name}</NavLink></td>
+											<td>{witness.account_id}</td>
+										</tr>
+									);
+								})}
+							</tbody>
+						</Table>
+					</CardBody>
+				</Card>
+			</div>
+		);
+	}
+	
+	renderCommitteeTable() {
+		return (
+			<div>
+				<Card>
+					<CardBody>
+						<Row>
+							<Col md="12">
+								<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-3`}><span className="fa fa-cogs">&nbsp;</span>Committee Members</h1>
+							</Col>
+						</Row>
+						<Table responsive>
+							<thead className={`${styles['header-contrast-text']} ${styles['search-results-header']} text-center`}>
+								<tr>
+									<th scope="col">Committee Name</th>
+									<th scope="col">Account Id</th>
+									<th scope="col">Committee Id</th>
+								</tr>
+							</thead>
+							<tbody className="text-center">
+								{this.state.committee.map((committee, i) => {
+									return (
+										<tr key={i}>
+											<td><NavLink tag={RRNavLink} to={`/accountAllDetail/${committee.account_name}/${committee.committee_id}`}>{committee.account_name}</NavLink></td>
+											<td>{committee.committee_member_account}</td>
+											<td>{committee.committee_id}</td>
+										</tr>
+									);
+								})}
+							</tbody>
+						</Table>
+					</CardBody>
+				</Card>
+			</div>
+		);
+	}
 
 	render() {
 		return (
@@ -191,6 +256,12 @@ class Search extends Component {
 				<br/>
 				{
 					this.state.accounts.length > 0 && this.renderAccountsTable()
+				}
+				{
+					this.state.witnesses.length > 0 && this.renderWitnessesTable()
+				}
+				{
+					this.state.committee.length > 0 && this.renderCommitteeTable()
 				}
 			</div>
 		);
