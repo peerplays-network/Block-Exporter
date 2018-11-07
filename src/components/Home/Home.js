@@ -127,7 +127,7 @@ class Welcome extends Component {
 
 		this.setState({stateCopy});
 
-		this.onDragStop(layout, oldItem, newItem, placeholder, e, element);
+		//this.onDragStop(layout, oldItem, newItem, placeholder, e, element);
 	}
 
 	calculateComponentHeight(id, height) {
@@ -139,23 +139,23 @@ class Welcome extends Component {
 		this.setState({stateCopy});
 	}
 
-	onDragStop(layout, oldItem, newItem, placeholder, e, element) {
-		//checks to see if the widget has gone out of bounds, and re-aligns it to be in the viewport
-		const grid = document.getElementsByClassName('react-grid-layout')[0];
-		const translateYMaxValue = window.innerHeight- grid.offsetTop - element.offsetHeight;
+	// onDragStop(layout, oldItem, newItem, placeholder, e, element) {
+	// 	//checks to see if the widget has gone out of bounds, and re-aligns it to be in the viewport
+	// 	const grid = document.getElementsByClassName('react-grid-layout')[0];
+	// 	const translateYMaxValue = window.innerHeight- grid.offsetTop - element.offsetHeight;
 
-		const translateValues = window.getComputedStyle(element).transform.split(',');
-		const translateX = parseInt(translateValues[translateValues.length - 2], 0);
-		let translateY = parseInt(translateValues[translateValues.length - 1].slice(0, -1), 0);
+	// 	const translateValues = window.getComputedStyle(element).transform.split(',');
+	// 	const translateX = parseInt(translateValues[translateValues.length - 2], 0);
+	// 	let translateY = parseInt(translateValues[translateValues.length - 1].slice(0, -1), 0);
 		
-		if (translateY > translateYMaxValue) {
-			translateY = translateYMaxValue;
-		}
-		if (translateY < 0) {
-			translateY = 0;
-		}
-    	element.style.transform = `translate(${translateX}px, ${translateY}px)`;
-	}
+	// 	if (translateY > translateYMaxValue) {
+	// 		translateY = translateYMaxValue;
+	// 	}
+	// 	if (translateY < 0) {
+	// 		translateY = 0;
+	// 	}
+    // 	element.style.transform = `translate(${translateX}px, ${translateY}px)`;
+	// }
 
 	render() {
 		/*had to add this as a workaround in order for the layout to update itself, as the Grid component only updates when a new grid object
@@ -167,7 +167,7 @@ class Welcome extends Component {
 				<div>
 					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={null} 
 						rowHeight={10} draggableCancel=".panel-body" autoSize={false} isResizable={false} 
-						margin={[0, 0]} containerPadding={[0, 0]} 
+						margin={[10, 10]} containerPadding={[0, 0]} 
 						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
 						 <div className={`${styles['react-grid-item']}`} key={'-1'}>
 							<SidePanel  calculateComponentHeight={this.calculateComponentHeight.bind(this)} components={this.state.components} 
@@ -176,7 +176,7 @@ class Welcome extends Component {
 						{this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
-									<div className={`${styles['react-grid-item']}`} key={component.id}>
+									<div className={`${styles['react-grid-item']}`} key={component.id} style={{borderStyle: 'dotted'}}>
 										<Panel headerText={component.name} size={component.size} 
 											onClose={() => this.onClosePanel.bind(this, component.id)}>
 											<div style={{overflow: 'auto'}}>
