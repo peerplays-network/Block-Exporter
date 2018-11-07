@@ -12,11 +12,12 @@
   transition: height 200ms ease;
 }
 .react-grid-item {
-  transition: all 200ms ease;
-  transition-property: left, top;
+  transition: all 50ms ease;
+  transition-property: transform;
 }
 .react-grid-item.cssTransforms {
   transition-property: transform;
+  display: none;
 }
 .react-grid-item.resizing {
   z-index: 1;

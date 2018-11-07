@@ -27,15 +27,16 @@ class AccountSearch extends Component {
 
 	componentDidMount() {
 		this.findData();
-		if(this.props.id !== '') {
-			this.props.calculateComponentHeight(this.props.id, this.gridHeight);
-		}
 	}
 	
 	componentDidUpdate(prevProps) {        
 		if(prevProps.accounts !== this.props.accounts) {           
 			this.setState({data: this.props.accounts, temp_data: this.props.accounts});
 			this.refreshPagination(this.props.accounts);    
+		}
+
+		if(this.props.id !== '' && this.props.visible !== prevProps.visible) {
+			this.props.calculateComponentHeight(this.props.id, this.gridHeight);
 		}
 	}
 

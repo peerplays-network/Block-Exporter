@@ -10,7 +10,11 @@ class WitnessViewer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {witnessData: !!this.props.witnesses ? this.props.witnesses : [], searchData: !!this.props.witnesses ? this.props.witnesses : [], witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'rank'};
+<<<<<<< HEAD
 		this.gridHeight = 24;
+=======
+		this.gridHeight = 48;
+>>>>>>> development
 	}
 
 	componentDidMount() {
@@ -120,7 +124,6 @@ class WitnessViewer extends Component {
 		const { currentPage, witness, searchData, pageSize } = this.state;
 
 		return (
-
 			<div>
 				{!!this.props.history ? // browse all witness page
 					<div className="container pt-0 pb-5 mt-5">
