@@ -46,13 +46,15 @@ router.get('/accounts', function (req, res, next) {
 		if (!colNames.includes(req.query.sort)) {
 			res.status(400).send('400 Bad Request - Invalid sort parameter, shame on you');
 			return;
-		} else if (req.query.direction) { // Sort is valid
-			sql = `SELECT * FROM explorer.accounts ORDER BY ${req.query.sort}`;
+		} else if (req.query.direction) { // Sort is valid 
+			// sql = `SELECT * FROM explorer.accounts ORDER BY ${req.query.sort}`;
+			sql = `SELECT * FROM explorer.accounts ORDER BY LENGTH(${req.query.sort}) ASC, ${req.query.sort} ASC`; // NATURAL SORT
 			if (req.query.direction !== 'ASC' && (req.query.direction !== 'DESC')) {
 				res.status(400).send('400 Bad Request - Invalid direction');
 				return;
 			} else {
-				sql = sql + ` ${req.query.direction}`;
+				// sql = sql + ` ${req.query.direction}`;
+				sql = `SELECT * FROM explorer.accounts ORDER BY LENGTH(${req.query.sort}) ${req.query.direction}, ${req.query.sort} ${req.query.direction}`;
 			}
 		}
 	}

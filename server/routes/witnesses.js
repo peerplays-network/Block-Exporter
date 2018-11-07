@@ -61,13 +61,14 @@ router.get('/committee', function (req, res) {
 			res.status(400).send('400 Bad Request - Invalid sort parameter, shame on you');
 			return;
 		}
-		sql = `SELECT * FROM explorer.committee ORDER BY ${req.query.sort}`;
+		// sql = `SELECT * FROM explorer.committee ORDER BY ${req.query.sort}`;
+		sql = `SELECT * FROM explorer.committee ORDER BY LENGTH(${req.query.sort}) ASC, ${req.query.sort} ASC`; // Natural Sort
 		if (req.query.direction) {
 			if (req.query.direction !== 'ASC' && (req.query.direction !== 'DESC')) {
 				res.status(400).send('400 Bad Request - Invalid direction');
 				return;
 			} else {
-				sql = sql + ` ${req.query.direction}`;
+				sql = `SELECT * FROM explorer.committee ORDER BY LENGTH(${req.query.sort}) ${req.query.direction}, ${req.query.sort} ${req.query.direction}`; // Natural Sort
 			}
 		}
 	}
@@ -142,13 +143,15 @@ router.get('/witnesses', function (req, res) {
 			res.status(400).send('400 Bad Request - Invalid sort parameter, shame on you');
 			return;
 		}
-		sql = `SELECT * FROM explorer.witnesses ORDER BY ${req.query.sort}`;
+		// sql = `SELECT * FROM explorer.witnesses ORDER BY ${req.query.sort}`;
+		sql = `SELECT * FROM explorer.witnesses ORDER BY LENGTH(${req.query.sort}) ASC, ${req.query.sort} ASC`; // Natural Sort
+
 		if (req.query.direction) {
 			if (req.query.direction !== 'ASC' && (req.query.direction !== 'DESC')) {
 				res.status(400).send('400 Bad Request - Invalid direction');
 				return;
 			} else {
-				sql = sql + ` ${req.query.direction}`;
+				sql = `SELECT * FROM explorer.witnesses ORDER BY LENGTH(${req.query.sort}) ${req.query.direction}, ${req.query.sort} ${req.query.direction}`; // Natural Sort
 			}
 		}
 	}
