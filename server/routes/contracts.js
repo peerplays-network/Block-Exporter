@@ -67,7 +67,8 @@ router.get('/contracts', function (req, res) {
 		}
 		sql = `SELECT * FROM explorer.contracts ORDER BY LENGTH(${req.query.sort}) ASC, ${req.query.sort} ASC`; // Natural Sort
 		if (req.query.sort == 'balances') {
-			sql = `SELECT * FROM explorer.contracts ORDER BY ${req.query.sort}`;
+			sql = `SELECT *, JSON_EXTRACT(balances, "$[0].amount") as amount FROM explorer.contracts
+			order by amount ASC, amount ASC`;
 		}
 		if (req.query.direction) {
 			if (req.query.direction !== 'ASC' && (req.query.direction !== 'DESC')) {
@@ -76,7 +77,8 @@ router.get('/contracts', function (req, res) {
 			} else {
 				sql = `SELECT * FROM explorer.contracts ORDER BY LENGTH(${req.query.sort}) ${req.query.direction}, ${req.query.sort} ${req.query.direction}`; // NATURAL SORT;
 				if (req.query.sort == 'balances') {
-					sql = `SELECT * FROM explorer.contracts ORDER BY ${req.query.sort} ${req.query.direction}`;
+					sql = `SELECT *, JSON_EXTRACT(balances, "$[0].amount") as amount FROM explorer.contracts
+					order by amount ${req.query.direction}, amount ${req.query.direction}`;
 				}
 			}
 		}
