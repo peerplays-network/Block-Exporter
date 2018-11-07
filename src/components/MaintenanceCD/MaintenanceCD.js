@@ -9,7 +9,7 @@ class MaintenanceCD extends Component {
 		this.state = {nextMaintenanceTime: Date.now() + 1000000 };
 	}
 	componentDidMount() {
-		const gridHeight=20;
+		const gridHeight=11;
 		this.props.calculateComponentHeight(this.props.id, gridHeight);
 
 		axios.get('api/variables/', {

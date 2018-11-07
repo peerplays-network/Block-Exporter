@@ -5,8 +5,8 @@ import styles from './styles.css';
 class SidePanel extends Component {
 
 	componentDidMount() {
-		const gridHeight = (window.innerHeight - 76)/10;
-		this.props.calculateComponentHeight(-1, gridHeight);//we want 930px
+		const gridHeight = 0;
+		this.props.calculateComponentHeight(-1, gridHeight);
 	}
 
 	render() {

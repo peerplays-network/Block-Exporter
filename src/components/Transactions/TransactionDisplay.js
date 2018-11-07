@@ -40,7 +40,7 @@ class TransactionDisplay extends Component {
 	componentDidMount() {
 		this.fetchData();
 		this.findOperations();
-		const gridHeight=60;
+		const gridHeight=31;
 		if(!!this.props.calculateComponentHeight)
 			this.props.calculateComponentHeight(this.props.id, gridHeight);
 	}
