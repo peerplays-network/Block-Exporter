@@ -66,13 +66,20 @@ router.get('/contracts', function (req, res) {
 			return;
 		}
 		sql = `SELECT * FROM explorer.contracts ORDER BY LENGTH(${req.query.sort}) ASC, ${req.query.sort} ASC`; // Natural Sort
-		// sql = `SELECT * FROM explorer.contracts ORDER BY ${req.query.sort}`;
+		if (req.query.sort == 'balances') {
+			sql = `SELECT *, JSON_EXTRACT(balances, "$[0].amount") as amount FROM explorer.contracts
+			order by amount ASC, amount ASC`;
+		}
 		if (req.query.direction) {
 			if (req.query.direction !== 'ASC' && (req.query.direction !== 'DESC')) {
 				res.status(400).send('400 Bad Request - Invalid direction');
 				return;
 			} else {
 				sql = `SELECT * FROM explorer.contracts ORDER BY LENGTH(${req.query.sort}) ${req.query.direction}, ${req.query.sort} ${req.query.direction}`; // NATURAL SORT;
+				if (req.query.sort == 'balances') {
+					sql = `SELECT *, JSON_EXTRACT(balances, "$[0].amount") as amount FROM explorer.contracts
+					order by amount ${req.query.direction}, amount ${req.query.direction}`;
+				}
 			}
 		}
 	}
