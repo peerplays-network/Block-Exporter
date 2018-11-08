@@ -70,18 +70,18 @@ class Search extends Component {
 	componentDidUpdate() {
 		if(this.state.searchString !== this.props.match.params[0]) {
 			this.setState({searchString: this.props.match.params[0]});
-		}
 		
-		axios.get(`/api/search?input=${this.props.match.params[0]}`, {
-		}).then(response => {
-			if(response.data.length === 1)
-				this.redirectToPage(response.data[0]);
-			else{
-				this.setState({accounts: response.data});
-				//this.getCommitteeName(response.data);
-				//this.getWitnessesName(response.data);
-			}
-		}).catch(error => {console.log('error fetching search data', error); this.setState({accounts:[]}); this.setState({witnesses:[]}); this.setState({committee:[]});});
+			axios.get(`/api/search?input=${this.props.match.params[0]}`, {
+			}).then(response => {
+				if(response.data.length === 1)
+					this.redirectToPage(response.data[0]);
+				else{
+					this.setState({accounts: response.data});
+					this.getCommitteeName(response.data);
+					this.getWitnessesName(response.data);
+				}
+			}).catch(error => {console.log('error fetching search data', error); this.setState({accounts:[]}); this.setState({witnesses:[]}); this.setState({committee:[]});});
+		}
 	}
 
 	redirectToPage(responseObj) {
