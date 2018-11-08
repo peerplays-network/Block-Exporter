@@ -32,15 +32,8 @@ class Welcome extends Component {
 
 		this.startingX = (12 * 1920/window.innerWidth)+1;
 
-		this.state = {components: [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: 'large', visible: true, id: 0, gridPlacement: {i: '0', x: this.startingX, y: 5, w: 24, h: 24}},
-			{name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: 'large', visible: true, id: 1, gridPlacement: {i: '1', x: this.startingX, y: 52, w: 21, h: 11}},
-			{name: 'Account Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: this.startingX, y: 0, w: 4.5, h: 24}},
-			{name: 'Transaction Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: 'large', visible: true, id:3, gridPlacement: {i: '3', x: this.startingX, y: 5, w: 24, h: 31}},
-			{name: 'Fee Schedule', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: this.startingX, y: 0, w: 4.5, h: 20}},
-			{name: 'Contract Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 5, gridPlacement: {i: '5', x: this.startingX, y: 0, w: 4.5, h: 31}},
-			{name: 'Committee Feed', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id: 6, gridPlacement: {i: '6', x: this.startingX, y: 0, w: 4.5, h: 24}},
-], 
-	   layout : [{i: '-1', x: 0, y: -0.5, w: 12, h: 0, static: true}, {i: '0', x: this.startingX, y: 5, w: 24, h: 24.5}, {i: '1', x: this.startingX, y: 54, w: 24, h: 11}, {i: '3', x: 42, y: 5, w: 24, h: 31}],
+		this.state = {components: this.initializePanels(),
+	   	layout : this.initializeLayout(),
 		};
 	}
 
@@ -48,15 +41,43 @@ class Welcome extends Component {
 		this.props.showSideBarIcon(true);
 	}
 
+	initializePanels() {
+		return [{name: 'Witness Feed', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: 'large', visible: true, id: 0, gridPlacement: {i: '0', x: this.startingX, y: 5, w: 24, h: 24.5}},
+			{name: 'Maintenance Countdown', img: 'https://via.placeholder.com/50x50', minSize: 'small', size: 'large', visible: true, id: 1, gridPlacement: {i: '1', x: this.startingX, y: 54, w: 24, h: 11}},
+			{name: 'Account Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 2, gridPlacement: {i: '2', x: this.startingX, y: 0, w: 24, h: 24}},
+			{name: 'Transaction Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: 'large', visible: true, id:3, gridPlacement: {i: '3', x: 42, y: 5, w: 24, h: 31}},
+			{name: 'Fee Schedule', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id:4, gridPlacement: {i: '4', x: this.startingX, y: 0, w: 24, h: 20}},
+			{name: 'Contract Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 5, gridPlacement: {i: '5', x: this.startingX, y: 0, w: 24, h: 31}},
+			{name: 'Committee Feed', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id: 6, gridPlacement: {i: '6', x: this.startingX, y: 0, w: 24, h: 24}}];
+	}
+
+	initializeLayout() {
+		return [{i: '-1', x: 0, y: -0.5, w: 12, h: 0, static: true}, {i: '0', x: this.startingX, y: 5, w: 24, h: 24.5}, {i: '1', x: this.startingX, y: 54, w: 24, h: 11}, {i: '3', x: 42, y: 5, w: 24, h: 31}];
+	}
+
 	componentDidUpdate(prevProps) {
 		if(prevProps.sideBarOpen !== this.props.sideBarOpen) {
 			const stateCopy = Object.assign({}, this.state);
-			if(this.props.sideBarOpen)
+			if(this.props.sideBarOpen) {
+				this.resetLayout();
 				stateCopy.layout[0].w = 12 * 1920/window.innerWidth;
+			}
 			else
 				stateCopy.layout[0].w = 0;
 			this.setState({stateCopy});
 		}
+	}
+
+	resetLayout() {
+		const stateCopy = Object.assign({}, this.state);
+		const initialPanelLayout = this.initializePanels();
+		stateCopy.components.forEach(el => {
+			if(el.visible) {
+				const index = stateCopy.layout.findIndex(x => x.i===el.id.toString()); 
+				stateCopy.layout[index] = initialPanelLayout[el.id].gridPlacement;
+			}
+			this.setState({stateCopy});
+		});
 	}
 
 	onClosePanel(id) {
