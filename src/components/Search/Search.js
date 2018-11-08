@@ -44,7 +44,8 @@ class Search extends Component {
 	getCommitteeName(accounts) {
 		axios.get('/api/committee', {
 		}).then(response => {
-			const newState = response.data;
+			var newState = response.data;
+			newState = newState.filter(el => {return accounts.find(account => account.account_id === el.committee_member_account);});
 			newState.map(el => {return el.account_name = accounts.find(account => account.account_id === el.committee_member_account).account_name;});
 			this.setState({committee: newState});
 		}).catch(error => {
@@ -56,7 +57,8 @@ class Search extends Component {
 	getWitnessesName(accounts) {
 		axios.get('/api/witnesses', {
 		}).then(response => {
-			const newState = response.data;
+			var newState = response.data;
+			newState = newState.filter(el => {return accounts.find(account => account.account_id === el.witness);});
 			newState.map(el => {return el.account_name = accounts.find(account => account.account_id === el.witness).account_name;});
 			this.setState({witnesses: newState});
 		}).catch(error => {
@@ -76,8 +78,10 @@ class Search extends Component {
 				this.redirectToPage(response.data[0]);
 			else{
 				this.setState({accounts: response.data});
+				//this.getCommitteeName(response.data);
+				//this.getWitnessesName(response.data);
 			}
-		}).catch(error => {console.log('error fetching search data', error); this.setState({accounts:[]});});
+		}).catch(error => {console.log('error fetching search data', error); this.setState({accounts:[]}); this.setState({witnesses:[]}); this.setState({committee:[]});});
 	}
 
 	redirectToPage(responseObj) {
