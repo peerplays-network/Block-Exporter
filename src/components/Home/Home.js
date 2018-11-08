@@ -40,7 +40,7 @@ class Welcome extends Component {
 			{name: 'Contract Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 5, gridPlacement: {i: '5', x: this.startingX, y: 0, w: 4.5, h: 31}},
 			{name: 'Committee Feed', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id: 6, gridPlacement: {i: '6', x: this.startingX, y: 0, w: 4.5, h: 24}},
 ], 
-	   layout : [{i: '-1', x: 0, y: -0.5, w: 12, h: 0, static: true}, {i: '0', x: this.startingX, y: 5, w: 24, h: 24}, {i: '1', x: this.startingX, y: 54, w: 24, h: 11}, {i: '3', x: 42, y: 5, w: 24, h: 31}],
+	   layout : [{i: '-1', x: 0, y: -0.5, w: 12, h: 0, static: true}, {i: '0', x: this.startingX, y: 5, w: 24, h: 24.5}, {i: '1', x: this.startingX, y: 54, w: 24, h: 11}, {i: '3', x: 42, y: 5, w: 24, h: 31}],
 		};
 	}
 
@@ -189,7 +189,7 @@ class Welcome extends Component {
 		return (
 			<div>
 				<div>
-					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={null} 
+					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={'vertical'} 
 						rowHeight={10} draggableCancel=".panel-body" autoSize={false} isResizable={false} 
 						margin={[10, 10]} containerPadding={[0, 10]} 
 						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
@@ -200,7 +200,7 @@ class Welcome extends Component {
 						{this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
-									<div className={`${styles['react-grid-item']}`} key={component.id} >
+									<div className={`${styles['react-grid-item']}`} key={component.id} style={{borderStyle: 'dotted'}}>
 										<Panel headerText={component.name} size={component.size} 
 											onClose={() => this.onClosePanel.bind(this, component.id)}>
 											<div style={{overflow: 'auto'}}>
