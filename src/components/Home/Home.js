@@ -40,7 +40,7 @@ class Welcome extends Component {
 			{name: 'Contract Feed', img: 'https://via.placeholder.com/50x50', minSize:'large', size: '', visible: false, id: 5, gridPlacement: {i: '5', x: this.startingX, y: 0, w: 4.5, h: 31}},
 			{name: 'Committee Feed', img: 'https://via.placeholder.com/50x50', minSize:'small', size: '', visible: false, id: 6, gridPlacement: {i: '6', x: this.startingX, y: 0, w: 4.5, h: 24}},
 ], 
-	   layout : [{i: '-1', x: 0, y: 0, w: 12, h: 45, static: true}, {i: '0', x: this.startingX, y: 5, w: 24, h: 24}, {i: '1', x: this.startingX, y: 54, w: 24, h: 11}, {i: '3', x: 42, y: 5, w: 24, h: 31}],
+	   layout : [{i: '-1', x: 0, y: -0.5, w: 12, h: 0, static: true}, {i: '0', x: this.startingX, y: 5, w: 24, h: 24}, {i: '1', x: this.startingX, y: 54, w: 24, h: 11}, {i: '3', x: 42, y: 5, w: 24, h: 31}],
 		};
 	}
 
@@ -131,7 +131,7 @@ class Welcome extends Component {
 
 		this.setState({stateCopy});
 
-		//this.onDragStop(layout, oldItem, newItem, placeholder, e, element);
+		this.onDragStop(layout, oldItem, newItem, placeholder, e, element);
 	}
 
 	calculateComponentHeight(id, height) {
@@ -160,11 +160,24 @@ class Welcome extends Component {
 		// if (translateY < 0) {
 		// 	translateY = 0;
 		// }
-
+		console.log('X',translateX);
+		console.log('Y',translateY);
 		if (translateX < 287 && this.props.sideBarOpen) {
-			translateX = 287;
+
+			// const stateCopy = Object.assign({}, this.state);
+			// const id = Number(oldItem.i);
+			// const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
+			// stateCopy.components[id].gridPlacement = {i: id.toString(), x: oldItem.x, y: oldItem.y, w: oldItem.w, h: oldItem.h};
+			// stateCopy.layout[layoutIndex] = stateCopy.components[id].gridPlacement;
+			// debugger;
+			// this.setState({stateCopy});
+
+			translateX = 290;
+			//translateY = Math.ceil((window.innerHeight/10) * oldItem.y);
+			debugger;
+			element.style.transform = `translate(${translateX}px, ${translateY}px)`;
 		}
-    	element.style.transform = `translate(${translateX}px, ${translateY}px)`;
+    	
 	}
 
 	render() {
@@ -172,15 +185,15 @@ class Welcome extends Component {
 		is passed to it.
 		*/
 		const newLayout = JSON.parse(JSON.stringify(this.state.layout));
-		console.log('FAKE LAYOUT',newLayout);
+		console.log('FAKE LAYOUT', newLayout);
 		return (
 			<div>
 				<div>
 					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={null} 
 						rowHeight={10} draggableCancel=".panel-body" autoSize={false} isResizable={false} 
-						margin={[10, 10]} containerPadding={[0, 0]} 
+						margin={[10, 10]} containerPadding={[0, 10]} 
 						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
-						 <div className={`${styles['react-grid-item']}`} key={'-1'} >
+						 <div className={`${styles['react-grid-item']}`} key={'-1'} style={{borderStyle: 'dotted'}}>
 							<SidePanel  calculateComponentHeight={this.calculateComponentHeight.bind(this)} components={this.state.components} 
 							   changeSize={this.changePanelSize.bind(this)}/>	
 						</div>
