@@ -69,7 +69,6 @@ class Welcome extends Component {
 	}
 
 	changePanelSize(id, size) {
-		debugger;
 		/*changes the width dependent upon which button is clicked. If the entry already exists in layout (e.g. the size is changed)
 		* then the layout entry is overwritten by the new state object, otherwise it is pushed into the layout array
 		*/
@@ -160,8 +159,8 @@ class Welcome extends Component {
 		// if (translateY < 0) {
 		// 	translateY = 0;
 		// }
-		console.log('X',translateX);
-		console.log('Y',translateY);
+		// console.log('X',translateX);
+		// console.log('Y',translateY);
 		if (translateX < 287 && this.props.sideBarOpen) {
 
 			// const stateCopy = Object.assign({}, this.state);
@@ -174,7 +173,6 @@ class Welcome extends Component {
 
 			translateX = 290;
 			//translateY = Math.ceil((window.innerHeight/10) * oldItem.y);
-			debugger;
 			element.style.transform = `translate(${translateX}px, ${translateY}px)`;
 		}
     	
@@ -185,7 +183,6 @@ class Welcome extends Component {
 		is passed to it.
 		*/
 		const newLayout = JSON.parse(JSON.stringify(this.state.layout));
-		console.log('FAKE LAYOUT', newLayout);
 		return (
 			<div>
 				<div>
@@ -193,14 +190,14 @@ class Welcome extends Component {
 						rowHeight={10} draggableCancel=".panel-body" autoSize={false} isResizable={false} 
 						margin={[10, 10]} containerPadding={[0, 10]} 
 						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
-						 <div className={`${styles['react-grid-item']}`} key={'-1'} style={{borderStyle: 'dotted'}}>
+						 <div className={`${styles['react-grid-item']}`} key={'-1'}>
 							<SidePanel  calculateComponentHeight={this.calculateComponentHeight.bind(this)} components={this.state.components} 
 							   changeSize={this.changePanelSize.bind(this)}/>	
 						</div>
 						{this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
-									<div className={`${styles['react-grid-item']}`} key={component.id} style={{borderStyle: 'dotted'}}>
+									<div className={`${styles['react-grid-item']}`} key={component.id}>
 										<Panel headerText={component.name} size={component.size} 
 											onClose={() => this.onClosePanel.bind(this, component.id)}>
 											<div style={{overflow: 'auto'}}>
