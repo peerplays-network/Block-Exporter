@@ -19,7 +19,7 @@ class Contract extends Component {
 			sortType: 'ASC',
 			sortBy: 'object_id'
 		};
-		this.gridHeight = 43;
+		this.gridHeight = 31;
 		//pagination set page length
 		this.onContractEnter = this.onContractEnter.bind(this);
 	}

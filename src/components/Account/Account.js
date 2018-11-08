@@ -20,7 +20,7 @@ class AccountSearch extends Component {
 			sortType: 'DESC',
 			sortBy: 'account_name',
 		};
-		this.gridHeight = 48;
+		this.gridHeight = 24;
 		//pagination set page length
 		this.onAccountEnter = this.onAccountEnter.bind(this);
 	}

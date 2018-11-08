@@ -10,7 +10,7 @@ class Committee extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {committeeData: [], searchData: [], committee: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'rank'};
-		this.gridHeight = 48;
+		this.gridHeight = 24;
 	}
 
 	componentDidMount() {

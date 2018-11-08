@@ -32,7 +32,7 @@ class FeeDirectory extends Component {
 	
 	componentDidMount() {
 		this.fetchData();
-		const gridHeight=40;
+		const gridHeight=20;
 		if(this.props.id !== undefined) 
 		{
 			this.props.calculateComponentHeight(this.props.id, gridHeight);
