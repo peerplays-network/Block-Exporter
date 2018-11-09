@@ -85,20 +85,20 @@ class TransactionDisplay extends Component {
 			const receiverAccount = this.findAccountName(parsedTransaction.to);
 			return (
 				<tr key={i}>
-					<td>{senderAccount} {this.displayOperation(operationType)} {parsedTransaction.amount.amount} {receiverAccount}</td>
+					<td>{parsedTransaction.amount.amount} {this.displayOperation(operationType)} {receiverAccount} from {senderAccount}</td>
 				</tr> 
 			);
 		}
 		else if(operationType === 37) {
 			return (
 				<tr key={i}>
-					<td>{parsedTransaction.total_claimed.amount} {this.displayOperation(operationType)} {parsedTransaction.deposit_to_account}</td>
+					<td>{parsedTransaction.total_claimed.amount} {this.displayOperation(operationType)} {this.findAccountName(parsedTransaction.deposit_to_account)}</td>
 				</tr> 
 			);
 		}
 		else if(operationType === 47) {
 			return (
-				<tr key={i}><td>{parsedTransaction.fee.amount} {this.displayOperation(operationType)} {parsedTransaction.registrar}</td></tr>
+				<tr key={i}><td>{parsedTransaction.fee.amount} {this.displayOperation(operationType)} {this.findAccountName(parsedTransaction.registrar)}</td></tr>
 			);
 		}
 		else {
