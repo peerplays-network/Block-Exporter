@@ -234,7 +234,7 @@ class AccountAllDetail extends Component {
 									<Row className="" key={i}>
 										<Col className="text-center" sm="2"> Name: <strong>{ account.account_name }</strong></Col>
 										<Col className="text-center" sm="2"> Account ID: <strong>{ account.account_id }</strong></Col>
-										<Col className="d-inline-flex justify-content-sm-center" sm="3"> Account Balance: <strong>{ this.state.accountBalance }</strong></Col>
+										<Col className="d-inline-flex justify-content-sm-center" sm="4"> Account Balance: <strong>{ this.state.accountBalance }</strong></Col>
 										<Col className="text-center" sm="2"> Lifetime fees paid: <strong>{ !!account.lifetime_fees_paid && account.lifetime_fees_paid.length > 0 ? account.lifetime_fees_paid : 0 }</strong></Col>
 										<Col className="text-center" sm="2"> Registrar: <strong>{ account.referrer }</strong></Col>
 									</Row>
