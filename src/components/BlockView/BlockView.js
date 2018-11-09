@@ -11,13 +11,19 @@ class BlockView extends Component {
 		this.state = {blocks: [], currentBlock: !!this.props.match.params[0]? Number(this.props.match.params[0]) : 500, prevDisabled: false, nextDisabled: false, error: false};
 		this.lowerBound = 0;
 		this.upperBound = 0;
+		this.maxBound = 0;
 	}
 
 	componentDidMount() {
 		this.lowerBound = Number(this.state.currentBlock)-Constants.BLOCK_RANGE;
 		this.upperBound = Number(this.state.currentBlock)+Constants.BLOCK_RANGE-1;
 
-		axios.get(`/api/blocks?start=${this.lowerBound}&end=${this.upperBound}`, {
+		axios.get('/api/blocks/last', {
+		}).then(response => {
+			this.maxBound = response.data[0].block_number;
+			if(this.maxBound <= this.upperBound)
+				this.upperBound = this.maxBound;
+			return axios.get(`/api/blocks?start=${this.lowerBound}&end=${this.upperBound}`);
 		}).then(response => {
 			this.setState({blocks: response.data, loading: false});
 		}).catch(error => {
@@ -33,7 +39,10 @@ class BlockView extends Component {
 
 	 loadNextBlocks(currentBlock) {
 		this.upperBound = this.upperBound+Constants.BLOCK_RANGE;
-		axios.get(`/api/blocks?start=${this.state.currentBlock+1}&end=${this.upperBound}`, {
+		axios.get('/api/blocks/last', {
+		}).then(response => {
+			this.maxBound = response.data[0].block_number;
+			return axios.get(`/api/blocks?start=${this.state.currentBlock+1}&end=${this.upperBound}`);
 		}).then(response => {
 			this.setState({ blocks: [...this.state.blocks, ...response.data] });
 		}).catch(error => {
@@ -55,20 +64,28 @@ class BlockView extends Component {
 
 	prevBlockClicked() {
 		this.props.history.push(`/block-view/${this.state.currentBlock-1}`);
-		this.setState({currentBlock: this.state.currentBlock-1});
+		this.setState({currentBlock: this.state.currentBlock-1,
+			prevDisabled: false,
+			nextDisabled: false,
+		});
 		if(this.state.currentBlock === this.lowerBound)
 			this.loadPreviousBlocks(this.state.currentBlock);
 
-		if(this.state.currentBlock === 2)
+		if(this.state.currentBlock <= 2)
 			this.setState({prevDisabled: true});
 	}
 
 	nextBlockClicked() {
-		this.props.history.push(`/block-view/${this.state.currentBlock+1}`);
-		this.setState({currentBlock: this.state.currentBlock+1,
-			prevDisabled: false});
-		if(this.state.currentBlock === this.upperBound) {
+		if(this.maxBound-1 > this.state.currentBlock) {
+			this.props.history.push(`/block-view/${this.state.currentBlock+1}`);
+			this.setState({currentBlock: this.state.currentBlock+1,
+				prevDisabled: false,
+				nextDisabled: false,
+			});
+		}
+		if(this.state.currentBlock === this.upperBound || this.state.currentBlock === this.maxBound-1) {
 			this.loadNextBlocks(this.state.currentBlock);
+			this.setState({nextDisabled: true});
 		}
 	}
 	
