@@ -32,7 +32,7 @@ export default class BlockItem extends Component {
 									<td>{witnessName}</td>
 								</tr>
 								<tr>
-									<th>Witness Id: </th>
+									<th style={{cursor:'initial'}}>Witness Id: </th>
 									<td>{currentBlock.id}</td>
 								</tr>
 								<tr>
