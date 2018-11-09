@@ -66,11 +66,14 @@ class BlockView extends Component {
 
 	prevBlockClicked() {
 		this.props.history.push(`/block-view/${this.state.currentBlock-1}`);
-		this.setState({currentBlock: this.state.currentBlock-1});
+		this.setState({currentBlock: this.state.currentBlock-1,
+			prevDisabled: false,
+			nextDisabled: false,
+		});
 		if(this.state.currentBlock === this.lowerBound)
 			this.loadPreviousBlocks(this.state.currentBlock);
 
-		if(this.state.currentBlock === 2)
+		if(this.state.currentBlock <= 2)
 			this.setState({prevDisabled: true});
 	}
 
@@ -79,10 +82,13 @@ class BlockView extends Component {
 		if(this.maxBound-1 > this.state.currentBlock) {
 			this.props.history.push(`/block-view/${this.state.currentBlock+1}`);
 			this.setState({currentBlock: this.state.currentBlock+1,
-				prevDisabled: false});
+				prevDisabled: false,
+				nextDisabled: false,
+			});
 		}
 		if(this.state.currentBlock === this.upperBound || this.state.currentBlock === this.maxBound-1) {
 			this.loadNextBlocks(this.state.currentBlock);
+			this.setState({nextDisabled: true});
 		}
 	}
 	
