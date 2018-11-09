@@ -230,7 +230,6 @@ class Search extends Component {
 							<thead className={`${styles['header-contrast-text']} ${styles['search-results-header']} text-center`}>
 								<tr>
 									<th scope="col">Committee Name</th>
-									<th scope="col">Account Id</th>
 									<th scope="col">Committee Id</th>
 								</tr>
 							</thead>
@@ -239,7 +238,6 @@ class Search extends Component {
 									return (
 										<tr key={i}>
 											<td><NavLink tag={RRNavLink} to={`/accountAllDetail/${committee.account_name}/${committee.committee_id}`}>{committee.account_name}</NavLink></td>
-											<td>{committee.committee_member_account}</td>
 											<td>{committee.committee_id}</td>
 										</tr>
 									);
