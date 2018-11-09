@@ -20,11 +20,9 @@ class BlockView extends Component {
 
 		axios.get('/api/blocks/last', {
 		}).then(response => {
-			console.log('block_number', response.data);
 			this.maxBound = response.data[0].block_number;
 			if(this.maxBound <= this.upperBound)
 				this.upperBound = this.maxBound;
-			console.log('upperbound', this.upperBound);
 			return axios.get(`/api/blocks?start=${this.lowerBound}&end=${this.upperBound}`);
 		}).then(response => {
 			this.setState({blocks: response.data, loading: false});
@@ -78,7 +76,6 @@ class BlockView extends Component {
 	}
 
 	nextBlockClicked() {
-		console.log('currentBlock, maxBound', this.state.currentBlock, this.maxBound);
 		if(this.maxBound-1 > this.state.currentBlock) {
 			this.props.history.push(`/block-view/${this.state.currentBlock+1}`);
 			this.setState({currentBlock: this.state.currentBlock+1,
