@@ -33,8 +33,8 @@ export default class SidePanelItem extends Component {
 								{this.renderButtons(this.props, this.props.minSize)}
 							</div>
 						</div>
-						<div className="col-4">
-							{this.props.img ? <img className={`${styles['side-image']}`} src={this.props.img} alt=""/>  : <span className={`${styles['dot']}`}></span>}
+						<div className={`${styles['icon-center']} col-4`}>
+							{this.props.img ? <i className={`${this.props.img} ${styles['side-image']}`}/>  : <span className={`${styles['dot']}`}></span>}
 						</div>
 					</div>
 				</td>
