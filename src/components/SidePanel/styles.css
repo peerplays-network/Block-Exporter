@@ -10,6 +10,12 @@
     border-right: 5px solid black;
  }
 
+ .icon-center {
+   /* margin-top: 4%; */
+   display: flex;
+   align-items: center;
+ }
+
 
 .welcome-text p {
     line-height: 1.5;
