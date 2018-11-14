@@ -17,14 +17,28 @@ class FeeDirectory extends Component {
 		//API call to search for operations
 		axios.get('api/operations', {
 		}).then(response => {
-			const group = response.data.sort((a, b)=>a.friendly_name.localeCompare(b.friendly_name))
-				.reduce((r, e)=>{
-					const key = e.friendly_name[0];
-					if(!r[key])
-						r[key]=[];
-					r[key].push(e);
-					return r;
-				}, {});
+			var alphabet = ('abcdefghijklmnopqrstuvwxyz').split('');
+			const group = [];
+			alphabet.forEach((item, index) => {
+				if(!group[item])
+					group[item] = [];
+			});
+			const operations = response.data.sort((a, b)=>a.friendly_name.localeCompare(b.friendly_name));
+			const billy = operations.reduce((r, e)=>{
+				const key = e.friendly_name[0];
+				if(!r[key])
+					r[key]=[];
+				r[key].push(e);
+				return r;
+			}, {});
+			//group.map(obj => billy.find(o => o.id === obj.id) || obj);
+			alphabet.forEach((value) => {
+				console.log('alphabet ', value);
+				console.log('finding', group[value] = (billy[value] || group[value]));
+			});
+			
+			
+			console.log('operations', group, billy);
 			group['All']=response.data;
 			this.setState({ fee: response.data, groupedData: group});
 		}).catch(error => {console.log('error fetching operations data', error);});
