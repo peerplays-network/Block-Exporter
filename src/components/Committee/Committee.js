@@ -138,7 +138,6 @@ class Committee extends Component {
 
 	renderBigTable() {
 		const { currentPage, committee, searchData, pageSize } = this.state;
-		console.log('search data: ', searchData);
 		return (
 			<div>
 				{!!this.props.history ? // browse all page
