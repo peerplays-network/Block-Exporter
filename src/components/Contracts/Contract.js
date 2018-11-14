@@ -105,8 +105,8 @@ class Contract extends Component {
 						<table className="table">
 							<thead className={`${styles['clickable']} ${styles['smart-contracts-header']} ${styles['header-contrast-text']}`}>
 								<tr>
-									<th onClick={this.sortByColumn.bind(this, 'object_id')}>ID</th>
 									<th onClick={this.sortByColumn.bind(this, 'name')}>Name</th>
+									<th onClick={this.sortByColumn.bind(this, 'object_id')}>ID</th>
 									<th onClick={this.sortByColumn.bind(this, 'balances')}>Balance</th>
 								</tr>
 							</thead>
@@ -129,8 +129,8 @@ class Contract extends Component {
 						<table className="table">
 							<thead className={`${styles['clickable']} ${styles['smart-contracts-header']} ${styles['header-contrast-text']}`}>
 								<tr>
-									<th onClick={this.sortByColumn.bind(this, 'object_id')}>ID</th>
 									<th onClick={this.sortByColumn.bind(this, 'name')}>Name</th>
+									<th onClick={this.sortByColumn.bind(this, 'object_id')}>ID</th>
 									<th onClick={this.sortByColumn.bind(this, 'balances')}>Balance</th>
 								</tr>
 							</thead>
