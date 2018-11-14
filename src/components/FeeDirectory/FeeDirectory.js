@@ -14,7 +14,7 @@ class FeeDirectory extends Component {
 	}
 
 	fetchData() {
-		//API call to search for Account
+		//API call to search for operations
 		axios.get('api/operations', {
 		}).then(response => {
 			const group = response.data.sort((a, b)=>a.friendly_name.localeCompare(b.friendly_name))
@@ -29,7 +29,7 @@ class FeeDirectory extends Component {
 			this.setState({ fee: response.data, groupedData: group});
 		}).catch(error => {console.log('error fetching operations data', error);});
 	}
-	
+
 	componentDidMount() {
 		this.fetchData();
 		const gridHeight=20;
@@ -100,7 +100,7 @@ class FeeDirectory extends Component {
 						{Object.entries(this.state.groupedData)
 							.map(([key, value], i) => {
 								return (
-									<div key={i} onClick={(i)=>this.onGroupClick({key})}>
+									<div className={`${styles['feeButton']}`} key={i} onClick={(i)=>this.onGroupClick({key})}>
 										<strong>{key}</strong>
 									</div>
 								);
