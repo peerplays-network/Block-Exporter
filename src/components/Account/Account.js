@@ -90,13 +90,12 @@ class AccountSearch extends Component {
 	}
 
 	sortByColumn(colType) {
-		debugger;
 		let sortType = this.state.sortType;
 		if(this.state.sortBy === colType)
 		{
 			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
 		}
-		debugger;
+
 		this.setState({sortType:sortType, sortBy:colType});
 		/*sorts depending on the column type. Also does a lookup on the witness data which
 		  stores the initial API call made when the component is loaded and witness rank is calculated.
