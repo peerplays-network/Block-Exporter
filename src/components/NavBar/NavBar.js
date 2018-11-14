@@ -107,6 +107,11 @@ class Navigation extends React.Component {
 								</NavLink>
 							</NavItem>
 							: null}
+						<NavItem navbar>
+							<NavLink href="/">
+								<i className={`${styles['header-contrast-text'] } ${styles['size25']} fas fa-home fa-1x pl-2`}></i>
+							</NavLink>
+						</NavItem>
 						
 					</Nav>
 					<div className={`${styles['header-contrast-text']} ${styles['header-height']} pt-1`}><a href="/" className={`${styles['link-no-decor']} ${styles['bold']} ${styles['size30']} pl-3`}>EXE EXPLORER</a></div>

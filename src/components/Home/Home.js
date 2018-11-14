@@ -195,6 +195,7 @@ class Welcome extends Component {
 			translateX = 290;
 			//translateY = Math.ceil((window.innerHeight/10) * oldItem.y);
 			element.style.transform = `translate(${translateX}px, ${translateY}px)`;
+
 		}
     	
 	}
