@@ -1,25 +1,34 @@
 .operation-layout{
-    border: 1px solid #666;
+    border: 1px solid #fff;
+    border-radius: 5px;
     padding: 5px 10px;
 }
 .fee-layout{
-    background: #f5f5f5;
-    border: 1px solid #666;
+    background: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
     margin-top: 10px;
     padding: 10px 20px;
 }
 .group-headings{
     position:absolute; 
-    left: 0px; 
+    left: 0px;
     top: 70px; 
     cursor:pointer;
     color: blue;
 }
+.feeButton{
+    width: 25px;
+    text-align: center;
+    background: #f4f4f4;
+    border: 1px solid #fff;
+    border-radius: 3px;
+}
 .group{
-    margin-left:35px;
+    margin-left:50px;
 }
 .input-group-prepend{
-    background-color: #e9ecef;
+    background-color: #f4f4f4;
     border:1px solid #ced4da;
     border-radius: 4px 0px 0px 4px;
     color:#495057;
@@ -53,7 +62,6 @@ td{
   .blocks-header{
     background: rgb(61, 61, 61);
   }
-  
   
   .text-center{
     text-align: center!important;
