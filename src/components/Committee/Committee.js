@@ -93,16 +93,28 @@ class Committee extends Component {
 		/*sorts depending on the column type. Also does a lookup on the committee data which
 		  stores the initial API call made when the component is loaded and committee rank is calculated.
 		the committee rank is the appended to the data coming in from the sort API call.*/
-		axios.get(`api/committee?sort=${colType}&direction=${sortType}`, {
-		}).then(response => {
-			let sortedcommitteeData = response.data;
-			sortedcommitteeData = sortedcommitteeData.map(object => {
-				const rankObject = this.state.committeeData.find(el => el.id === object.id);
-				return rankObject;
-			});
-			this.setState({searchData: sortedcommitteeData});
-			this.sortSearch(this.state.committee, sortedcommitteeData);
-		}).catch(error => {console.log('error fetching committee data', error);});
+
+		if(colType === 'committee_id') {
+			const sortedArray = this.state.searchData.sort((a, b) => {return a.account_name > b.account_name; });
+			if(this.state.sortType === 'DESC') {
+				this.setState({searchData: sortedArray.reverse()});
+			}
+			else {
+				this.setState({searchData: sortedArray});
+			}
+		}
+		else {
+			axios.get(`api/committee?sort=${colType}&direction=${sortType}`, {
+			}).then(response => {
+				let sortedcommitteeData = response.data;
+				sortedcommitteeData = sortedcommitteeData.map(object => {
+					const rankObject = this.state.committeeData.find(el => el.id === object.id);
+					return rankObject;
+				});
+				this.setState({searchData: sortedcommitteeData});
+				this.sortSearch(this.state.committee, sortedcommitteeData);
+			}).catch(error => {console.log('error fetching committee data', error);});
+		}
 	}
 
 	getAccountName(accountId) {
@@ -126,7 +138,7 @@ class Committee extends Component {
 
 	renderBigTable() {
 		const { currentPage, committee, searchData, pageSize } = this.state;
-
+		console.log('search data: ', searchData);
 		return (
 			<div>
 				{!!this.props.history ? // browse all page
