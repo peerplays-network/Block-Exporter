@@ -216,7 +216,7 @@ class Welcome extends Component {
 						{this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
-									<div className={`${styles['react-grid-item']}`} style={{borderStyle: 'dotted'}} key={component.id}>
+									<div className={`${styles['react-grid-item']}`} key={component.id}>
 										<Panel headerText={component.name} size={component.size} 
 											onClose={() => this.onClosePanel.bind(this, component.id)}>
 											<div style={{overflow: 'auto'}}>
