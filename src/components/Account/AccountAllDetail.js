@@ -1,10 +1,12 @@
 /*Used in Account*/
 import React,  { Component } from 'react';
 import { Nav, NavItem, NavLink, Row, Col, TabContent, TabPane, Card, CardBody } from 'reactstrap';
+import { NavLink as RRNavLink } from 'react-router-dom';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import styles from './styles.css';
+import PaginationCall from '../Account/PaginationCall';
 
 class AccountAllDetail extends Component {
 	constructor(e) {
@@ -17,6 +19,7 @@ class AccountAllDetail extends Component {
 			Operations: [],
 			activeTab: '1',
 			accountBalance: 0,
+			currentTransactionPage: 0,
 		};
 		this.toggle = this.toggle.bind(this);
 		this.account = '';
@@ -93,6 +96,28 @@ class AccountAllDetail extends Component {
 			this.setState({activeTab: '3'});
 		else if(!!this.account[1] && this.account[1].includes('1.5'))
 			this.setState({activeTab: '4'});
+	}
+
+	componentDidUpdate(prevProps) {
+		console.log('current props: ', this.props);
+		console.log('prev props: ', prevProps);
+		if(this.props !== prevProps) {
+			this.findData();
+			this.findTransactions();
+			this.findWitnesses();
+			this.findCommittee();
+			this.findOperations();
+
+			if(!!this.account[1] && this.account[1].includes('1.6'))
+				this.setState({activeTab: '3'});
+			else if(!!this.account[1] && this.account[1].includes('1.5'))
+				this.setState({activeTab: '4'});
+		}
+	}
+
+	changeTransactionPage(e, index) {
+		e.preventDefault();
+		this.setState({ currentTransactionPage: index  });
 	}
 
 	toggle(tab) {
@@ -176,7 +201,7 @@ class AccountAllDetail extends Component {
 
 	findAccountName(id) {
 		const accountName = this.props.accounts.find(el => el.account_id === id);
-		return !!accountName ? accountName.account_name : id;
+		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName.account_name}`}>{accountName.account_name}</NavLink></span>  : id;
 	}
 
 	renderTransaction(transaction, i) {
@@ -241,8 +266,10 @@ class AccountAllDetail extends Component {
 								)}
 							</TabPane>
 							<TabPane tabId="2">
+								<PaginationCall currentPage={this.state.currentTransactionPage} handleClick={this.changeTransactionPage.bind(this)} pagesCount={Math.ceil(this.state.Transactions.length/10)} />
+
 								<h4>Transactions</h4>
-								{this.state.Transactions.map((transaction, i) =>
+								{this.state.Transactions.slice( this.state.currentTransactionPage * 10, (this.state.currentTransactionPage + 1) * 10).map((transaction, i) =>
 									this.renderTransaction(transaction, i)
 								)}
 							</TabPane>
