@@ -33,12 +33,8 @@ class FeeDirectory extends Component {
 			}, {});
 			//group.map(obj => billy.find(o => o.id === obj.id) || obj);
 			alphabet.forEach((value) => {
-				console.log('alphabet ', value);
-				console.log('finding', group[value] = (billy[value] || group[value]));
+				group[value] = (billy[value] || group[value]);
 			});
-			
-			
-			console.log('operations', group, billy);
 			group['All']=response.data;
 			this.setState({ fee: response.data, groupedData: group});
 		}).catch(error => {console.log('error fetching operations data', error);});
@@ -46,7 +42,7 @@ class FeeDirectory extends Component {
 
 	componentDidMount() {
 		this.fetchData();
-		const gridHeight=20;
+		const gridHeight=23;
 		if(this.props.id !== undefined) 
 		{
 			this.props.calculateComponentHeight(this.props.id, gridHeight);
@@ -100,7 +96,7 @@ class FeeDirectory extends Component {
 		} = this;
 		const fullPage = this.props.id === undefined;
 		return (
-			<div className="container" style={{height:'320px'}}>
+			<div className="container" style={{height:'375px'}}>
 				{!!this.props.history ? 
 					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
 						<span className="fa fa-credit-card">&nbsp;</span>Fee Schedule</h1>
@@ -111,14 +107,19 @@ class FeeDirectory extends Component {
 				</InputGroup>}
 				{this.props.size==='large' && <div className="row">
 					<div className={`${styles['group-headings']} col-sm-2`}>
-						{Object.entries(this.state.groupedData)
-							.map(([key, value], i) => {
-								return (
-									<div className={`${styles['feeButton']}`} key={i} onClick={(i)=>this.onGroupClick({key})}>
-										<strong>{key}</strong>
-									</div>
-								);
-							})}
+						<div className={`row`}
+							style={{
+								background: '#fff'
+							}}>
+							{Object.entries(this.state.groupedData)
+								.map(([key, value], i) => {
+									return (
+										<div className={`${styles['feeButton']}`} key={i} onClick={(i)=>this.onGroupClick({key})}>
+											<strong>{key}</strong>
+										</div>
+									);
+								})}
+						</div>
 					</div>
 
 					<div className={`${styles['group']} col-sm-10`} >
