@@ -128,7 +128,7 @@ class Navigation extends React.Component {
 							</NavItem>
 							<Tooltip placement="left" isOpen={this.state.tooltipOpen} autohide={false} target="searchBar"
 								toggle={this.toggleToolTip.bind(this)}>
-								Search for Accounts, Blocks, or Committee Members by name or id
+								Search for Accounts, Witnesses, Smart Contracts, Blocks, or Committee Members by name or id
 							</Tooltip>
 							<NavItem>
 								<BlockAnimation />
