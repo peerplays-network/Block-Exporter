@@ -5,6 +5,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import styles from './styles.css';
+import PaginationCall from '../Account/PaginationCall';
 
 class AccountAllDetail extends Component {
 	constructor(e) {
@@ -17,6 +18,7 @@ class AccountAllDetail extends Component {
 			Operations: [],
 			activeTab: '1',
 			accountBalance: 0,
+			currentTransactionPage: 0,
 		};
 		this.toggle = this.toggle.bind(this);
 		this.account = '';
@@ -93,6 +95,11 @@ class AccountAllDetail extends Component {
 			this.setState({activeTab: '3'});
 		else if(!!this.account[1] && this.account[1].includes('1.5'))
 			this.setState({activeTab: '4'});
+	}
+
+	changeTransactionPage(e, index) {
+		e.preventDefault();
+		this.setState({ currentTransactionPage: index  });
 	}
 
 	toggle(tab) {
@@ -241,8 +248,10 @@ class AccountAllDetail extends Component {
 								)}
 							</TabPane>
 							<TabPane tabId="2">
+								<PaginationCall currentPage={this.state.currentTransactionPage} handleClick={this.changeTransactionPage.bind(this)} pagesCount={Math.ceil(this.state.Transactions.length/10)} />
+
 								<h4>Transactions</h4>
-								{this.state.Transactions.map((transaction, i) =>
+								{this.state.Transactions.slice( this.state.currentTransactionPage * 10, (this.state.currentTransactionPage + 1) * 10).map((transaction, i) =>
 									this.renderTransaction(transaction, i)
 								)}
 							</TabPane>
