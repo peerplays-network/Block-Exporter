@@ -14,6 +14,7 @@ class Search extends Component {
 			accounts: [],
 			witnesses: [],
 			committee: [],
+			loadingOrError: 'Loading',
 			//blocks: [],
 			//transactions: [],
 		};
@@ -38,7 +39,7 @@ class Search extends Component {
 				this.getCommitteeName(response.data);
 				this.getWitnessesName(response.data);
 			}
-		}).catch(error => {console.log('error fetching search data', error); this.setState({accounts:[]});});
+		}).catch(error => {console.log('error fetching search data', error); this.setState({loadingOrError: 'No Search Results Found'}); this.setState({accounts:[]});});
 	}
 
 	getCommitteeName(accounts) {
@@ -50,6 +51,7 @@ class Search extends Component {
 			this.setState({committee: newState});
 		}).catch(error => {
 			console.log('error', error);
+			this.setState({loadingOrError: 'No Search Results Found'});
 			this.setState({committee:[]});
 		});
 	}
@@ -63,6 +65,7 @@ class Search extends Component {
 			this.setState({witnesses: newState});
 		}).catch(error => {
 			console.log('error', error);
+			this.setState({loadingOrError: 'No Search Results Found'});
 			this.setState({witnesses:[]});
 		});
 	}
@@ -80,7 +83,7 @@ class Search extends Component {
 					this.getCommitteeName(response.data);
 					this.getWitnessesName(response.data);
 				}
-			}).catch(error => {console.log('error fetching search data', error); this.setState({accounts:[]}); this.setState({witnesses:[]}); this.setState({committee:[]});});
+			}).catch(error => {console.log('error fetching search data', error); this.setState({loadingOrError: 'No Search Results Found'}); this.setState({accounts:[]}); this.setState({witnesses:[]}); this.setState({committee:[]});});
 		}
 	}
 
@@ -253,8 +256,7 @@ class Search extends Component {
 	render() {
 		return (
 			<div className="container pt-4 pb-5 mt-5"> 
-				{this.state.accounts.length > 0 && <h3> Search Results For "{this.state.searchString}"</h3>}
-				{this.state.accounts.length === 0 && <h3> No Results For "{this.state.searchString}"</h3> }
+				{this.state.accounts.length > 0 ? <h3> Search Results For "{this.state.searchString}"</h3> : <h3>{this.state.loadingOrError}</h3>}
 				<br/>
 				{
 					this.state.accounts.length > 0 && this.renderAccountsTable()
