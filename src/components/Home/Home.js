@@ -156,12 +156,12 @@ class Welcome extends Component {
 
 	calculateComponentHeight(id, height) {
 		//since the grid layout does not have an auto height, each component sets their own height, and calls this function once mounted
-		// const stateCopy = Object.assign({}, this.state);
-		// const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
+		const stateCopy = Object.assign({}, this.state);
+		const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
 		// debugger;
-		// stateCopy.layout[layoutIndex].h = height;
+		stateCopy.layout[layoutIndex].h = height;
 
-		// this.setState({stateCopy});
+		this.setState({stateCopy});
 	}
 
 	onDragStop(layout, oldItem, newItem, placeholder, e, element) {
@@ -183,7 +183,6 @@ class Welcome extends Component {
 		// console.log('X',translateX);
 		// console.log('Y',translateY);
 		if (translateX < 287 && this.props.sideBarOpen) {
-
 			// const stateCopy = Object.assign({}, this.state);
 			// const id = Number(oldItem.i);
 			// const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
@@ -195,9 +194,7 @@ class Welcome extends Component {
 			translateX = 290;
 			//translateY = Math.ceil((window.innerHeight/10) * oldItem.y);
 			element.style.transform = `translate(${translateX}px, ${translateY}px)`;
-
 		}
-    	
 	}
 
 	render() {

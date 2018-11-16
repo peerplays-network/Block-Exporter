@@ -17,14 +17,24 @@ class FeeDirectory extends Component {
 		//API call to search for operations
 		axios.get('api/operations', {
 		}).then(response => {
-			const group = response.data.sort((a, b)=>a.friendly_name.localeCompare(b.friendly_name))
-				.reduce((r, e)=>{
-					const key = e.friendly_name[0];
-					if(!r[key])
-						r[key]=[];
-					r[key].push(e);
-					return r;
-				}, {});
+			var alphabet = ('abcdefghijklmnopqrstuvwxyz').split('');
+			const group = [];
+			alphabet.forEach((item, index) => {
+				if(!group[item])
+					group[item] = [];
+			});
+			const operations = response.data.sort((a, b)=>a.friendly_name.localeCompare(b.friendly_name));
+			const billy = operations.reduce((r, e)=>{
+				const key = e.friendly_name[0];
+				if(!r[key])
+					r[key]=[];
+				r[key].push(e);
+				return r;
+			}, {});
+			//group.map(obj => billy.find(o => o.id === obj.id) || obj);
+			alphabet.forEach((value) => {
+				group[value] = (billy[value] || group[value]);
+			});
 			group['All']=response.data;
 			this.setState({ fee: response.data, groupedData: group});
 		}).catch(error => {console.log('error fetching operations data', error);});
@@ -32,7 +42,7 @@ class FeeDirectory extends Component {
 
 	componentDidMount() {
 		this.fetchData();
-		const gridHeight=20;
+		const gridHeight=23;
 		if(this.props.id !== undefined) 
 		{
 			this.props.calculateComponentHeight(this.props.id, gridHeight);
@@ -86,7 +96,7 @@ class FeeDirectory extends Component {
 		} = this;
 		const fullPage = this.props.id === undefined;
 		return (
-			<div className="container" style={{height:'320px'}}>
+			<div className="container" style={{height:'375px'}}>
 				{!!this.props.history ? 
 					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
 						<span className="fa fa-credit-card">&nbsp;</span>Fee Schedule</h1>
@@ -96,28 +106,45 @@ class FeeDirectory extends Component {
 					<Input type="text" value={searchFee} onChange={this.onFeeTextChanged.bind(this)} placeholder="Operation" />
 				</InputGroup>}
 				{this.props.size==='large' && <div className="row">
-					<div className={`${styles['group-headings']} col-sm-2`}>
-						{Object.entries(this.state.groupedData)
-							.map(([key, value], i) => {
-								return (
-									<div className={`${styles['feeButton']}`} key={i} onClick={(i)=>this.onGroupClick({key})}>
-										<strong>{key}</strong>
-									</div>
-								);
-							})}
-					</div>
+					<div className={`${styles['group-cover']} col-sm-13`} >
+						<div className={`${styles['group-headings']} col-sm-4`}>
+							<div className={`row`}
+								style={{
+									background: '#fff'
+								}}>
+								{Object.entries(this.state.groupedData)
+									.map(([key, value], i) => {
+										console.log('key and value', key, value, value.length>0);
+										if(value.length>0) {
+											return (
+												<div className={`${styles['feeButton']}`} key={i} onClick={(i)=>this.onGroupClick({key})}>
+													<strong>{key}</strong>
+												</div>
+											);
+										}
+										else{
+											return (
+												<div className={`${styles['feeButtonDead']}`} key={i}>
+													<strong>{key}</strong>
+												</div>
+											);
+										}
+									})}
+							</div>
+						</div>
 
-					<div className={`${styles['group']} col-sm-10`} >
-						{this.state.fee && this.state.fee.map(child => (
-							<FeeSection
-								key={child.id}
-								isOpen={!!openSections[child.friendly_name]}
-								label={child.friendly_name}
-								onClick={onClick.bind(this)}
-								fullPage={fullPage}
-								fee={child}
-							/>
-						))}{this.state.fee.length===0 && <div> No Fee Found </div>}
+						<div className={`${styles['group']} col-sm-10`} >
+							{this.state.fee && this.state.fee.map(child => (
+								<FeeSection
+									key={child.id}
+									isOpen={!!openSections[child.friendly_name]}
+									label={child.friendly_name}
+									onClick={onClick.bind(this)}
+									fullPage={fullPage}
+									fee={child}
+								/>
+							))}{this.state.fee.length===0 && <div> No Fee Found </div>}
+						</div>
 					</div>
 				</div>}
 				{this.props.size!=='large' && <div>
