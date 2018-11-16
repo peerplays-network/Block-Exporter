@@ -207,7 +207,7 @@ class WitnessViewer extends Component {
 		return (
 			<Fragment>
 				<table className="table">
-					<thead className={`${styles['clickable']} thead-light`}>
+					<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
 						<tr>
 							<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
 							<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness</th>
