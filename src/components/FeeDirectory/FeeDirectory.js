@@ -106,33 +106,45 @@ class FeeDirectory extends Component {
 					<Input type="text" value={searchFee} onChange={this.onFeeTextChanged.bind(this)} placeholder="Operation" />
 				</InputGroup>}
 				{this.props.size==='large' && <div className="row">
-					<div className={`${styles['group-headings']} col-sm-2`}>
-						<div className={`row`}
-							style={{
-								background: '#fff'
-							}}>
-							{Object.entries(this.state.groupedData)
-								.map(([key, value], i) => {
-									return (
-										<div className={`${styles['feeButton']}`} key={i} onClick={(i)=>this.onGroupClick({key})}>
-											<strong>{key}</strong>
-										</div>
-									);
-								})}
+					<div className={`${styles['group-cover']} col-sm-13`} >
+						<div className={`${styles['group-headings']} col-sm-4`}>
+							<div className={`row`}
+								style={{
+									background: '#fff'
+								}}>
+								{Object.entries(this.state.groupedData)
+									.map(([key, value], i) => {
+										console.log('key and value', key, value, value.length>0);
+										if(value.length>0) {
+											return (
+												<div className={`${styles['feeButton']}`} key={i} onClick={(i)=>this.onGroupClick({key})}>
+													<strong>{key}</strong>
+												</div>
+											);
+										}
+										else{
+											return (
+												<div className={`${styles['feeButtonDead']}`} key={i}>
+													<strong>{key}</strong>
+												</div>
+											);
+										}
+									})}
+							</div>
 						</div>
-					</div>
 
-					<div className={`${styles['group']} col-sm-10`} >
-						{this.state.fee && this.state.fee.map(child => (
-							<FeeSection
-								key={child.id}
-								isOpen={!!openSections[child.friendly_name]}
-								label={child.friendly_name}
-								onClick={onClick.bind(this)}
-								fullPage={fullPage}
-								fee={child}
-							/>
-						))}{this.state.fee.length===0 && <div> No Fee Found </div>}
+						<div className={`${styles['group']} col-sm-10`} >
+							{this.state.fee && this.state.fee.map(child => (
+								<FeeSection
+									key={child.id}
+									isOpen={!!openSections[child.friendly_name]}
+									label={child.friendly_name}
+									onClick={onClick.bind(this)}
+									fullPage={fullPage}
+									fee={child}
+								/>
+							))}{this.state.fee.length===0 && <div> No Fee Found </div>}
+						</div>
 					</div>
 				</div>}
 				{this.props.size!=='large' && <div>

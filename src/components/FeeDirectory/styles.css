@@ -12,7 +12,6 @@
 }
 .group-headings{
     position:absolute; 
-    left: 0px;
     top: 70px; 
     width: 50px;
     cursor:pointer;
@@ -21,6 +20,21 @@
 .feeButton{
     width: 25px;
     text-align: center;
+    background: #f4f4f4;
+    border: 1px solid #fff;
+    border-radius: 3px;
+}
+.feeButton:focus{
+    width: 25px;
+    text-align: center;
+    background: #323232;
+    border: 1px solid #fff;
+    border-radius: 3px;
+}
+.feeButtonDead{
+    width: 25px;
+    text-align: center;
+    color: #cedced;
     background: #f4f4f4;
     border: 1px solid #fff;
     border-radius: 3px;
