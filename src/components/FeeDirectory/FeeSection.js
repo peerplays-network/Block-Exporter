@@ -11,7 +11,9 @@ class FeeSection extends Component {
 		  onClick,
 		  props: { isOpen, label, fullPage}
 		} = this;
+
 		const current_fees = JSON.stringify(JSON.parse(this.props.fee.current_fees)) === JSON.stringify({}) ? {data: 'not available'} : JSON.parse(this.props.fee.current_fees);
+
 		return (
 		  	<div>
 			  	{!fullPage && <div className={`${styles['operation-layout']} row`}
@@ -31,7 +33,7 @@ class FeeSection extends Component {
 								return (<div>
 									<span>{key}</span>
 									<span> : </span>
-									<span>{Object.keys(JSON.parse(current_fees[key])).length === 0 && JSON.parse(current_fees[key]).constructor === Object ? current_fees[key] : 'No Information Available'}</span>
+									<span>{Object.keys(current_fees[key]).length === 0 && current_fees.constructor === Object ? current_fees[key] : 'No Information Available'}</span>
 								</div>
 								);
 							})}
