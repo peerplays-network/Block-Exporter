@@ -111,9 +111,17 @@ class Welcome extends Component {
 			default:
 				return;
 		}
-
+		
 		const index = stateCopy.layout.findIndex(x => x.i===id.toString());
-		index === -1 ? stateCopy.layout.push(stateCopy.components[id].gridPlacement) : stateCopy.layout[index] = stateCopy.components[id].gridPlacement;
+		if(index === -1) 
+			stateCopy.layout.push(stateCopy.components[id].gridPlacement); 
+		else {
+			//stateCopy.layout[index].gridPlacement.w = stateCopy.components[id].gridPlacement.w;
+			stateCopy.layout[index] = stateCopy.components[id].gridPlacement;
+			if(stateCopy.components[id].gridPlacement.x < this.startingX)
+				stateCopy.layout[index].x = this.startingX;
+		}
+		
 		stateCopy.components[id].visible = true;
 		this.setState({stateCopy});
 	}
