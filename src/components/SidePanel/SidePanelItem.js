@@ -2,21 +2,34 @@ import React, { Component, Fragment } from 'react';
 import styles from './styles.css';
 
 export default class SidePanelItem extends Component {
+	constructor(e) {
+		super(e);
+		this.state = {
+			active: '',
+			name: '',
+		};
+	}
+
+	activateButton(id, name) {
+		this.setState({ active: id, name: name });
+		this.props.changeSize(id, name);
+	}
+
 	renderButtons(props, minSize) {
 		return (
 			<Fragment>
 				<div className="col-2 offset-1">
-					{this.props.minSize !== 'small' ? <button onClick={() => props.changeSize(this.props.id, 'small')} disabled className={`${styles['disabled-widget-size']} btn btn-sm`}>S</button> 
-						: <button onClick={() => props.changeSize(this.props.id, 'small')} className={`${styles['enabled-widget-size']} btn btn-sm`}>S</button>
+					{this.props.minSize !== 'small' ? <button onClick={() => this.activateButton(this.props.id, 'small')} disabled className={`${styles['disabled-widget-size']} btn btn-sm`}>S</button> 
+						: <button onClick={() => this.activateButton(this.props.id, 'small')} className={this.state.active === this.props.id && this.state.name === 'small' ? `${styles['enabled-widget-size-active']} btn btn-sm` : `${styles['enabled-widget-size']} btn btn-sm`}>S</button>
 					}
 				</div>
 				<div className="col-2 offset-1">
-					{this.props.minSize === 'large' ? <button onClick={() => props.changeSize(this.props.id, 'medium')} className={`${styles['disabled-widget-size']} btn btn-sm`} disabled>M</button>
-						:  <button onClick={() => props.changeSize(this.props.id, 'medium')} className={`${styles['enabled-widget-size']} btn btn-sm`}>M</button> 
+					{this.props.minSize === 'large' ? <button onClick={() => this.activateButton(this.props.id, 'medium')} className={`${styles['disabled-widget-size']} btn btn-sm`} disabled>M</button>
+						:  <button onClick={() => this.activateButton(this.props.id, 'medium')} className={this.state.active === this.props.id && this.state.name === 'medium' ? `${styles['enabled-widget-size-active']} btn btn-sm` : `${styles['enabled-widget-size']} btn btn-sm`}>M</button> 
 					}
 				</div>
 				<div className="col-2 offset-1">
-					<button onClick={() => props.changeSize(this.props.id, 'large')} className={`${styles['enabled-widget-size']} btn btn-sm`}>L</button>
+					<button onClick={() => this.activateButton(this.props.id, 'large')} className={this.state.active === this.props.id && this.state.name === 'large' ? `${styles['enabled-widget-size-active']} btn btn-sm` : `${styles['enabled-widget-size']} btn btn-sm`}>L</button>
 				</div>
 			</Fragment>
 		);
