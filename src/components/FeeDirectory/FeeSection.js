@@ -20,7 +20,7 @@ class FeeSection extends Component {
 					style={{
 						background: isOpen ? '#fff' : '#f5f5f5'
 					}}>
-					<div className="col-sm-10" onClick={onClick.bind(this)} style={{ cursor: 'pointer' }}>
+					<div className="col-sm-11" onClick={onClick.bind(this)} style={{ cursor: 'pointer' }}>
 						{label}
 					</div>
 					<div className={`${styles['arrow']} col-sm-1`} onClick={onClick.bind(this)}>

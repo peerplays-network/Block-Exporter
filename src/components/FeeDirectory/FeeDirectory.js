@@ -106,8 +106,8 @@ class FeeDirectory extends Component {
 					<Input type="text" value={searchFee} onChange={this.onFeeTextChanged.bind(this)} placeholder="Operation" />
 				</InputGroup>}
 				{this.props.size==='large' && <div className="row">
-					<div className={`${styles['group-cover']} col-sm-13`} >
-						<div className={`${styles['group-headings']} col-sm-4`}>
+					<div className={`${styles['group-cover']} col-13`} >
+						<div className={`${styles['group-headings']} col-4`}>
 							<div className={`row`}
 								style={{
 									background: '#fff'
@@ -133,7 +133,7 @@ class FeeDirectory extends Component {
 							</div>
 						</div>
 
-						<div className={`${styles['group']} col-sm-10`} >
+						<div className={`${styles['group']} col-12`} >
 							{this.state.fee && this.state.fee.map(child => (
 								<FeeSection
 									key={child.id}
