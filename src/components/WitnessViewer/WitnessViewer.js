@@ -137,7 +137,7 @@ class WitnessViewer extends Component {
 								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
 									<tr>
 										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
-										<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness</th>
+										<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness Name</th>
 										<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
 										<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
 										<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
@@ -174,7 +174,7 @@ class WitnessViewer extends Component {
 								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
 									<tr>
 										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
-										<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness</th>
+										<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness Name</th>
 										<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
 										<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
 										<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
@@ -210,7 +210,7 @@ class WitnessViewer extends Component {
 					<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
 						<tr>
 							<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
-							<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness</th>
+							<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness Name</th>
 							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
 							<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
 							<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
