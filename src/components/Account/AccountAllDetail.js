@@ -91,16 +91,15 @@ class AccountAllDetail extends Component {
 		this.findWitnesses();
 		this.findCommittee();
 		this.findOperations();
-
-		if(!!this.account[1] && this.account[1].includes('1.6'))
+		if(!!this.account[1] && this.account[1].includes('1.2'))
+			this.setState({activeTab: '1'});
+		else if(!!this.account[1] && this.account[1].includes('1.6'))
 			this.setState({activeTab: '3'});
 		else if(!!this.account[1] && this.account[1].includes('1.5'))
 			this.setState({activeTab: '4'});
 	}
 
 	componentDidUpdate(prevProps) {
-		console.log('current props: ', this.props);
-		console.log('prev props: ', prevProps);
 		if(this.props !== prevProps) {
 			this.findData();
 			this.findTransactions();
@@ -108,7 +107,9 @@ class AccountAllDetail extends Component {
 			this.findCommittee();
 			this.findOperations();
 
-			if(!!this.account[1] && this.account[1].includes('1.6'))
+			if(!!this.account[1] && this.account[1].includes('1.2'))
+				this.setState({activeTab: '1'});
+			else if(!!this.account[1] && this.account[1].includes('1.6'))
 				this.setState({activeTab: '3'});
 			else if(!!this.account[1] && this.account[1].includes('1.5'))
 				this.setState({activeTab: '4'});
@@ -144,7 +145,7 @@ class AccountAllDetail extends Component {
 		
 		return (
 			<NavItem>
-				<NavLink className={classnames({ active: this.state.activeTab === index}) } style={{cursor:'pointer',background:'#3d3d3d',color:'white'}} onClick={() => { this.toggle(index); }}>
+				<NavLink className={classnames({ active: this.state.activeTab === index}) } style={{cursor:'pointer', background:'#3d3d3d',color:'white'}} onClick={() => { this.toggle(index); }}>
 					{ type } Details ({ this.account[0] })
 				</NavLink>
 			</NavItem>
@@ -201,7 +202,7 @@ class AccountAllDetail extends Component {
 
 	findAccountName(id) {
 		const accountName = this.props.accounts.find(el => el.account_id === id);
-		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName.account_name}`}>{accountName.account_name}</NavLink></span>  : id;
+		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName.account_name}/${accountName.account_id}`}>{accountName.account_name}</NavLink></span>  : id;
 	}
 
 	renderTransaction(transaction, i) {
