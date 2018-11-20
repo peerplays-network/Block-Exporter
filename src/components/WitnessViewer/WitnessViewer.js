@@ -113,7 +113,7 @@ class WitnessViewer extends Component {
 		{
 			newState = newState.reverse();
 		}
-		this.setState({searchData: newState, sortType:sortType, sortBy:'rank'});
+		this.setState({searchData: newState, sortType:sortType, sortBy:'rank', currentPage: 0});
 	}
 
 	renderBigTable() {

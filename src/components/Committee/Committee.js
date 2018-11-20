@@ -97,10 +97,10 @@ class Committee extends Component {
 		if(colType === 'committee_id') {
 			const sortedArray = this.state.searchData.sort((a, b) => {return a.account_name > b.account_name; });
 			if(this.state.sortType === 'DESC') {
-				this.setState({searchData: sortedArray.reverse()});
+				this.setState({searchData: sortedArray.reverse(), currentPage: 0});
 			}
 			else {
-				this.setState({searchData: sortedArray});
+				this.setState({searchData: sortedArray, currentPage: 0});
 			}
 		}
 		else {
@@ -133,7 +133,7 @@ class Committee extends Component {
 		{
 			newState = newState.reverse();
 		}
-		this.setState({searchData: newState, sortType:sortType, sortBy:'rank'});
+		this.setState({searchData: newState, sortType:sortType, sortBy:'rank', currentPage: 0});
 	}
 
 	renderBigTable() {
