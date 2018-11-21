@@ -119,7 +119,15 @@ router.get('/blocks/sorted', function (req, res) {
 		}
 	});
 
-	const sql = `SELECT * FROM explorer.blocks ORDER BY ${req.query.sort} ${req.query.direction} LIMIT ${req.query.x}, ${req.query.y}`;
+	let sql = `SELECT * FROM explorer.blocks ORDER BY ${req.query.sort} ${req.query.direction} LIMIT ${req.query.x}, ${req.query.y}`;
+
+	if (req.query.sort === 'witness') { // Need to use a JOIN if the column is witness, because we store them as IDs -- not names
+		sql = `SELECT b.*, w.account_name FROM explorer.blocks b
+		JOIN explorer.witnesses w on b.witness = w.account_id
+		order by account_name ${req.query.direction}
+		LIMIT ${req.query.x} , ${req.query.y};`;
+	}
+
 
 	// Perform Query
 	connection.query(sql, function (err, rows, fields) {
