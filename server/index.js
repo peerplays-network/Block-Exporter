@@ -17,7 +17,6 @@ const blockchainLib = require("peerplaysjs-lib");
 const mysql = require('mysql');
 
 const Blockchain = require("./api");
-const wsMonitor = require("./api/monitor");
 const db = require("./database/constants");
 const config_server = require("./config/main");
 
