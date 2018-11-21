@@ -162,6 +162,70 @@
         }
       }
     },
+    "/blocks/sorted": {
+      "get": {
+        "tags": [
+          "Blocks"
+        ],
+        "description": "Get blocks in a sorted format",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "block_number",
+            "description": "The column to sort by ('block_number', 'transaction_count', 'operation_count', 'witness', 'timestamp')",
+            "required": true
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            },
+            "example": "ASC",
+            "required": true
+          },
+          {
+            "name": "x",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 0,
+            "description": "X in (LIMIT X, Y)",
+            "required": true
+          },
+          {
+            "name": "y",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 0,
+            "description": "Y in (LIMIT X, Y)",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
     "/blocks/last": {
       "get": {
         "tags": [
