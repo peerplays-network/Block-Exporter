@@ -24,7 +24,6 @@ class BlockList extends Component {
 		}).then(response => {
 			lower=response.data[0].block_number-(Constants.BLOCKS_PER_PAGE-1);
 			upper=response.data[0].block_number;
-			console.log('length 1: ', response.data[0].block_number);
 			this.setState({blockLength: response.data[0].block_number});
 			return axios.get(`api/blocks?start=${lower}&end=${upper}`);
 		}).then(response => {
@@ -45,7 +44,9 @@ class BlockList extends Component {
 		const requestedBlockRange = this.state.upper - (Constants.BLOCKS_PER_PAGE*currentPage);
 		let sortType = this.state.sortType;
 		let colType = this.state.sortBy;
-		axios.get(`api/blocks/sorted?sort=${colType}&direction=${sortType}&x=${requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1)}&y=${(Constants.BLOCKS_PER_PAGE-1)}`, {
+		let x = ((requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1)) >= 0 ) ? requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1) : 0;
+		let y = (Constants.BLOCKS_PER_PAGE-1);
+		axios.get(`api/blocks/sorted?sort=${colType}&direction=${sortType}&x=${x}&y=${y}`, {
 		}).then(response => {
 			this.setState({blocks: response.data.reverse()});
 		}).catch(error => console.log('error fetching blocks'));
@@ -57,7 +58,6 @@ class BlockList extends Component {
 			this.loadNextBlocks(index.selected);
 		else
 			this.loadNextSortedBlocks(index.selected);
-		console.log('page and data', this.state.currentPage, this.state.blocks);
 	}
 
 	refreshPagination (data) {
@@ -71,8 +71,7 @@ class BlockList extends Component {
 
 	sortByColumn(colType) {
 		let sortType = this.state.sortType;
-		let lower=0;
-		let upper=1;
+		const requestedBlockRange = this.state.upper - (Constants.BLOCKS_PER_PAGE*0);
 		if(this.state.sortBy === colType)
 		{
 			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
@@ -83,11 +82,8 @@ class BlockList extends Component {
 		the witness rank is the appended to the data coming in from the sort API call.*/
 		axios.get('api/blocks/last', {
 		}).then(response => {
-			lower=(Constants.BLOCKS_PER_PAGE-1);
-			upper=response.data[0].block_number;
-			console.log('length 1: ', response.data[0].block_number);
 			this.setState({blockLength: response.data[0].block_number});
-			return axios.get(`api/blocks/sorted?sort=${colType}&direction=${sortType}&x=${lower}&y=${upper}`);
+			return axios.get(`api/blocks/sorted?sort=${colType}&direction=${sortType}&x=${requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1)}&y=${(Constants.BLOCKS_PER_PAGE-1)}`);
 		}).then(response => {
 			this.onSearch(response.data.reverse());
 		}).catch(error => {console.log('error fetching blocks', error);});
@@ -96,9 +92,7 @@ class BlockList extends Component {
 	onSearch(data) {
 		var temp_data = [];
 		temp_data = data;
-		//console.log('rankObject and response', temp_data);
 		this.setState({ blocks: temp_data });
-		//this.refreshPagination(temp_data);
 	}
 
 	render() {
@@ -118,11 +112,11 @@ class BlockList extends Component {
 					<Table responsive>
 						<thead className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>
 							<tr>
-								<th style={{cursor:'default'}}>Height</th>
-								<th style={{cursor:'default'}}>Time</th>
+								<th onClick={this.sortByColumn.bind(this, 'block_number')} style={{cursor:'default'}}>Height</th>
+								<th onClick={this.sortByColumn.bind(this, 'timestamp')} style={{cursor:'default'}}>Time</th>
 								<th onClick={this.sortByColumn.bind(this, 'witness')} scope="col">Witness</th>
-								<th style={{cursor:'default'}}>Transactions</th>
-								<th style={{cursor:'default'}}>Operations</th>
+								<th onClick={this.sortByColumn.bind(this, 'transaction_count')} style={{cursor:'default'}}>Transactions</th>
+								<th onClick={this.sortByColumn.bind(this, 'operation_count')} style={{cursor:'default'}}>Operations</th>
 							</tr>
 						</thead>
 						<tbody className="text-center">
