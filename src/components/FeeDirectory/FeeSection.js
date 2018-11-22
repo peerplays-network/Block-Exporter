@@ -20,7 +20,7 @@ class FeeSection extends Component {
 					style={{
 						background: isOpen ? '#fff' : '#f5f5f5'
 					}}>
-					<div className={'col-sm-11 p-0'} onClick={onClick.bind(this)} style={{ cursor: 'pointer'}}>
+					<div className={'col-sm-11 p-0'} onClick={onClick.bind(this)} style={{ cursor: 'pointer', overflow: 'hidden' , whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
 						{label}
 					</div>
 					<div className={`${styles['arrow']} col-sm-1 p-0`} onClick={onClick.bind(this)}>
@@ -44,7 +44,7 @@ class FeeSection extends Component {
 					style={{
 						background: isOpen ? '#fff' : '#f5f5f5'
 					}}>
-					<div onClick={onClick.bind(this)} style={{ cursor: 'pointer' }}>
+					<div onClick={onClick.bind(this)} style={{ cursor: 'pointer', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
 						{label}
 						<div style={{float: 'right'}} onClick={onClick.bind(this)}>
 							{!isOpen && <span>&#9650;</span>}
