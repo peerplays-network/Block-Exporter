@@ -13,7 +13,7 @@ class BlockList extends Component {
 		super(props);
 
 		this.state = {
-			blocks: [], currentPage: 0, blockLength: 0, sortType: 'ASC', sortBy: 'default', 
+			blocks: [], currentPage: 0, blockLength: 0, sortType: 'ASC', sortBy: 'default', bottom: 0, 
 		};
 	}
 
@@ -40,15 +40,13 @@ class BlockList extends Component {
 		}).catch(error => console.log('error fetching blocks'));
 	}
 
-	loadNextSortedBlocks(currentPage) {
-		const requestedBlockRange = this.state.upper - (Constants.BLOCKS_PER_PAGE*currentPage);
-		let sortType = this.state.sortType;
+	loadNextSortedBlocks(currentPage, sortType) {
 		let colType = this.state.sortBy;
-		let x = ((requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1)) >= 0 ) ? requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1) : 0;
+		let x = ((this.state.bottom + (Constants.BLOCKS_PER_PAGE*currentPage)) <= this.state.upper ) ? this.state.bottom + (Constants.BLOCKS_PER_PAGE*currentPage) : this.state.upper;
 		let y = (Constants.BLOCKS_PER_PAGE-1);
 		axios.get(`api/blocks/sorted?sort=${colType}&direction=${sortType}&x=${x}&y=${y}`, {
 		}).then(response => {
-			this.setState({blocks: response.data.reverse()});
+			this.setState({blocks: response.data});
 		}).catch(error => console.log('error fetching blocks'));
 	}
 
@@ -57,7 +55,7 @@ class BlockList extends Component {
 		if(this.state.sortBy === 'default')
 			this.loadNextBlocks(index.selected);
 		else
-			this.loadNextSortedBlocks(index.selected);
+			this.loadNextSortedBlocks(index.selected, this.state.sortType);
 	}
 
 	refreshPagination (data) {
@@ -71,21 +69,19 @@ class BlockList extends Component {
 
 	sortByColumn(colType) {
 		let sortType = this.state.sortType;
-		const requestedBlockRange = this.state.upper - (Constants.BLOCKS_PER_PAGE*0);
+		let requestedBlockRange = 0;
 		if(this.state.sortBy === colType)
 		{
 			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
+			requestedBlockRange = (this.state.bottom + (Constants.BLOCKS_PER_PAGE*this.state.currentPage) <= this.state.upper) ? this.state.bottom + (Constants.BLOCKS_PER_PAGE*this.state.currentPage) : this.state.upper ;
 		}
 		this.setState({sortType:sortType, sortBy:colType});
 		/*sorts depending on the column type. Also does a lookup on the witness data which
 		  stores the initial API call made when the component is loaded and witness rank is calculated.
 		the witness rank is the appended to the data coming in from the sort API call.*/
-		axios.get('api/blocks/last', {
+		axios.get(`api/blocks/sorted?sort=${colType}&direction=${sortType}&x=${requestedBlockRange}&y=${(Constants.BLOCKS_PER_PAGE-1)}`, {
 		}).then(response => {
-			this.setState({blockLength: response.data[0].block_number});
-			return axios.get(`api/blocks/sorted?sort=${colType}&direction=${sortType}&x=${requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1)}&y=${(Constants.BLOCKS_PER_PAGE-1)}`);
-		}).then(response => {
-			this.onSearch(response.data.reverse());
+			this.onSearch(response.data);
 		}).catch(error => {console.log('error fetching blocks', error);});
 	}
 
