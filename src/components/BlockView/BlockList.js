@@ -112,11 +112,11 @@ class BlockList extends Component {
 					<Table responsive>
 						<thead className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>
 							<tr>
-								<th onClick={this.sortByColumn.bind(this, 'block_number')} style={{cursor:'default'}}>Height</th>
-								<th onClick={this.sortByColumn.bind(this, 'timestamp')} style={{cursor:'default'}}>Time</th>
+								<th onClick={this.sortByColumn.bind(this, 'block_number')}>Height</th>
+								<th onClick={this.sortByColumn.bind(this, 'timestamp')}>Time</th>
 								<th onClick={this.sortByColumn.bind(this, 'witness')} scope="col">Witness</th>
-								<th onClick={this.sortByColumn.bind(this, 'transaction_count')} style={{cursor:'default'}}>Transactions</th>
-								<th onClick={this.sortByColumn.bind(this, 'operation_count')} style={{cursor:'default'}}>Operations</th>
+								<th onClick={this.sortByColumn.bind(this, 'transaction_count')}>Transactions</th>
+								<th onClick={this.sortByColumn.bind(this, 'operation_count')}>Operations</th>
 							</tr>
 						</thead>
 						<tbody className="text-center">
