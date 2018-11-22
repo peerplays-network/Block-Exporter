@@ -1,25 +1,10 @@
 var express = require('express');
 var router = express.Router();
-const mysql = require('mysql');
-const db = require('../database/constants');
+const DatabaseUtils = require('../utility/DatabaseUtils');
 
 // Operations API: Get specific OPERATION
 router.get('/operations/:id', function (req, res) {
-
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
-
-		  // Establish connection
-		  connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
 
 	// Perform Query
 	connection.query(`SELECT * FROM explorer.operations WHERE id=${req.params.id}`, function (err, rows, fields) {
@@ -36,21 +21,7 @@ router.get('/operations/:id', function (req, res) {
 
 // Operations API: Get OPERATIONS
 router.get('/operations', function (req, res) {
-
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
-
-		  // Establish connection
-		  connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
 
 	// Perform Query
 	connection.query('SELECT * FROM explorer.operations', function (err, rows, fields) {

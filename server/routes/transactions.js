@@ -2,25 +2,14 @@ var express = require('express');
 var router = express.Router();
 const mysql = require('mysql');
 const db = require('../database/constants');
+const DatabaseUtils = require('../utility/DatabaseUtils');
 
 
 // Transactions API: GET # of transactions
 router.get('/transactions/length', function (req, res) {
 
-	const connection = mysql.createConnection({
-		host: db.HOST,
-		user: db.USER,
-		password: db.PASSWORD,
-		database: db.DATABASE
-	});
+	const connection = DatabaseUtils.connect();
 
-	// Establish connection
-	connection.connect(function (err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
 
 	const sql = 'SELECT COUNT(*) FROM transactions;';
 
@@ -48,20 +37,8 @@ router.get('/transactions/recent', function (req, res) {
 		return;
 	}
 
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-	});
+	const connection = DatabaseUtils.connect();
 
-		  // Establish connection
-	connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
 
 	let sql = `SELECT * FROM explorer.transactions ORDER BY id DESC LIMIT ${req.query.limit};`;
 
@@ -93,20 +70,7 @@ router.get('/transactions/:id', function (req, res) {
 		return;
 	}
 
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
-
-		  // Establish connection
-		  connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
 
 	// Perform Query
 	connection.query('SELECT * FROM explorer.transactions', function (err, rows, fields) {
@@ -132,27 +96,10 @@ router.get('/transactions', function (req, res) {
 
 	const start = req.query.start;
 	const end = req.query.end;
-
-
-
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-	});
-
-		  // Establish connection
-	connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
 
 	let sql = `SELECT * FROM explorer.transactions WHERE parent_block >= ${start} AND parent_block <= ${end}`;
 
-	
 	if (req.query.direction) {
 		if (req.query.direction !== 'ASC' && (req.query.direction !== 'DESC')) {
 			res.status(400).send('400 Bad Request - Invalid direction');
