@@ -27,8 +27,4 @@ const DatabaseUtils = {
 
 };
 
-
-
-
-
 module.exports = DatabaseUtils;
