@@ -13,7 +13,7 @@ class BlockList extends Component {
 		super(props);
 
 		this.state = {
-			blocks: [], currentPage: 0, blockLength: 0
+			blocks: [], currentPage: 0, blockLength: 0, sortType: 'ASC', sortBy: 'default', bottom: 0, 
 		};
 	}
 
@@ -24,7 +24,6 @@ class BlockList extends Component {
 		}).then(response => {
 			lower=response.data[0].block_number-(Constants.BLOCKS_PER_PAGE-1);
 			upper=response.data[0].block_number;
-			console.log('length 1: ', response.data[0].block_number);
 			this.setState({blockLength: response.data[0].block_number});
 			return axios.get(`api/blocks?start=${lower}&end=${upper}`);
 		}).then(response => {
@@ -37,17 +36,59 @@ class BlockList extends Component {
 		const requestedBlockRange = this.state.upper - (Constants.BLOCKS_PER_PAGE*currentPage);
 		axios.get(`api/blocks?start=${requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1)}&end=${requestedBlockRange}`, {
 		}).then(response => {
-			this.setState({ blocks: response.data.reverse() });
+			this.setState({blocks: response.data.reverse()});
 		}).catch(error => console.log('error fetching blocks'));
-	 }
+	}
+
+	loadNextSortedBlocks(currentPage, sortType) {
+		let colType = this.state.sortBy;
+		let x = ((this.state.bottom + (Constants.BLOCKS_PER_PAGE*currentPage)) <= this.state.upper ) ? this.state.bottom + (Constants.BLOCKS_PER_PAGE*currentPage) : this.state.upper;
+		let y = (Constants.BLOCKS_PER_PAGE-1);
+		axios.get(`api/blocks/sorted?sort=${colType}&direction=${sortType}&x=${x}&y=${y}`, {
+		}).then(response => {
+			this.setState({blocks: response.data});
+		}).catch(error => console.log('error fetching blocks'));
+	}
 
 	changePage(index) {
 		this.setState({currentPage: index.selected});
-		this.loadNextBlocks(index.selected);
+		if(this.state.sortBy === 'default')
+			this.loadNextBlocks(index.selected);
+		else
+			this.loadNextSortedBlocks(index.selected, this.state.sortType);
+	}
+
+	refreshPagination (data) {
+		this.setState({pagesCount: Math.ceil(data.length / this.state.pageSize) });
+		this.setState({currentPage: 0});
 	}
 
 	getWitnessName(witnessId) {
 		return this.props.witnesses.find(el => el.account_id === witnessId).account_name;
+	}
+
+	sortByColumn(colType) {
+		let sortType = this.state.sortType;
+		let requestedBlockRange = 0;
+		if(this.state.sortBy === colType)
+		{
+			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
+			requestedBlockRange = (this.state.bottom + (Constants.BLOCKS_PER_PAGE*this.state.currentPage) <= this.state.upper) ? this.state.bottom + (Constants.BLOCKS_PER_PAGE*this.state.currentPage) : this.state.upper ;
+		}
+		this.setState({sortType:sortType, sortBy:colType});
+		/*sorts depending on the column type. Also does a lookup on the witness data which
+		  stores the initial API call made when the component is loaded and witness rank is calculated.
+		the witness rank is the appended to the data coming in from the sort API call.*/
+		axios.get(`api/blocks/sorted?sort=${colType}&direction=${sortType}&x=${requestedBlockRange}&y=${(Constants.BLOCKS_PER_PAGE-1)}`, {
+		}).then(response => {
+			this.onSearch(response.data);
+		}).catch(error => {console.log('error fetching blocks', error);});
+	}
+
+	onSearch(data) {
+		var temp_data = [];
+		temp_data = data;
+		this.setState({ blocks: temp_data });
 	}
 
 	render() {
@@ -67,11 +108,11 @@ class BlockList extends Component {
 					<Table responsive>
 						<thead className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>
 							<tr>
-								<th style={{cursor:'default'}}>Height</th>
-								<th style={{cursor:'default'}}>Time</th>
-								<th style={{cursor:'default'}}>Witness</th>
-								<th style={{cursor:'default'}}>Transactions</th>
-								<th style={{cursor:'default'}}>Operations</th>
+								<th onClick={this.sortByColumn.bind(this, 'block_number')}>Height</th>
+								<th onClick={this.sortByColumn.bind(this, 'timestamp')}>Time</th>
+								<th onClick={this.sortByColumn.bind(this, 'witness')} scope="col">Witness</th>
+								<th onClick={this.sortByColumn.bind(this, 'transaction_count')}>Transactions</th>
+								<th onClick={this.sortByColumn.bind(this, 'operation_count')}>Operations</th>
 							</tr>
 						</thead>
 						<tbody className="text-center">
