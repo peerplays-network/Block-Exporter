@@ -96,7 +96,7 @@ class FeeDirectory extends Component {
 		} = this;
 		const fullPage = this.props.id === undefined;
 		return (
-			<div className="container" style={{height:'375px'}}>
+			<div className="container" style={{height:'375px', width: '100%'}}>
 				{!!this.props.history ? 
 					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
 						<span className="fa fa-credit-card">&nbsp;</span>Fee Schedule</h1>
@@ -106,8 +106,8 @@ class FeeDirectory extends Component {
 					<Input type="text" value={searchFee} onChange={this.onFeeTextChanged.bind(this)} placeholder="Operation" />
 				</InputGroup>}
 				{this.props.size==='large' && <div className="row">
-					<div className={`${styles['group-cover']} col-sm-13`} >
-						<div className={`${styles['group-headings']} col-sm-4`}>
+					<div className={`${styles['group-cover']} col-13`} >
+						<div className={`${styles['group-headings']} col-4`}>
 							<div className={`row`}
 								style={{
 									background: '#fff'
@@ -133,7 +133,7 @@ class FeeDirectory extends Component {
 							</div>
 						</div>
 
-						<div className={`${styles['group']} col-sm-10`} >
+						<div className={`${styles['group']} col-12`} >
 							{this.state.fee && this.state.fee.map(child => (
 								<FeeSection
 									key={child.id}
@@ -142,6 +142,7 @@ class FeeDirectory extends Component {
 									onClick={onClick.bind(this)}
 									fullPage={fullPage}
 									fee={child}
+									size={this.props.size}
 								/>
 							))}{this.state.fee.length===0 && <div> No Fee Found </div>}
 						</div>
@@ -156,6 +157,7 @@ class FeeDirectory extends Component {
 							onClick={onClick.bind(this)}
 							fullPage={fullPage}
 							fee={child}
+							size={this.props.size}
 						/>
 					))}{this.state.fee.length===0 && <div> No Fee Found </div>}
 				</div>}

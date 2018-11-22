@@ -13,13 +13,13 @@ class Panel extends Component {
 	calculateHeight() {
 		switch(this.props.size) {
 			case 'small':
-				return '400px';
+				return '500px';
 			case 'medium':
 				return '500px';
 			case 'large':
 				return '600px';
 			default :
-				return '300px';
+				return '500px';
 		}
 	}
 	
