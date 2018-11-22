@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const mysql = require('mysql');
-const db = require('../database/constants');
+
+const DatabaseUtils = require('../utility/DatabaseUtils');
 
 // Check API status
 router.get('/healthcheck', function (req, res) {
@@ -11,21 +11,7 @@ router.get('/healthcheck', function (req, res) {
 
 // BlockAPI API: GET number of blocks in the blockchain
 router.get('/blocks/length', function (req, res) {
-
-	const connection = mysql.createConnection({
-		host: db.HOST,
-		user: db.USER,
-		password: db.PASSWORD,
-		database: db.DATABASE
-	});
-
-	// Establish connection
-	connection.connect(function (err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
 
 	const sql = 'SELECT COUNT(*) FROM blocks;';
 
@@ -46,21 +32,7 @@ router.get('/blocks/length', function (req, res) {
 
 // BlockAPI API: GET last block
 router.get('/blocks/last', function (req, res) {
-
-	const connection = mysql.createConnection({
-		host: db.HOST,
-		user: db.USER,
-		password: db.PASSWORD,
-		database: db.DATABASE
-	});
-
-	// Establish connection
-	connection.connect(function (err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
 
 	let sql = 'SELECT * FROM explorer.blocks ORDER BY block_number DESC LIMIT 1';
 
@@ -104,20 +76,7 @@ router.get('/blocks/sorted', function (req, res) {
 		return;
 	}
 
-	const connection = mysql.createConnection({
-		host: db.HOST,
-		user: db.USER,
-		password: db.PASSWORD,
-		database: db.DATABASE
-	});
-
-	// Establish connection
-	connection.connect(function (err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
 
 	let sql = `SELECT * FROM explorer.blocks ORDER BY ${req.query.sort} ${req.query.direction} LIMIT ${req.query.x}, ${req.query.y}`;
 
@@ -157,20 +116,7 @@ router.get('/blocks', function (req, res) {
 	const end = req.query.end;
 
 
-	const connection = mysql.createConnection({
-		host: db.HOST,
-		user: db.USER,
-		password: db.PASSWORD,
-		database: db.DATABASE
-	});
-
-	// Establish connection
-	connection.connect(function (err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
 
 	let sql = `SELECT * FROM explorer.blocks WHERE block_number >= ${start} AND block_number <= ${end}`;
 
@@ -203,20 +149,7 @@ router.get('/blocks', function (req, res) {
 // Variables API: GET variables
 router.get('/variables', function (req, res) {
 
-	const connection = mysql.createConnection({
-		host: db.HOST,
-		user: db.USER,
-		password: db.PASSWORD,
-		database: db.DATABASE
-	});
-
-	// Establish connection
-	connection.connect(function (err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
 
 	// Perform Query
 	connection.query('SELECT * FROM explorer.variables', function (err, rows, fields) {

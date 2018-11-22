@@ -1,9 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const mysql = require('mysql');
-const db = require('../database/constants');
 const Blockchain = require('../api');
-const config_server = require('../config/main');
+const DatabaseUtils = require('../utility/DatabaseUtils');
 
 function determineSearchType(term) {
 	if (!term.includes('.') && isNaN(term)) { 
@@ -29,23 +27,9 @@ function determineSearchType(term) {
 router.get('/resources', function (req, res) {
 	// const colNames = ['id', 'committee_id', 'committee_member_account', 'vote_id', 'total_votes', 'url'];
 
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
+	const connection = DatabaseUtils.connect();
 
-		  // Establish connection
-		  connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
-    
 	const sql = 'SELECT * FROM explorer.resources';
-
 
 	// Perform Query
 	connection.query(sql, function (err, rows, fields) {
@@ -122,20 +106,8 @@ router.get('/search', function (req, res) {
 
 
  
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
+	const connection = DatabaseUtils.connect();
 
-		  // Establish connection
-	connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
 	connection.query(sql, function (err, rows, fields) {
 		if (err) throw err;
 

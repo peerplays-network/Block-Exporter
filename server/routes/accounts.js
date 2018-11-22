@@ -1,24 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const mysql = require('mysql');
-const db = require('../database/constants');
+const DatabaseUtils = require('../utility/DatabaseUtils');
 
 // Accounts API: GET specific account
 router.get('/accounts/:name', function (req, res, next) {
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
 
-		  // Establish connection
-		  connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
 
 	// Perform Query
 	connection.query(`SELECT * FROM explorer.accounts WHERE account_name = '${req.params.name}'`, function (err, rows, fields) {
@@ -64,20 +51,7 @@ router.get('/accounts', function (req, res, next) {
 	}
 
 
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
-
-		  // Establish connection
-		  connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
 
 
 	// Perform Query
