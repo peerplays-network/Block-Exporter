@@ -1,25 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const mysql = require('mysql');
-const db = require('../database/constants');
+const DatabaseUtils = require('../utility/DatabaseUtils');
 
 // Smart Contracts API: GET Contract by Name
 router.get('/contracts/:name', function (req, res) {
 
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
-
-		  // Establish connection
-		  connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
     
 	const sql = `SELECT * FROM explorer.contracts WHERE name = '${req.params.name}'`;
     
@@ -42,20 +28,8 @@ router.get('/contracts/:name', function (req, res) {
 router.get('/contracts', function (req, res) {
 	const colNames = ['object_id', 'statistics_id', 'name', 'suicided', 'balances', 'statistics'];
 
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
+	const connection = DatabaseUtils.connect();
 
-		  // Establish connection
-		  connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
     
 	let sql = 'SELECT * FROM explorer.contracts';
     

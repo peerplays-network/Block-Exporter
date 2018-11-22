@@ -1,7 +1,5 @@
 var express = require('express');
 var router = express.Router();
-const mysql = require('mysql');
-const db = require('../database/constants');
 
 const DatabaseUtils = require('../utility/DatabaseUtils');
 
@@ -150,7 +148,7 @@ router.get('/blocks', function (req, res) {
 
 // Variables API: GET variables
 router.get('/variables', function (req, res) {
-	
+
 	const connection = DatabaseUtils.connect();
 
 	// Perform Query

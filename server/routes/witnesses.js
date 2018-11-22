@@ -1,24 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const mysql = require('mysql');
-const db = require('../database/constants');
+const DatabaseUtils = require('../utility/DatabaseUtils');
 
 // Committee API: GET specific committee member
 router.get('/committee/:id', function (req, res) {
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
+	const connection = DatabaseUtils.connect();
 
-		  // Establish connection
-		  connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+
 
 	// Perform Query
 	connection.query(`SELECT * FROM explorer.committee WHERE committee_member_account = '${req.params.id}'`, function (err, rows, fields) {
@@ -39,20 +27,7 @@ router.get('/committee/:id', function (req, res) {
 router.get('/committee', function (req, res) {
 	const colNames = ['id', 'committee_id', 'committee_member_account', 'vote_id', 'total_votes', 'url'];
 
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
-
-		  // Establish connection
-		  connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
+	const connection = DatabaseUtils.connect();
     
 	let sql = 'SELECT * FROM explorer.committee';
 
@@ -91,20 +66,8 @@ router.get('/committee', function (req, res) {
 
 // Witness API: GET specific witness
 router.get('/witnesses/:name', function (req, res) {
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
+	const connection = DatabaseUtils.connect();
 
-		  // Establish connection
-		  connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
 
 	// Perform Query
 	connection.query(`SELECT * FROM explorer.witnesses WHERE account_name = '${req.params.name}'`, function (err, rows, fields) {
@@ -126,21 +89,9 @@ router.get('/witnesses/:name', function (req, res) {
 router.get('/witnesses', function (req, res) {
 	const colNames = ['id', 'account_id', 'account_name', 'witness', 'witness_since', 'total_votes', 'total_missed', 'url', 'is_active'];
 
-	const connection = mysql.createConnection({
-		host     : db.HOST,
-		user     : db.USER,
-		password : db.PASSWORD,
-		database : db.DATABASE
-		  });
+	const connection = DatabaseUtils.connect();
 
-		  // Establish connection
-		  connection.connect(function(err) {
-		if (err) {
-			console.error('error connecting to DB: ' + err.stack);
-			return;
-		}
-	});
-    
+
 	let sql = 'SELECT * FROM explorer.witnesses';
 
 	if (req.query.sort) { // Handle sorting and direction
