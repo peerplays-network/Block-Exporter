@@ -97,14 +97,17 @@ class Welcome extends Component {
 
 		switch(size) {
 			case 'small' :
+				stateCopy.components[id].visible = true;
 				stateCopy.components[id].gridPlacement.w = 18;
 				stateCopy.components[id].size = 'small';
 				break;
 			case 'medium' :
+				stateCopy.components[id].visible = true;
 				stateCopy.components[id].gridPlacement.w = 21;
 				stateCopy.components[id].size = 'medium';
 				break;
 			case 'large' :
+				stateCopy.components[id].visible = true;
 				stateCopy.components[id].gridPlacement.w = 24;
 				stateCopy.components[id].size = 'large';
 				break;
