@@ -10,7 +10,7 @@ class WitnessViewer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {witnessData: !!this.props.witnesses ? this.props.witnesses : [], searchData: !!this.props.witnesses ? this.props.witnesses : [], witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'rank'};
-		this.gridHeight = 24.5;
+		this.gridHeight = 25;
 	}
 
 	componentDidMount() {
@@ -134,7 +134,7 @@ class WitnessViewer extends Component {
 								<span className="fa fa-balance-scale">&nbsp;</span>Browse Witnesses</h1>
 
 							<table className="table">
-								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
+								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']}`}>
 									<tr>
 										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
 										<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness Name</th>
@@ -171,7 +171,7 @@ class WitnessViewer extends Component {
 							
 
 							<table className="table">
-								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
+								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']}`}>
 									<tr>
 										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
 										<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness Name</th>

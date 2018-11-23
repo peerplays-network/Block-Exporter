@@ -10,7 +10,7 @@ class Committee extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {committeeData: [], searchData: [], committee: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'rank'};
-		this.gridHeight = 24;
+		this.gridHeight = 24.5;
 	}
 
 	componentDidMount() {
@@ -152,7 +152,7 @@ class Committee extends Component {
 							<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-0`}>
 								<span className="fa fa-address-card">&nbsp;</span>Browse Committee Members</h1>
 							<table className="table">
-								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
+								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']}`}>
 									<tr>
 										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
 										<th onClick={this.sortByColumn.bind(this, 'committee_id')} scope="col">Committee Member</th>
@@ -189,7 +189,7 @@ class Committee extends Component {
 							</div>
 							
 							<table className="table">
-								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']}`}>
+								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']} `}>
 									<tr>
 										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
 										<th onClick={this.sortByColumn.bind(this, 'committee_id')} scope="col">Committee Member</th>
