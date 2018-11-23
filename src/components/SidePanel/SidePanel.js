@@ -27,6 +27,8 @@ class SidePanel extends Component {
 								id={item.id}
 								key={item.id}
 								minSize={item.minSize}
+								visible={item.visible}
+								size={item.size}
 							/>;
 						})}
 					</tbody>

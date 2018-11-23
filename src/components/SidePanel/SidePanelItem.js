@@ -20,16 +20,16 @@ export default class SidePanelItem extends Component {
 			<Fragment>
 				<div className="col-2 offset-1">
 					{this.props.minSize !== 'small' ? <button onClick={() => this.activateButton(this.props.id, 'small')} disabled className={`${styles['disabled-widget-size']} btn btn-sm`}>S</button> 
-						: <button onClick={() => this.activateButton(this.props.id, 'small')} className={this.state.active === this.props.id && this.state.name === 'small' ? `${styles['enabled-widget-size-active']} btn btn-sm` : `${styles['enabled-widget-size']} btn btn-sm`}>S</button>
+						: <button onClick={() => this.activateButton(this.props.id, 'small')} className={props.visible === true && props.size === 'small' ? `${styles['enabled-widget-size-active']} btn btn-sm` : `${styles['enabled-widget-size']} btn btn-sm`}>S</button>
 					}
 				</div>
 				<div className="col-2 offset-1">
 					{this.props.minSize === 'large' ? <button onClick={() => this.activateButton(this.props.id, 'medium')} className={`${styles['disabled-widget-size']} btn btn-sm`} disabled>M</button>
-						:  <button onClick={() => this.activateButton(this.props.id, 'medium')} className={this.state.active === this.props.id && this.state.name === 'medium' ? `${styles['enabled-widget-size-active']} btn btn-sm` : `${styles['enabled-widget-size']} btn btn-sm`}>M</button> 
+						:  <button onClick={() => this.activateButton(this.props.id, 'medium')} className={props.visible === true && props.size === 'medium' ? `${styles['enabled-widget-size-active']} btn btn-sm` : `${styles['enabled-widget-size']} btn btn-sm`}>M</button> 
 					}
 				</div>
 				<div className="col-2 offset-1">
-					<button onClick={() => this.activateButton(this.props.id, 'large')} className={this.state.active === this.props.id && this.state.name === 'large' ? `${styles['enabled-widget-size-active']} btn btn-sm` : `${styles['enabled-widget-size']} btn btn-sm`}>L</button>
+					<button onClick={() => this.activateButton(this.props.id, 'large')} className={props.visible === true && props.size === 'large' ? `${styles['enabled-widget-size-active']} btn btn-sm` : `${styles['enabled-widget-size']} btn btn-sm`}>L</button>
 				</div>
 			</Fragment>
 		);
