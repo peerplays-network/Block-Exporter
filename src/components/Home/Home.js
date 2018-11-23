@@ -48,7 +48,7 @@ class Welcome extends Component {
 			{name: 'Transaction Feed', img: 'fas fa-handshake fa-2x', minSize:'large', size: 'large', visible: true, id:3, gridPlacement: {i: '3', x: 42, y: 5, w: 24, h: 31}},
 			{name: 'Fee Schedule', img: 'fas fa-file-invoice-dollar fa-2x', minSize:'medium', size: '', visible: false, id:4, gridPlacement: {i: '4', x: this.startingX, y: 0, w: 24, h: 23}},
 			{name: 'Contract Feed', img: 'fas fa-file-signature fa-2x', minSize:'large', size: '', visible: false, id: 5, gridPlacement: {i: '5', x: this.startingX, y: 0, w: 24, h: 31}},
-			{name: 'Committee Feed', img: 'fas fa-sitemap fa-2x', minSize:'small', size: '', visible: false, id: 6, gridPlacement: {i: '6', x: this.startingX, y: 0, w: 24, h: 24.5}}];
+			{name: 'Committee Feed', img: 'fas fa-sitemap fa-2x', minSize:'small', size: '', visible: false, id: 6, gridPlacement: {i: '6', x: this.startingX, y: 0, w: 24, h: 25}}];
 	}
 
 	initializeLayout() {
@@ -224,7 +224,7 @@ class Welcome extends Component {
 						{this.state.components.map(component => { 
 							return (
 								component.visible ? ( 
-									<div className={`${styles['react-grid-item']}`} key={component.id}>
+									<div className={`${styles['react-grid-item']}`} key={component.id} style={{borderStyle: 'dotted'}}>
 										<Panel headerText={component.name} size={component.size} 
 											onClose={() => this.onClosePanel.bind(this, component.id)}>
 											<div style={{overflow: 'auto'}}>
