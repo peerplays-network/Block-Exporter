@@ -214,7 +214,7 @@ class Welcome extends Component {
 			<div>
 				<div>
 					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={'vertical'} 
-						rowHeight={10} draggableCancel=".panel-body" autoSize={false} isResizable={false} 
+						rowHeight={10} draggableCancel=".panel-body,.close" autoSize={false} isResizable={false} 
 						margin={[10, 10]} containerPadding={[0, 10]} 
 						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
 						 <div className={`${styles['react-grid-item']}`} key={'-1'}>
