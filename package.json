@@ -1,6 +1,6 @@
 {
   "name": "exechain-block-explorer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A block explorer for exechain",
   "main": "server/index.js",
   "scripts": {
