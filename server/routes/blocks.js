@@ -66,6 +66,11 @@ router.get('/blocks/sorted', function (req, res) {
 		return;
 	}
 
+	if (req.query.y > 1000) {
+		res.status(413).send('413 - Range should be <= 1000');
+		return;
+	}
+
 	if (!req.query.sort || !req.query.direction) {
 		res.status(400).send('400 Bad Request - check your params');
 		return;
@@ -108,6 +113,11 @@ router.get('/blocks', function (req, res) {
 	// Start and End are required.
 	if (!req.query.start || !req.query.end) {
 		res.status(400).send('400 Bad Request');
+		return;
+	}
+
+	if ((req.query.end - req.query.start) > 1000) {
+		res.status(413).send('413 - Range should be <= 1000');
 		return;
 	}
 
