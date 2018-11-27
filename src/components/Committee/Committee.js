@@ -150,7 +150,7 @@ class Committee extends Component {
 								<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 							</div>
 							<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-0`}>
-								<span className="fa fa-address-card">&nbsp;</span>Browse Committee Members</h1>
+								<span className="fa fa-crown">&nbsp;</span>Browse Committee Members</h1>
 							<table className="table">
 								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']}`}>
 									<tr>

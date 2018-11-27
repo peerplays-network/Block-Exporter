@@ -163,7 +163,7 @@ class WitnessViewer extends Component {
 								<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 							</div>
 							<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-0`}>
-								<span className="fa fa-balance-scale">&nbsp;</span>Browse Witnesses</h1>
+								<span className="fa fa-cogs">&nbsp;</span>Browse Witnesses</h1>
 
 							<table className="table">
 								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']}`}>
