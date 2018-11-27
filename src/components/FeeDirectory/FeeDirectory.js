@@ -90,7 +90,7 @@ class FeeDirectory extends Component {
 	}
 
 	onClickSmall(e) {
-		if(this.state.key !== 'All') {
+		if(this.state.key !== 'All' && this.state.groupedData['All'] !== undefined) {
 			this.setState({
 				fee: this.state.groupedData['All'],
 				key: 'All',
