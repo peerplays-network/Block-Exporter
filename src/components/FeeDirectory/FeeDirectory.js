@@ -10,7 +10,7 @@ class FeeDirectory extends Component {
     
 		const openSections = {};
 		this.onGroupClick = this.onGroupClick.bind(this);
-		this.state = { openSections, fee: [], groupedData: [], searchFee:'' };
+		this.state = { openSections, fee: [], groupedData: [], searchFee:'', key: '' };
 	}
 
 	fetchData() {
@@ -70,7 +70,8 @@ class FeeDirectory extends Component {
 	onGroupClick(key) {
 		const fees = this.state.groupedData[key.key];
 		this.setState({
-			fee: fees
+			fee: fees,
+			key: key
 		});
 	}
 
@@ -86,6 +87,15 @@ class FeeDirectory extends Component {
 				[label]: !isOpen
 			}
 		});
+	}
+
+	onClickSmall(e) {
+		if(this.state.key !== 'All') {
+			this.setState({
+				fee: this.state.groupedData['All'],
+				key: 'All',
+			});
+		}
 	}
     
 	render() 
@@ -114,7 +124,6 @@ class FeeDirectory extends Component {
 								}}>
 								{Object.entries(this.state.groupedData)
 									.map(([key, value], i) => {
-										console.log('key and value', key, value, value.length>0);
 										if(value.length>0) {
 											return (
 												<div className={`${styles['feeButton']}`} key={i} onClick={(i)=>this.onGroupClick({key})}>
@@ -149,6 +158,7 @@ class FeeDirectory extends Component {
 					</div>
 				</div>}
 				{this.props.size!=='large' && <div>
+					{this.onClickSmall()}
 					{this.state.fee && this.state.fee.map(child => (
 						<FeeSection
 							key={child.id}
