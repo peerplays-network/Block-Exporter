@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 class Committee extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {committeeData: [], searchData: [], committee: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'rank'};
+		this.state = {topFiveCommittee: [], committeeData: [], searchData: [], committee: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'rank'};
 		this.gridHeight = 25;
 	}
 
@@ -21,7 +21,7 @@ class Committee extends Component {
 			newState.map( (el, index) => {return el.rank = index+1;});
 			newState.map(el => {return el.account_name = this.props.accounts.find(account => account.account_id === el.committee_member_account).account_name;});
 
-			this.setState({searchData: newState});
+			this.setState({searchData: newState, topFiveCommittee: newState.slice(0, 5)});
 			this.refreshPagination(response.data);
 		}).catch(error => {
 			console.log('error', error);
@@ -121,19 +121,19 @@ class Committee extends Component {
 		return !!this.props.accounts? this.props.accounts.find(el => el.account_id === accountId).account_name : '';
 	}
 
-	sortByRank() {
+	sortByRank(tableSize) {
 		let sortType = this.state.sortType;
 		if(this.state.sortBy === 'rank')
 		{
 			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
 		}
-		let newState = this.state.searchData.sort((a, b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)).reverse();
+		let newState = tableSize === 'big' ? this.state.searchData.sort((a, b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)).reverse() : this.state.topFiveCommittee.sort((a, b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)).reverse();;
 		
 		if(this.state.sortType === 'ASC')
 		{
 			newState = newState.reverse();
 		}
-		this.setState({searchData: newState, sortType:sortType, sortBy:'rank', currentPage: 0});
+		tableSize === 'big' ? this.setState({searchData: newState, sortType:sortType, sortBy:'rank', currentPage: 0}) : this.setState({topFiveCommittee: newState, sortType:sortType, sortBy:'rank', currentPage: 0});
 	}
 
 	renderBigTable() {
@@ -154,7 +154,7 @@ class Committee extends Component {
 							<table className="table">
 								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']}`}>
 									<tr>
-										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
+										<th onClick={this.sortByRank.bind(this, 'big')} scope="col">Rank</th>
 										<th onClick={this.sortByColumn.bind(this, 'committee_id')} scope="col">Committee Member</th>
 										<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
 										<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
@@ -191,7 +191,7 @@ class Committee extends Component {
 							<table className="table">
 								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']} `}>
 									<tr>
-										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
+										<th onClick={this.sortByRank.bind(this, 'big')} scope="col">Rank</th>
 										<th onClick={this.sortByColumn.bind(this, 'committee_id')} scope="col">Committee Member</th>
 										<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
 										<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
@@ -219,20 +219,20 @@ class Committee extends Component {
 	}
 
 	renderSmallTable() {
-		const {committeeData} = this.state;
+		const {topFiveCommittee} = this.state;
 		return (
 			<Fragment>
 				<table className="table">
 					<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']}`}>
 						<tr>
-							<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
+							<th onClick={this.sortByRank.bind(this, 'small')} scope="col">Rank</th>
 							<th onClick={this.sortByColumn.bind(this, 'committee_id')} scope="col">Committee Member</th>
 							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
 							<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
 						</tr>
 					</thead>
 					<tbody>
-						{committeeData.slice(0, 5).map((committee) => {
+						{topFiveCommittee.map((committee) => {
 							return <CommitteeRow
 								key={committee.id}
 								rank={committee.rank}
