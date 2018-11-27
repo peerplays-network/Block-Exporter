@@ -117,6 +117,35 @@ class Committee extends Component {
 		}
 	}
 
+	sortByColumnSmall(colType) {
+		let sortType = this.state.sortType;
+		let sortedList = [];
+		if(this.state.sortBy === colType)
+		{
+			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
+		}
+		this.setState({sortType:sortType, sortBy:colType});
+
+		switch(colType) {
+			case 'committee_id':
+				sortedList = this.state.topFiveCommittee.sort( (a, b) => {return (''+a.account_name.localeCompare(b.account_name));});
+				break;
+			case 'total_votes':
+				sortedList = this.state.topFiveCommittee.sort((a, b) => (a.total_votes > b.total_votes) ? 1 : ((b.total_votes > a.total_votes) ? -1 : 0));
+				break;
+			case 'url':
+				sortedList = this.state.topFiveCommittee.sort( (a, b) => {return (''+a.url.localeCompare(b.url));});
+				break;
+			default :
+				break;
+
+		}
+		
+		if(sortedList.length === 5) {
+			sortType === 'ASC' ? this.setState({topFiveCommittee: sortedList.reverse()}) : this.setState({topFiveCommittee: sortedList}) ;
+		}
+	}
+
 	getAccountName(accountId) {
 		return !!this.props.accounts? this.props.accounts.find(el => el.account_id === accountId).account_name : '';
 	}
@@ -226,9 +255,9 @@ class Committee extends Component {
 					<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']}`}>
 						<tr>
 							<th onClick={this.sortByRank.bind(this, 'small')} scope="col">Rank</th>
-							<th onClick={this.sortByColumn.bind(this, 'committee_id')} scope="col">Committee Member</th>
-							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
-							<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
+							<th onClick={this.sortByColumnSmall.bind(this, 'committee_id')} scope="col">Committee Member</th>
+							<th onClick={this.sortByColumnSmall.bind(this, 'total_votes')} scope="col">Votes</th>
+							<th onClick={this.sortByColumnSmall.bind(this, 'url')} scope="col">URL</th>
 						</tr>
 					</thead>
 					<tbody>
