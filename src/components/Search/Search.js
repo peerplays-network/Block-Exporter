@@ -226,7 +226,7 @@ class Search extends Component {
 					<CardBody>
 						<Row>
 							<Col md="12">
-								<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-3`}><span className="fa fa-cogs">&nbsp;</span>Committee Members</h1>
+								<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-3`}><span className="fa fa-crown">&nbsp;</span>Committee Members</h1>
 							</Col>
 						</Row>
 						<Table responsive>

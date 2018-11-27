@@ -123,7 +123,7 @@ class AccountSearch extends Component {
 
 					
 						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3`}>
-							<span className="fa fa-address-book">&nbsp;</span> Browse Accounts</h1>
+							<span className="fa fa-user-alt">&nbsp;</span> Browse Accounts</h1>
 					
 						
 						<table className="table" >

@@ -109,7 +109,7 @@ class FeeDirectory extends Component {
 			<div className="container" style={{height:'375px', width: '100%'}}>
 				{!!this.props.history ? 
 					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
-						<span className="fa fa-credit-card">&nbsp;</span>Fee Schedule</h1>
+						<span className="fa fa-file-invoice-dollar">&nbsp;</span>Fee Schedule</h1>
 					: null}
 				{fullPage && <InputGroup className={`${styles['input-group']}`}>
 					<InputGroupAddon className={`${styles['input-group-prepend']}`} addonType="prepend"><span className={`fa fa-search ${styles['icon']}`}></span></InputGroupAddon>
