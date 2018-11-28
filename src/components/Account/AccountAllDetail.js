@@ -129,7 +129,7 @@ class AccountAllDetail extends Component {
 		}
 	}
 
-	tabNavBuild( index, type) {
+	tabNavBuild( index, type, icon) {
 		if(index === '1' && this.state.Account.length <= 0 ) {
 			return null;
 		}
@@ -146,7 +146,7 @@ class AccountAllDetail extends Component {
 		return (
 			<NavItem>
 				<NavLink className={classnames({ active: this.state.activeTab === index}) } style={{cursor:'pointer', background:'#3d3d3d',color:'white'}} onClick={() => { this.toggle(index); }}>
-					{ type } Details ({ this.account[0] })
+					<span className={`fa ${icon}`}>&nbsp;</span> { type } Details ({ this.account[0] })
 				</NavLink>
 			</NavItem>
 		);
@@ -216,7 +216,7 @@ class AccountAllDetail extends Component {
 					<Col sm="5"><strong>{parsedTransaction.amount.amount}</strong> {this.displayOperation(operationType)} <strong>{receiverAccount}</strong> from <strong>{senderAccount}</strong> </Col> 
 					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
 					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
-				</Row> 
+				</Row>
 			);
 		}
 		else if(operationType === 37) {
@@ -246,10 +246,10 @@ class AccountAllDetail extends Component {
 				<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
 					<span className="fa fa-address-card">&nbsp;</span>Account Information</h1>
 				<Nav tabs>
-					{ this.tabNavBuild('1', 'Account') }
-					{ this.tabNavBuild('2', 'Transaction') }
-					{ this.tabNavBuild('3', 'Witness') }
-					{ this.tabNavBuild('4', 'Committee') }
+					{ this.tabNavBuild('1', 'Account', 'fa-user-alt') }
+					{ this.tabNavBuild('2', 'Transaction', 'fa-handshake') }
+					{ this.tabNavBuild('3', 'Witness', 'fa-cogs') }
+					{ this.tabNavBuild('4', 'Committee', 'fa-crown') }
 				</Nav>
 				<Card>
 					<CardBody>

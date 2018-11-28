@@ -10,7 +10,7 @@ class FeeDirectory extends Component {
     
 		const openSections = {};
 		this.onGroupClick = this.onGroupClick.bind(this);
-		this.state = { openSections, fee: [], groupedData: [], searchFee:'' };
+		this.state = { openSections, fee: [], groupedData: [], searchFee:'', key: '' };
 	}
 
 	fetchData() {
@@ -70,7 +70,8 @@ class FeeDirectory extends Component {
 	onGroupClick(key) {
 		const fees = this.state.groupedData[key.key];
 		this.setState({
-			fee: fees
+			fee: fees,
+			key: key
 		});
 	}
 
@@ -87,6 +88,15 @@ class FeeDirectory extends Component {
 			}
 		});
 	}
+
+	onClickSmall(e) {
+		if(this.state.key !== 'All' && this.state.groupedData['All'] !== undefined) {
+			this.setState({
+				fee: this.state.groupedData['All'],
+				key: 'All',
+			});
+		}
+	}
     
 	render() 
 	{
@@ -99,7 +109,7 @@ class FeeDirectory extends Component {
 			<div className="container" style={{height:'375px', width: '100%'}}>
 				{!!this.props.history ? 
 					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
-						<span className="fa fa-credit-card">&nbsp;</span>Fee Schedule</h1>
+						<span className="fa fa-file-invoice-dollar">&nbsp;</span>Fee Schedule</h1>
 					: null}
 				{fullPage && <InputGroup className={`${styles['input-group']}`}>
 					<InputGroupAddon className={`${styles['input-group-prepend']}`} addonType="prepend"><span className={`fa fa-search ${styles['icon']}`}></span></InputGroupAddon>
@@ -114,7 +124,6 @@ class FeeDirectory extends Component {
 								}}>
 								{Object.entries(this.state.groupedData)
 									.map(([key, value], i) => {
-										console.log('key and value', key, value, value.length>0);
 										if(value.length>0) {
 											return (
 												<div className={`${styles['feeButton']}`} key={i} onClick={(i)=>this.onGroupClick({key})}>
@@ -149,6 +158,7 @@ class FeeDirectory extends Component {
 					</div>
 				</div>}
 				{this.props.size!=='large' && <div>
+					{this.onClickSmall()}
 					{this.state.fee && this.state.fee.map(child => (
 						<FeeSection
 							key={child.id}

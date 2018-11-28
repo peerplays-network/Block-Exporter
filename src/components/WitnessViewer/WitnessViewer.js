@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 class WitnessViewer extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {witnessData: !!this.props.witnesses ? this.props.witnesses : [], searchData: !!this.props.witnesses ? this.props.witnesses : [], witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'rank'};
+		this.state = {topFiveWitnessData: !!this.props.witnesses ? this.props.witnesses.slice(0, 5) : [], witnessData: !!this.props.witnesses ? this.props.witnesses : [], searchData: !!this.props.witnesses ? this.props.witnesses : [], witness: '', currentPage: 0, pageSize: 3, pagesCount: 0, sortType: 'ASC', sortBy: 'rank'};
 		this.gridHeight = 25;
 	}
 
@@ -29,7 +29,7 @@ class WitnessViewer extends Component {
 
 	componentDidUpdate(prevProps) {
 		if(this.props.witnesses !== prevProps.witnesses) {
-			this.setState({witnessData: this.props.witnesses, searchData: this.props.witnesses});
+			this.setState({witnessData: this.props.witnesses, searchData: this.props.witnesses, topFiveWitnessData: this.props.witnesses.slice(0, 5)});
 			this.refreshPagination(this.props.witnesses);
 		}
 	}
@@ -101,19 +101,51 @@ class WitnessViewer extends Component {
 		}).catch(error => {console.log('error fetching witness data', error);});
 	}
 
-	sortByRank() {
+	sortByColumnSmall(colType) {
+		let sortType = this.state.sortType;
+		let sortedList = [];
+		if(this.state.sortBy === colType)
+		{
+			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
+		}
+		this.setState({sortType:sortType, sortBy:colType});
+
+		switch(colType) {
+			case 'account_name':
+				sortedList = this.state.topFiveWitnessData.sort( (a, b) => {return (''+a.account_name.localeCompare(b.account_name));});
+				break;
+			case 'total_votes':
+				sortedList = this.state.topFiveWitnessData.sort((a, b) => (a.total_votes > b.total_votes) ? 1 : ((b.total_votes > a.total_votes) ? -1 : 0));
+				break;
+			case 'total_missed':
+				sortedList = this.state.topFiveWitnessData.sort((a, b) => (a.total_missed > b.total_missed) ? 1 : ((b.total_missed > a.total_missed) ? -1 : 0));
+				break;
+			case 'url':
+				sortedList = this.state.topFiveWitnessData.sort( (a, b) => {return (''+a.url.localeCompare(b.url));});
+				break;
+			default :
+				break;
+
+		}
+		
+		if(sortedList.length === 5) {
+			sortType === 'ASC' ? this.setState({topFiveWitnessData: sortedList.reverse()}) : this.setState({topFiveWitnessData: sortedList}) ;
+		}
+	}
+
+	sortByRank(tableSize) {
 		let sortType = this.state.sortType;
 		if(this.state.sortBy === 'rank')
 		{
 			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
 		}
-		let newState = this.state.searchData.sort((a, b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)).reverse();
+		let newState = tableSize === 'big' ? this.state.searchData.sort((a, b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)).reverse() : this.state.topFiveWitnessData.sort((a, b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)).reverse();;
 		
 		if(this.state.sortType === 'ASC')
 		{
 			newState = newState.reverse();
 		}
-		this.setState({searchData: newState, sortType:sortType, sortBy:'rank', currentPage: 0});
+		tableSize === 'big' ? this.setState({searchData: newState, sortType:sortType, sortBy:'rank', currentPage: 0}) : this.setState({topFiveWitnessData: newState, sortType:sortType, sortBy:'rank', currentPage: 0});
 	}
 
 	renderBigTable() {
@@ -131,12 +163,12 @@ class WitnessViewer extends Component {
 								<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 							</div>
 							<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-0`}>
-								<span className="fa fa-balance-scale">&nbsp;</span>Browse Witnesses</h1>
+								<span className="fa fa-cogs">&nbsp;</span>Browse Witnesses</h1>
 
 							<table className="table">
 								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']}`}>
 									<tr>
-										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
+										<th onClick={this.sortByRank.bind(this, 'big')} scope="col">Rank</th>
 										<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness Name</th>
 										<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
 										<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
@@ -173,7 +205,7 @@ class WitnessViewer extends Component {
 							<table className="table">
 								<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']}`}>
 									<tr>
-										<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
+										<th onClick={this.sortByRank.bind(this, 'big')} scope="col">Rank</th>
 										<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness Name</th>
 										<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
 										<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
@@ -203,21 +235,21 @@ class WitnessViewer extends Component {
 	}
 
 	renderSmallTable() {
-		const {witnessData} = this.state;
+		const {topFiveWitnessData} = this.state;
 		return (
 			<Fragment>
 				<table className="table">
 					<thead className={`${styles['clickable']} ${styles['header-contrast-text']} ${styles['header-contrast-text']} ${styles['witness-header']} ${styles['nowrap']}`}>
 						<tr>
-							<th onClick={this.sortByRank.bind(this)} scope="col">Rank</th>
-							<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Witness Name</th>
-							<th onClick={this.sortByColumn.bind(this, 'total_votes')} scope="col">Votes</th>
-							<th onClick={this.sortByColumn.bind(this, 'total_missed')} scope="col">Misses</th>
-							<th onClick={this.sortByColumn.bind(this, 'url')} scope="col">URL</th>
+							<th onClick={this.sortByRank.bind(this, 'small')} scope="col">Rank</th>
+							<th onClick={this.sortByColumnSmall.bind(this, 'account_name')} scope="col">Witness Name</th>
+							<th onClick={this.sortByColumnSmall.bind(this, 'total_votes')} scope="col">Votes</th>
+							<th onClick={this.sortByColumnSmall.bind(this, 'total_missed')} scope="col">Misses</th>
+							<th onClick={this.sortByColumnSmall.bind(this, 'url')} scope="col">URL</th>
 						</tr>
 					</thead>
 					<tbody>
-						{witnessData.slice(0, 5).map((witness) => {
+						{topFiveWitnessData.map((witness) => {
 							return <WitnessRow
 								key={witness.id}
 								rank={witness.rank}
