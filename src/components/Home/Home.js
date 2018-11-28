@@ -217,7 +217,7 @@ class Welcome extends Component {
 						rowHeight={10} draggableCancel=".panel-body,.close" autoSize={false} isResizable={false} 
 						margin={[10, 10]} containerPadding={[0, 10]} 
 						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
-						 <div className={`${styles['react-grid-item']}`} key={'-1'}>
+						 <div className={`${styles['react-grid-item']}`} key={'-1'} style={{borderStyle: 'dotted'}}>
 							<SidePanel  calculateComponentHeight={this.calculateComponentHeight.bind(this)} components={this.state.components} 
 							   changeSize={this.changePanelSize.bind(this)}/>	
 						</div>
