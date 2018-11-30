@@ -42,7 +42,6 @@ class BlockAnimation extends Component
 		let lastBlock = 0;
 		axios.get('/api/blocks/last', {})
 			.then(response => {
-				debugger;
 				lastBlock = response.data[0].block_number;
 				if(lastBlock > this.state.lastBlock)
 				{
@@ -51,7 +50,7 @@ class BlockAnimation extends Component
 					});
 				}
 			})
-			.catch(error => {debugger; console.log('error fetching blocks: ', error)});
+			.catch(error => {console.log('error fetching blocks: ', error)});
 	}
 
 	add() {
