@@ -7,6 +7,7 @@ import { NavLink } from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
 import { connect } from 'react-redux'; 
 import * as Constants from '../../constants/constants';
+import BlockApi from '../../api/BlockApi';
 
 class BlockList extends Component {
 	constructor(props) {
@@ -41,11 +42,11 @@ class BlockList extends Component {
 	}
 
 	loadNextSortedBlocks(currentPage, sortType) {
-		let colType = this.state.sortBy;
-		let x = ((this.state.bottom + (Constants.BLOCKS_PER_PAGE*currentPage)) <= this.state.upper ) ? this.state.bottom + (Constants.BLOCKS_PER_PAGE*currentPage) : this.state.upper;
-		let y = (Constants.BLOCKS_PER_PAGE-1);
-		axios.get(`api/blocks/sorted?sort=${colType}&direction=${sortType}&x=${x}&y=${y}&last=${this.state.blockLength}`, {
-		}).then(response => {
+		const colType = this.state.sortBy;
+		const x = ((this.state.bottom + (Constants.BLOCKS_PER_PAGE*currentPage)) <= this.state.upper ) ? this.state.bottom + (Constants.BLOCKS_PER_PAGE*currentPage) : this.state.upper;
+		const y = (Constants.BLOCKS_PER_PAGE-1);
+
+		BlockApi.getSortedBlocks(colType, sortType, x, y, this.state.blockLength).then((response) => {
 			this.setState({blocks: response.data});
 		}).catch(error => console.log('error fetching blocks'));
 	}
@@ -83,10 +84,9 @@ class BlockList extends Component {
 		/*sorts depending on the column type. Also does a lookup on the witness data which
 		  stores the initial API call made when the component is loaded and witness rank is calculated.
 		the witness rank is the appended to the data coming in from the sort API call.*/
-		axios.get(`api/blocks/sorted?sort=${colType}&direction=${sortType}&x=${requestedBlockRange}&y=${(Constants.BLOCKS_PER_PAGE-1)}&last=${this.state.blockLength}`, {
-		}).then(response => {
+		BlockApi.getSortedBlocks(colType, sortType, requestedBlockRange, Constants.BLOCKS_PER_PAGE-1, this.state.blockLength).then((response) => {
 			this.onSearch(response.data);
-		}).catch(error => {console.log('error fetching blocks', error);});
+		}).catch(error => console.log('error fetching blocks'));
 	}
 
 	onSearch(data) {
