@@ -13,6 +13,11 @@ class FeeDirectory extends Component {
 		this.state = { openSections, fee: [], groupedData: [], searchFee:'', key: '' };
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		if(prevProps.size !== this.props.size)
+			this.setState({openSections: {}});
+	}
+
 	fetchData() {
 		//API call to search for operations
 		axios.get('api/operations', {
