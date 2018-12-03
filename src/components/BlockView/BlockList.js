@@ -74,17 +74,15 @@ class BlockList extends Component {
 		// this.setState({blockLength: updateLength.data[0].block_number});
 
 		let sortType = this.state.sortType;
-		let requestedBlockRange = 0;
 		if(this.state.sortBy === colType)
 		{
 			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
-			requestedBlockRange = (this.state.bottom + (Constants.BLOCKS_PER_PAGE*this.state.currentPage) <= this.state.upper) ? this.state.bottom + (Constants.BLOCKS_PER_PAGE*this.state.currentPage) : this.state.upper ;
 		}
 		this.setState({sortType:sortType, sortBy:colType, currentPage: 0});
 		/*sorts depending on the column type. Also does a lookup on the witness data which
 		  stores the initial API call made when the component is loaded and witness rank is calculated.
 		the witness rank is the appended to the data coming in from the sort API call.*/
-		BlockApi.getSortedBlocks(colType, sortType, requestedBlockRange, Constants.BLOCKS_PER_PAGE-1, this.state.blockLength).then((response) => {
+		BlockApi.getSortedBlocks(colType, sortType, 0, Constants.BLOCKS_PER_PAGE-1, this.state.blockLength).then((response) => {
 			this.onSearch(response.data);
 		}).catch(error => console.log('error fetching blocks'));
 	}
