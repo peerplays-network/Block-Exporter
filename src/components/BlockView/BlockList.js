@@ -80,7 +80,7 @@ class BlockList extends Component {
 			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
 			requestedBlockRange = (this.state.bottom + (Constants.BLOCKS_PER_PAGE*this.state.currentPage) <= this.state.upper) ? this.state.bottom + (Constants.BLOCKS_PER_PAGE*this.state.currentPage) : this.state.upper ;
 		}
-		this.setState({sortType:sortType, sortBy:colType});
+		this.setState({sortType:sortType, sortBy:colType, currentPage: 0});
 		/*sorts depending on the column type. Also does a lookup on the witness data which
 		  stores the initial API call made when the component is loaded and witness rank is calculated.
 		the witness rank is the appended to the data coming in from the sort API call.*/
