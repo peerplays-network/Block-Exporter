@@ -117,7 +117,7 @@ class TransactionDisplay extends Component {
 
 					{!!this.props.history ? //display on browse transaction page, hides it onthe transaction widget
 						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3 mt-2 mb-2s`}>
-							<span className="fa fa-inbox">&nbsp;</span>Browse Transactions</h1>
+							<span className="fa fa-handshake">&nbsp;</span>Browse Transactions</h1>
 						: null//display on browse transaction page, hides it on the transaction widget
 					}
 	
