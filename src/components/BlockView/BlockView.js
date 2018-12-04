@@ -83,9 +83,9 @@ class BlockView extends Component {
 				nextDisabled: false,
 			});
 		}
-		if(this.state.currentBlock === this.upperBound || this.state.currentBlock === this.maxBound-1) {
-			this.loadNextBlocks(this.state.currentBlock);
+		if(this.state.currentBlock === this.upperBound || this.state.currentBlock >= this.maxBound-1) {
 			this.setState({nextDisabled: true});
+			this.loadNextBlocks(this.state.currentBlock);
 		}
 	}
 	
