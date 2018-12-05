@@ -205,6 +205,10 @@ class AccountAllDetail extends Component {
 		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName.account_name}/${accountName.account_id}`}>{accountName.account_name}</NavLink></span>  : id;
 	}
 
+	linkAccountName(accountName) {
+		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName}`}>{accountName}</NavLink></span> : accountName;
+	}
+
 	renderTransaction(transaction, i) {
 		const operationType = JSON.parse(transaction.operations)[0];
 		const parsedTransaction = JSON.parse(transaction.operations)[1];
@@ -231,7 +235,12 @@ class AccountAllDetail extends Component {
 		else {
 			return (
 				<Row key={i}>
-					<Col sm="5"> <strong> {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.registrar)}</strong></Col> 
+					<Col sm="5"> <strong> {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} 
+						<strong> {this.findAccountName(parsedTransaction.account)? this.findAccountName(parsedTransaction.account): (
+							this.findAccountName(parsedTransaction.committee_member_account)? this.findAccountName(parsedTransaction.committee_member_account): (
+								this.findAccountName(parsedTransaction.account_to_upgrade)? this.findAccountName(parsedTransaction.account_to_upgrade) : (
+									this.findAccountName(parsedTransaction.witness_account)? this.findAccountName(parsedTransaction.witness_account) : this.linkAccountName(parsedTransaction.name)
+								)))}</strong></Col> 
 					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
 					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
 				</Row> 

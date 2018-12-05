@@ -72,6 +72,10 @@ class TransactionDisplay extends Component {
 		const accountName = this.props.accounts.find(el => el.account_id === id);
 		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName.account_name}`}>{accountName.account_name}</NavLink></span>  : id;
 	}
+	
+	linkAccountName(accountName) {
+		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName}`}>{accountName}</NavLink></span> : accountName;
+	}
 
 	displayOperation( operation ) {
 		return this.state.Operations[operation].friendly_name;
@@ -103,7 +107,12 @@ class TransactionDisplay extends Component {
 		}
 		else {
 			return (
-				<tr><td>{this.displayOperation(operationType)}</td></tr>
+				<tr><td>{this.displayOperation(operationType)}
+					<strong> {this.findAccountName(parsedTransaction.account)? this.findAccountName(parsedTransaction.account): (
+						this.findAccountName(parsedTransaction.committee_member_account)? this.findAccountName(parsedTransaction.committee_member_account): (
+							this.findAccountName(parsedTransaction.account_to_upgrade)? this.findAccountName(parsedTransaction.account_to_upgrade) : (
+								this.findAccountName(parsedTransaction.witness_account)? this.findAccountName(parsedTransaction.witness_account) : this.linkAccountName(parsedTransaction.name)
+							)))}</strong></td></tr>
 			);
 		}
 	}
