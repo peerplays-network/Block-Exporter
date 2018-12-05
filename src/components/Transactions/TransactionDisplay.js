@@ -72,39 +72,78 @@ class TransactionDisplay extends Component {
 		const accountName = this.props.accounts.find(el => el.account_id === id);
 		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName.account_name}`}>{accountName.account_name}</NavLink></span>  : id;
 	}
+	
+	linkAccountName(accountName) {
+		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName}`}>{accountName}</NavLink></span> : accountName;
+	}
 
 	displayOperation( operation ) {
 		return this.state.Operations[operation].friendly_name;
 	}
 
+	renderOther(transaction, operationType, parsedTransaction, i) {
+		console.log('operation and parsedTransaction', operationType, parsedTransaction);
+		return (
+			<tr key={i}>
+				<td sm="5"> <strong> {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong> {this.findAccountName(parsedTransaction.account)}</strong></td>
+			</tr> 
+		);
+	}
+
 	renderTransaction(transaction, i) {
 		const operationType = JSON.parse(transaction.operations)[0];
 		const parsedTransaction = JSON.parse(transaction.operations)[1];
-		if(operationType === 0) {
-			const senderAccount = this.findAccountName(parsedTransaction.from);
-			const receiverAccount = this.findAccountName(parsedTransaction.to);
-			return (
-				<tr key={i}>
-					<td><strong>{parsedTransaction.amount.amount}</strong> {this.displayOperation(operationType)} <strong>{receiverAccount}</strong> from <strong>{senderAccount}</strong></td>
-				</tr> 
-			);
-		}
-		else if(operationType === 37) {
-			return (
-				<tr key={i}>
-					<td><strong>{parsedTransaction.total_claimed.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.deposit_to_account)}</strong></td>
-				</tr> 
-			);
-		}
-		else if(operationType === 47) {
-			return (
-				<tr key={i}><td><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.registrar)}</strong></td></tr>
-			);
-		}
-		else {
-			return (
-				<tr><td>{this.displayOperation(operationType)}</td></tr>
-			);
+		switch(operationType) {
+			case 0:
+				const senderAccount = this.findAccountName(parsedTransaction.from);
+				const receiverAccount = this.findAccountName(parsedTransaction.to);
+				return (
+					<tr key={i}>
+						<td><strong>{parsedTransaction.amount.amount}</strong> {this.displayOperation(operationType)} <strong>{receiverAccount}</strong> from <strong>{senderAccount}</strong></td>
+					</tr> 
+				);
+			case 5:
+				return (
+					<tr key={i}>
+						<td><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.linkAccountName(parsedTransaction.name)}</strong></td>
+					</tr> 
+				);
+			case 6:
+				return (
+					<tr key={i}>
+						<td><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.account)}</strong></td>
+					</tr> 
+				);
+			case 8:
+				return (
+					<tr key={i}>
+						<td><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.account_to_upgrade)}</strong></td>
+					</tr> 
+				);
+			case 20:
+				return (
+					<tr key={i}>
+						<td><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.witness_account)}</strong></td>
+					</tr> 	
+				);
+			case 29:
+				return (
+					<tr key={i}>
+						<td><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.committee_member_account)}</strong></td>
+					</tr> 	
+				);
+			case 37:
+				return (
+					<tr key={i}>
+						<td><strong>{parsedTransaction.total_claimed.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.deposit_to_account)}</strong></td>
+					</tr> 
+				);
+			case 47:
+				return (
+					<tr key={i}><td><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.registrar)}</strong></td></tr>
+				);
+			default:
+				return this.renderOther(transaction, operationType, parsedTransaction, i);
 		}
 	}
 

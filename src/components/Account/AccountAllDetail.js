@@ -205,37 +205,61 @@ class AccountAllDetail extends Component {
 		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName.account_name}/${accountName.account_id}`}>{accountName.account_name}</NavLink></span>  : id;
 	}
 
+	linkAccountName(accountName) {
+		return !!accountName ? <span><NavLink className="d-inline p-0" tag={RRNavLink} to={`/accountAllDetail/${accountName}`}>{accountName}</NavLink></span> : accountName;
+	}
+
+	renderOther(transaction, operationType, parsedTransaction, i) {
+		console.log('operation and parsedTransaction', operationType, parsedTransaction);
+		return (
+			<Row key={i}>
+				<Col sm="5"> <strong> {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong> {this.findAccountName(parsedTransaction.account)}</strong></Col> 
+				<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
+				<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
+			</Row> 
+		);
+	}
+
 	renderTransaction(transaction, i) {
 		const operationType = JSON.parse(transaction.operations)[0];
 		const parsedTransaction = JSON.parse(transaction.operations)[1];
-		if(operationType === 0) {
-			const senderAccount = this.findAccountName(parsedTransaction.from);
-			const receiverAccount = this.findAccountName(parsedTransaction.to);
-			return (
-				<Row key={i}>
-					<Col sm="5"><strong>{parsedTransaction.amount.amount}</strong> {this.displayOperation(operationType)} <strong>{receiverAccount}</strong> from <strong>{senderAccount}</strong> </Col> 
-					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
-					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
-				</Row>
-			);
-		}
-		else if(operationType === 37) {
-			return (
-				<Row key={i}>
-					<Col sm="5"><strong>{parsedTransaction.total_claimed.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.deposit_to_account)}</strong></Col> 
-					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
-					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
-				</Row> 
-			);
-		}
-		else {
-			return (
-				<Row key={i}>
-					<Col sm="5"> <strong> {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.registrar)}</strong></Col> 
-					<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
-					<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
-				</Row> 
-			);
+		switch(operationType) {
+			case 0:
+				const senderAccount = this.findAccountName(parsedTransaction.from);
+				const receiverAccount = this.findAccountName(parsedTransaction.to);
+				return (
+					<Row key={i}>
+						<Col sm="5"><strong>{parsedTransaction.amount.amount}</strong> {this.displayOperation(operationType)} <strong>{receiverAccount}</strong> from <strong>{senderAccount}</strong> </Col> 
+						<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
+						<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
+					</Row>
+				);
+			case 5:
+				return (
+					<Row key={i}>
+						<Col sm="5"><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.linkAccountName(parsedTransaction.name)}</strong></Col> 
+						<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
+						<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
+					</Row> 
+				);
+			case 8:
+				return (
+					<Row key={i}>
+						<Col sm="5"><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.account_to_upgrade)}</strong></Col> 
+						<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
+						<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
+					</Row> 
+				);
+			case 37:
+				return (
+					<Row key={i}>
+						<Col sm="5"><strong>{parsedTransaction.total_claimed.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.deposit_to_account)}</strong></Col> 
+						<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
+						<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
+					</Row> 
+				);
+			default:
+				return this.renderOther(transaction, operationType, parsedTransaction, i);
 		}
 	}
 
