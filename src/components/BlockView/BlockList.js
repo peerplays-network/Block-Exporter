@@ -18,25 +18,24 @@ class BlockList extends Component {
 		};
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		let lower=0;
 		let upper=1;
-		axios.get('api/blocks/last', {
-		}).then(response => {
-			lower=response.data[0].block_number-(Constants.BLOCKS_PER_PAGE-1);
-			upper=response.data[0].block_number;
-			this.setState({blockLength: response.data[0].block_number});
-			return axios.get(`api/blocks?start=${lower}&end=${upper}`);
-		}).then(response => {
-			this.setState({blocks: response.data.reverse(), lower, upper});
-			return axios.get('api/blocks/length');
-		}).catch(error => console.log('error fetching blocks: ', error));
+		try {
+			const last = await BlockApi.getLastBlock();
+			lower = last.data[0].block_number-(Constants.BLOCKS_PER_PAGE-1);
+			upper = last.data[0].block_number;
+	
+			const blocks = await BlockApi.getBlocks(lower, upper);
+			this.setState({blockLength: upper, blocks: blocks.data.reverse(), lower, upper});
+		  } catch(error) {
+			console.warn(error);
+		  }
 	}
 
 	loadNextBlocks(currentPage) {
 		const requestedBlockRange = this.state.upper - (Constants.BLOCKS_PER_PAGE*currentPage);
-		axios.get(`api/blocks?start=${requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1)}&end=${requestedBlockRange}`, {
-		}).then(response => {
+		BlockApi.getBlocks(requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1), requestedBlockRange).then(response => {
 			this.setState({blocks: response.data.reverse()});
 		}).catch(error => console.log('error fetching blocks'));
 	}
@@ -46,7 +45,7 @@ class BlockList extends Component {
 		const x = ((this.state.bottom + (Constants.BLOCKS_PER_PAGE*currentPage)) <= this.state.upper ) ? this.state.bottom + (Constants.BLOCKS_PER_PAGE*currentPage) : this.state.upper;
 		const y = (Constants.BLOCKS_PER_PAGE-1);
 
-		BlockApi.getSortedBlocks(colType, sortType, x, y, this.state.blockLength).then((response) => {
+		BlockApi.getBlocksLimited(colType, sortType, x, y, this.state.blockLength).then((response) => {
 			this.setState({blocks: response.data});
 		}).catch(error => console.log('error fetching blocks'));
 	}
@@ -82,7 +81,7 @@ class BlockList extends Component {
 		/*sorts depending on the column type. Also does a lookup on the witness data which
 		  stores the initial API call made when the component is loaded and witness rank is calculated.
 		the witness rank is the appended to the data coming in from the sort API call.*/
-		BlockApi.getSortedBlocks(colType, sortType, 0, Constants.BLOCKS_PER_PAGE-1, this.state.blockLength).then((response) => {
+		BlockApi.getBlocksLimited(colType, sortType, 0, Constants.BLOCKS_PER_PAGE-1, this.state.blockLength).then((response) => {
 			this.onSearch(response.data);
 		}).catch(error => console.log('error fetching blocks'));
 	}
