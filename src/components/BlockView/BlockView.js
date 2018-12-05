@@ -34,7 +34,7 @@ class BlockView extends Component {
 
 	componentDidUpdate(prevProps) {
 		if(!!this.props.match.params[0] && Number(this.props.match.params[0])!==this.state.currentBlock)
-			this.setState({currentBlock: Number(this.props.match.params[0])});
+			this.setState({currentBlock: Number(this.props.match.params[0]), nextDisabled: false});
 	}
 
 	 loadNextBlocks(currentBlock) {
@@ -83,9 +83,9 @@ class BlockView extends Component {
 				nextDisabled: false,
 			});
 		}
-		if(this.state.currentBlock === this.upperBound || this.state.currentBlock === this.maxBound-1) {
-			this.loadNextBlocks(this.state.currentBlock);
+		if(this.state.currentBlock === this.upperBound || this.state.currentBlock >= this.maxBound-1) {
 			this.setState({nextDisabled: true});
+			this.loadNextBlocks(this.state.currentBlock);
 		}
 	}
 	
