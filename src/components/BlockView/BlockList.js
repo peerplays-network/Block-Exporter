@@ -67,7 +67,7 @@ class BlockList extends Component {
 		return this.props.witnesses.find(el => el.account_id === witnessId).account_name;
 	}
 
-	async sortByColumn(colType) {
+	sortByColumn(colType) {
 		// Update block length for pagination
 		// const updateLength = await axios.get('api/blocks/last');
 		// this.setState({blockLength: updateLength.data[0].block_number});
