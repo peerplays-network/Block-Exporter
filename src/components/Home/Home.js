@@ -164,7 +164,6 @@ class Welcome extends Component {
 	}
 
 	onDragStop(layout, oldItem, newItem, placeholder, e, element) {
-		debugger;
 		//checks to see if the widget has gone out of bounds, and re-aligns it to be in the viewport
 		const translateValues = window.getComputedStyle(element).transform.split(',');
 		const translateX = parseInt(translateValues[translateValues.length - 2], 0);
@@ -185,12 +184,10 @@ class Welcome extends Component {
 	}
 
 	onLayoutChange(layout) {
-		debugger;
 		if(typeof this.elementOverlap === 'object' && this.elementOverlap !== null) {
 			this.elementOverlap.el.style.transform = `translate(${this.elementOverlap.x}px, ${this.elementOverlap.y}px)`;
 			this.elementOverlap = null;
 		}
-		debugger;
 	}
 
 	render() {
