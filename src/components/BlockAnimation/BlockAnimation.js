@@ -22,7 +22,7 @@ class BlockAnimation extends Component
 			.then(response => {
 				lastBlock = response.data[0].block_number;
 				let bars = [];
-				for (let i = lastBlock - Constants.NUMBER_OF_BLOCKS + 1; i <= lastBlock; i++)
+				for (let i = lastBlock - Constants.NUMBER_OF_BLOCKS; i < lastBlock; i++)
 				{
 					bars = bars.concat([i]);
 				}
