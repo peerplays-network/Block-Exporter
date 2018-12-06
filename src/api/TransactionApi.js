@@ -1,10 +1,9 @@
 import axios from 'axios';
-import * as Constants from '../constants/constants'; 
 
 const TransactionApi = {
 
 	/**
-   * Return a list of blocks
+   * Return a list of transactions
    *
    * @param {string} start - first block to retrieve
    * @param {string} end - last block to retrieve
@@ -21,13 +20,9 @@ const TransactionApi = {
 	},
 
 	/**
-   * Return a list of sorted blocks by column, with limit restriction
+   * Return a list of transactions for id, with limit restriction
    *
-   * @param {string} column - The column to sort by
-   * @param {string} direction - ASC or DESC
-   * @param {string} x - x in LIMIT X, Y
-   * @param {string} y - y in LIMIT X, Y
-   * @param {string} last - The last block to sort from
+   * @param {string} id - The column to sort by
    */
 
 	getTransactionsId(id) {
@@ -40,18 +35,18 @@ const TransactionApi = {
 	},
    
 	/**
-   * Return last block from the DB
+   * Return all operations from the DB
    *
    */
 
-	getLastBlock() {
+	getOperations() {
 		return new Promise(async (resolve, reject) => {
-			const response = await axios.get('api/blocks/last');
+			const response = await axios.get('/api/operations/');
 			return resolve(response);
 		  });
 	},
 	/**
-   * Return the length of the blockchain
+   * Return the length of the number of transactions
    *
    */
 

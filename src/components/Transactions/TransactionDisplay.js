@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Table} from 'reactstrap';
-import axios from 'axios';
 import styles from './styles.css';
 import { NavLink } from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom';
@@ -28,11 +27,13 @@ class TransactionDisplay extends Component {
 		}
 	}
 
-	findOperations(e) {
-		axios.get('/api/operations/', {
-		}).then(response => {
-			this.setState({ Operations: response.data });
-		}).catch(error => {console.log('error is fetching operation data', error);});
+	async findOperations(e) {
+		try{
+			const operations = await TransactionApi.getOperations();
+			this.setState({Operations: operations.data});
+		} catch(error) {
+			console.warn(error);
+		}
 	}
 
 	componentDidMount() {
