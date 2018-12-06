@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import {Table} from 'reactstrap'; 
-import Pagination from 'react-paginate';
+import {Table} from 'reactstrap';
 import axios from 'axios';
 import styles from './styles.css';
 import { NavLink } from 'reactstrap';
@@ -8,6 +7,7 @@ import { NavLink as RRNavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PaginationCall from '../Account/PaginationCall';
 import * as Constants from '../../constants/constants'; 
+import TransactionApi from '../../api/TransactionApi';
 //State will be removed once data feed is established
 
 class TransactionDisplay extends Component {
@@ -18,16 +18,14 @@ class TransactionDisplay extends Component {
 		};
 	}
 
-	fetchData() {
-		axios.get('/api/transactions/recent?id=&limit=1', {
-		}).then(response => {
-			return axios.get('/api/transactions/recent?id=&limit=10');
-		}).then(response => {
-			this.setState({transactionData: response.data});
-			return axios.get('/api/transactions/length');
-		}).then(response => {
-			this.setState({transactionLength: response.data});
-		}).catch(error => console.log('error fetching transactions', error));
+	async fetchData() {
+		try{
+			const transaction = await TransactionApi.getTransactions();
+			const length = await TransactionApi.getTransactionLength();
+			this.setState({transactionLength: length.data, transactionData: transaction.data});
+		} catch(error) {
+			console.warn(error);
+		}
 	}
 
 	findOperations(e) {
@@ -50,22 +48,26 @@ class TransactionDisplay extends Component {
 		index > this.state.currentPage ? this.loadNextTransactions(index) : this.loadPreviousTransactions(index);
 	}
 
-	loadNextTransactions(index) {
+	async loadNextTransactions(index) {
 		const {transactionData} = this.state;
 		this.setState({currentPage: index});
-		axios.get(`/api/transactions/recent?id=${transactionData[transactionData.length - 1].id-1}&limit=10`, {
-		}).then(response => {
-			this.setState({transactionData: response.data});
-		}).catch(error => console.log('error fetching transactions'));
+		try{
+			const transaction = await TransactionApi.getTransactionsId(transactionData[transactionData.length - 1].id-1);
+			this.setState({transactionData: transaction.data});
+		} catch(error) {
+			console.warn(error);
+		}
 	}
 
-	loadPreviousTransactions(index) {
+	async loadPreviousTransactions(index) {
 		const {transactionData} = this.state;
 		this.setState({currentPage: index});
-		axios.get(`/api/transactions/recent?id=${transactionData[0].id+11}&limit=10`, {
-		}).then(response => {
-			this.setState({transactionData: response.data});
-		}).catch(error => console.log('error fetching transactions'));
+		try{
+			const transaction = await TransactionApi.getTransactionsId(transactionData[0].id+11);
+			this.setState({transactionData: transaction.data});
+		} catch(error) {
+			console.warn(error);
+		}
 	}
 
 	findAccountName(id) {
