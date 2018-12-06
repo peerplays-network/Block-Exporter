@@ -195,7 +195,6 @@ class Welcome extends Component {
 		is passed to it.
 		*/
 		const newLayout = JSON.parse(JSON.stringify(this.state.layout));
-		console.log('length: ', newLayout);
 		return (
 			<div>
 				<div>
