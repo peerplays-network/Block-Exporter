@@ -170,7 +170,7 @@ class Welcome extends Component {
 		const translateY = parseInt(translateValues[translateValues.length - 1].slice(0, -1), 0);
 		
 		if(translateX <= 287) {
-			this.elementOverlap = {el: element, x: 290, y: translateY };
+			this.elementOverlap = {id: oldItem.i, el: element, x: 290, y: translateY };
 		}
 	}
 	
@@ -186,7 +186,16 @@ class Welcome extends Component {
 	onLayoutChange(layout) {
 		if(typeof this.elementOverlap === 'object' && this.elementOverlap !== null) {
 			this.elementOverlap.el.style.transform = `translate(${this.elementOverlap.x}px, ${this.elementOverlap.y}px)`;
+
+			const stateCopy = Object.assign({}, this.state);
+			const id = Number(this.elementOverlap.id);
+			const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
+	
+			stateCopy.components[id].gridPlacement.x = this.startingX;
+			stateCopy.layout[layoutIndex].x = this.startingX;
+
 			this.elementOverlap = null;
+			this.setState({layout: stateCopy.layout, components: stateCopy.components});
 		}
 	}
 
