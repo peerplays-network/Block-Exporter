@@ -35,6 +35,7 @@ class Welcome extends Component {
 		this.state = {components: this.initializePanels(),
 	   	layout : this.initializeLayout(),
 		};
+		this.elementOverlap = null;
 	}
 
 	componentDidMount() {
@@ -64,7 +65,7 @@ class Welcome extends Component {
 			}
 			else
 				stateCopy.layout[0].w = 0;
-			this.setState({stateCopy});
+			this.setState({layout: stateCopy.layout});
 		}
 	}
 
@@ -76,8 +77,8 @@ class Welcome extends Component {
 				const index = stateCopy.layout.findIndex(x => x.i===el.id.toString()); 
 				stateCopy.layout[index] = initialPanelLayout[el.id].gridPlacement;
 			}
-			this.setState({stateCopy});
 		});
+		this.setState({layout: stateCopy.layout, components: stateCopy.components});
 	}
 
 	onClosePanel(id) {
@@ -86,7 +87,7 @@ class Welcome extends Component {
 		const index = stateCopy.layout.findIndex(x => x.i===id.toString()); 
 		stateCopy.layout.splice(Number(index), 1);
 		stateCopy.components[id].visible = false;
-		this.setState({stateCopy});
+		this.setState({layout: stateCopy.layout, components: stateCopy.components});
 	}
 
 	changePanelSize(id, size) {
@@ -121,9 +122,8 @@ class Welcome extends Component {
 			if(stateCopy.components[id].gridPlacement.x < this.startingX)
 				stateCopy.layout[index].x = this.startingX;
 		}
-		
 		stateCopy.components[id].visible = true;
-		this.setState({stateCopy});
+		this.setState({layout: stateCopy.layout, components: stateCopy.components});
 	}
 
 	renderComponent(component) {
@@ -154,54 +154,48 @@ class Welcome extends Component {
 		const stateCopy = Object.assign({}, this.state);
 		const id = Number(oldItem.i);
 		const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
+
 		stateCopy.components[id].gridPlacement = {i: id.toString(), x: newItem.x, y: newItem.y, w: newItem.w, h: newItem.h};
 		stateCopy.layout[layoutIndex] = stateCopy.components[id].gridPlacement;
 
-		this.setState({stateCopy});
+		this.setState({layout: stateCopy.layout, components: stateCopy.components});
 
 		this.onDragStop(layout, oldItem, newItem, placeholder, e, element);
 	}
 
+	onDragStop(layout, oldItem, newItem, placeholder, e, element) {
+		//checks to see if the widget has gone out of bounds, and re-aligns it to be in the viewport
+		const translateValues = window.getComputedStyle(element).transform.split(',');
+		const translateX = parseInt(translateValues[translateValues.length - 2], 0);
+		const translateY = parseInt(translateValues[translateValues.length - 1].slice(0, -1), 0);
+		
+		if(translateX <= 287) {
+			this.elementOverlap = {id: oldItem.i, el: element, x: 290, y: translateY };
+		}
+	}
+	
 	calculateComponentHeight(id, height) {
 		//since the grid layout does not have an auto height, each component sets their own height, and calls this function once mounted
 		const stateCopy = Object.assign({}, this.state);
 		const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
-		// debugger;
 		stateCopy.layout[layoutIndex].h = height;
 
-		this.setState({stateCopy});
+		this.setState({layout: stateCopy.layout});
 	}
 
-	onDragStop(layout, oldItem, newItem, placeholder, e, element) {
-		//checks to see if the widget has gone out of bounds, and re-aligns it to be in the viewport
-		const grid = document.getElementsByClassName('react-grid-layout')[0];
-		const translateYMaxValue = window.innerHeight- grid.offsetTop - element.offsetHeight;
-		const translateXMaxValue = window.innerWidth- 285 - element.offsetWidth;
+	onLayoutChange(layout) {
+		if(typeof this.elementOverlap === 'object' && this.elementOverlap !== null) {
+			this.elementOverlap.el.style.transform = `translate(${this.elementOverlap.x}px, ${this.elementOverlap.y}px)`;
 
-		const translateValues = window.getComputedStyle(element).transform.split(',');
-		let translateX = parseInt(translateValues[translateValues.length - 2], 0);
-		let translateY = parseInt(translateValues[translateValues.length - 1].slice(0, -1), 0);
-		
-		// if (translateY > translateYMaxValue) {
-		// 	translateY = translateYMaxValue;
-		// }
-		// if (translateY < 0) {
-		// 	translateY = 0;
-		// }
-		// console.log('X',translateX);
-		// console.log('Y',translateY);
-		if (translateX < 287 && this.props.sideBarOpen) {
-			// const stateCopy = Object.assign({}, this.state);
-			// const id = Number(oldItem.i);
-			// const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
-			// stateCopy.components[id].gridPlacement = {i: id.toString(), x: oldItem.x, y: oldItem.y, w: oldItem.w, h: oldItem.h};
-			// stateCopy.layout[layoutIndex] = stateCopy.components[id].gridPlacement;
-			// debugger;
-			// this.setState({stateCopy});
+			const stateCopy = Object.assign({}, this.state);
+			const id = Number(this.elementOverlap.id);
+			const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
+	
+			stateCopy.components[id].gridPlacement.x = this.startingX;
+			stateCopy.layout[layoutIndex].x = this.startingX;
 
-			translateX = 290;
-			//translateY = Math.ceil((window.innerHeight/10) * oldItem.y);
-			element.style.transform = `translate(${translateX}px, ${translateY}px)`;
+			this.elementOverlap = null;
+			this.setState({layout: stateCopy.layout, components: stateCopy.components});
 		}
 	}
 
@@ -215,8 +209,8 @@ class Welcome extends Component {
 				<div>
 					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={'vertical'} 
 						rowHeight={10} draggableCancel=".panel-body,.close" autoSize={false} isResizable={false} 
-						margin={[10, 10]} containerPadding={[0, 10]} 
-						onDragStop={(layout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(layout, oldItem, newItem, placeholder, e, element)}> 
+						margin={[10, 10]} containerPadding={[0, 10]} onLayoutChange={(newLayout) => this.onLayoutChange(newLayout)}
+						onDragStop={(newLayout, oldItem, newItem, placeholder, e, element)=>this.updateCoordinates(newLayout, oldItem, newItem, placeholder, e, element)}> 
 						 <div className={`${styles['react-grid-item']}`} key={'-1'}>
 							<SidePanel  calculateComponentHeight={this.calculateComponentHeight.bind(this)} components={this.state.components} 
 							   changeSize={this.changePanelSize.bind(this)}/>	
