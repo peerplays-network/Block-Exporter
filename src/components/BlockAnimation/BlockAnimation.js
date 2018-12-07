@@ -4,6 +4,7 @@ import posed, {PoseGroup} from 'react-pose';
 import { withRouter } from 'react-router';
 import * as Constants from '../../constants/constants';
 import Block from './Block';
+import BlockApi from '../../api/BlockApi';
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -16,29 +17,30 @@ class BlockAnimation extends Component
 		this.state = {bars:[], lastBlock:0};
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		let lastBlock = 0;
-		axios.get('/api/blocks/last', {})
-			.then(response => {
-				lastBlock = response.data[0].block_number;
-				let bars = [];
-				for (let i = lastBlock - Constants.NUMBER_OF_BLOCKS; i < lastBlock; i++)
-				{
-					bars = bars.concat([i]);
-				}
-				this.setState({bars: bars, lastBlock: lastBlock}, ()=>{
-					this.startTimer();
-				});
-			})
-			.catch(error => console.log('error fetching blocks: ', error));
+		try{
+			const getLast = await BlockApi.getLastBlock();
+			console.log('getLast', getLast);
+			lastBlock = getLast.data[0].block_number;
+			let bars = [];
+			for (let i = lastBlock - Constants.NUMBER_OF_BLOCKS + 1; i <= lastBlock; i++)
+			{
+				bars = bars.concat([i]);
+			}
+			this.setState({bars: bars, lastBlock: lastBlock}, ()=>{
+				this.startTimer();
+			});
+		} catch(error) {
+			console.warn(error);
+		}
 	}
 
 	startTimer() {
 		setInterval(this.fetchLastBlock.bind(this), 3000);
 	}
 
-	fetchLastBlock()
-	{
+	fetchLastBlock() {
 		let lastBlock = 0;
 		axios.get('/api/blocks/last', {})
 			.then(response => {
