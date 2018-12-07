@@ -169,7 +169,7 @@ class Welcome extends Component {
 		const translateX = parseInt(translateValues[translateValues.length - 2], 0);
 		const translateY = parseInt(translateValues[translateValues.length - 1].slice(0, -1), 0);
 		
-		if(translateX <= 287) {
+		if(translateX <= 287 && this.props.sideBarOpen) {
 			this.elementOverlap = {id: oldItem.i, el: element, x: 290, y: translateY };
 		}
 	}
