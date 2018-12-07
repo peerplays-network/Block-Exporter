@@ -84,7 +84,7 @@ class TransactionDisplay extends Component {
 		return this.state.Operations[operation].friendly_name;
 	}
 
-	renderOther(transaction, operationType, parsedTransaction, i) {
+	renderOther(operationType, parsedTransaction, i) {
 		console.log('operation and parsedTransaction', operationType, parsedTransaction);
 		return (
 			<tr key={i}>

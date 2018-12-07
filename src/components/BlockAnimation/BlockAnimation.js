@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import posed, {PoseGroup} from 'react-pose';
 import { withRouter } from 'react-router';
 import * as Constants from '../../constants/constants';
 import Block from './Block';
+import BlockApi from '../../api/BlockApi';
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -16,41 +16,42 @@ class BlockAnimation extends Component
 		this.state = {bars:[], lastBlock:0};
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		let lastBlock = 0;
-		axios.get('/api/blocks/last', {})
-			.then(response => {
-				lastBlock = response.data[0].block_number;
-				let bars = [];
-				for (let i = lastBlock - Constants.NUMBER_OF_BLOCKS + 1; i <= lastBlock; i++)
-				{
-					bars = bars.concat([i]);
-				}
-				this.setState({bars: bars, lastBlock: lastBlock}, ()=>{
-					this.startTimer();
-				});
-			})
-			.catch(error => console.log('error fetching blocks: ', error));
+		try{
+			const getLast = await BlockApi.getILastBlock(2);
+			lastBlock = getLast.data[0].block_number;
+			let bars = [];
+			for (let i = lastBlock - Constants.NUMBER_OF_BLOCKS + 1; i <= lastBlock; i++)
+			{
+				bars = bars.concat([i]);
+			}
+			this.setState({bars: bars, lastBlock: lastBlock}, ()=>{
+				this.startTimer();
+			});
+		} catch(error) {
+			console.warn(error);
+		}
 	}
 
 	startTimer() {
 		setInterval(this.fetchLastBlock.bind(this), 3000);
 	}
 
-	fetchLastBlock()
-	{
+	async fetchLastBlock() {
 		let lastBlock = 0;
-		axios.get('/api/blocks/last', {})
-			.then(response => {
-				lastBlock = response.data[0].block_number;
-				if(lastBlock > this.state.lastBlock)
-				{
-					this.setState({lastBlock: lastBlock}, ()=>{
-						this.add();
-					});
-				}
-			})
-			.catch(error => {console.log('error fetching blocks: ', error)});
+		try{
+			const getLast = await BlockApi.getILastBlock(2);
+			lastBlock = getLast.data[0].block_number;
+			if(lastBlock > this.state.lastBlock)
+			{
+				this.setState({lastBlock: lastBlock}, ()=>{
+					this.add();
+				});
+			}
+		} catch(error) {
+			console.warn(error);
+		}
 	}
 
 	add() {

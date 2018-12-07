@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as Constants from '../constants/constants'; 
+//import * as Constants from '../constants/constants'; 
 
 const BlockApi = {
 
@@ -12,7 +12,7 @@ const BlockApi = {
    */
 
 	getBlocks(start, end, direction = 'ASC') {
-		const query = `api/blocks?start=${start}&end=${end}&direction=${direction}`;
+		const query = `/api/blocks?start=${start}&end=${end}&direction=${direction}`;
 
 		return new Promise(async (resolve, reject) => {
 			const response = await axios.get(query);
@@ -31,7 +31,7 @@ const BlockApi = {
    */
 
 	getBlocksLimited(column, direction, x, y, last) {
-		const query = `api/blocks/sorted?sort=${column}&direction=${direction}&x=${x}&y=${y}&last=${last}`;
+		const query = `/api/blocks/sorted?sort=${column}&direction=${direction}&x=${x}&y=${y}&last=${last}`;
 
 		return new Promise(async (resolve, reject) => {
 			const response = await axios.get(query);
@@ -46,10 +46,28 @@ const BlockApi = {
 
 	getLastBlock() {
 		return new Promise(async (resolve, reject) => {
-			const response = await axios.get('api/blocks/last');
+			const query = '/api/blocks/last';
+			const response = await axios.get(query);
 			return resolve(response);
 		  });
 	},
+
+	/**
+   * Return i block before the last block from the DB
+   *
+   */
+
+	getILastBlock(i) {
+		return new Promise(async (resolve, reject) => {
+			const last = await this.getLastBlock();
+			const iLast = (last.data[0].block_number-i);
+			const query = `/api/blocks/?start=${iLast}&end=${iLast}`;
+			const response = await axios.get(query);
+			return resolve(response);
+		  });
+	},
+
+	
 	/**
    * Return the length of the blockchain
    *
@@ -57,7 +75,7 @@ const BlockApi = {
 
 	getBlockLength() {
 		return new Promise(async (resolve, reject) => {
-			const response = await axios.get('api/blocks/length');
+			const response = await axios.get('/api/blocks/length');
 			return resolve(response);
 		  });
 	},
