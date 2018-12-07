@@ -96,6 +96,7 @@ class TransactionDisplay extends Component {
 	renderTransaction(transaction, i) {
 		const operationType = JSON.parse(transaction.operations)[0];
 		const parsedTransaction = JSON.parse(transaction.operations)[1];
+
 		switch(operationType) {
 			case 0:
 				const senderAccount = this.findAccountName(parsedTransaction.from);
@@ -108,7 +109,7 @@ class TransactionDisplay extends Component {
 			case 5:
 				return (
 					<tr key={i}>
-						<td><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.linkAccountName(parsedTransaction.name)}</strong></td>
+						<td><strong>{parsedTransaction.fee.amount}</strong> paid by {this.findAccountName(parsedTransaction.registrar)} for {this.displayOperation(operationType)} <strong>{this.linkAccountName(parsedTransaction.name)}</strong></td>
 					</tr> 
 				);
 			case 6:

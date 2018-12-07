@@ -237,11 +237,17 @@ class AccountAllDetail extends Component {
 			case 5:
 				return (
 					<Row key={i}>
-						<Col sm="5"><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.linkAccountName(parsedTransaction.name)}</strong></Col> 
+						<Col sm="5"><strong>{parsedTransaction.fee.amount}</strong> paid by {this.findAccountName(parsedTransaction.registrar)} for {this.displayOperation(operationType)} <strong>{this.linkAccountName(parsedTransaction.name)}</strong></Col> 
 						<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
 						<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
 					</Row> 
 				);
+			case 6:
+				return (
+					<Row key={i}>
+						<Col><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.account)}</strong></Col>
+					</Row> 
+				);	
 			case 8:
 				return (
 					<Row key={i}>
@@ -250,6 +256,18 @@ class AccountAllDetail extends Component {
 						<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
 					</Row> 
 				);
+			case 20:
+				return (
+					<Row key={i}>
+						<Col><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.witness_account)}</strong></Col>
+					</Row> 	
+				);
+			case 29:
+				return (
+					<Row key={i}>
+						<Col><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.committee_member_account)}</strong></Col>
+					</Row> 	
+				);
 			case 37:
 				return (
 					<Row key={i}>
@@ -257,6 +275,10 @@ class AccountAllDetail extends Component {
 						<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
 						<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
 					</Row> 
+				);
+			case 47:
+				return (
+					<Row key={i}><Col><strong>{parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.registrar)}</strong></Col></Row>
 				);
 			default:
 				return this.renderOther(transaction, operationType, parsedTransaction, i);
