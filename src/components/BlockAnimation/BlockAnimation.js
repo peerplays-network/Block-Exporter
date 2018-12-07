@@ -21,7 +21,6 @@ class BlockAnimation extends Component
 		let lastBlock = 0;
 		try{
 			const getLast = await BlockApi.getLastBlock();
-			console.log('getLast', getLast);
 			lastBlock = getLast.data[0].block_number;
 			let bars = [];
 			for (let i = lastBlock - Constants.NUMBER_OF_BLOCKS + 1; i <= lastBlock; i++)
@@ -40,19 +39,20 @@ class BlockAnimation extends Component
 		setInterval(this.fetchLastBlock.bind(this), 3000);
 	}
 
-	fetchLastBlock() {
+	async fetchLastBlock() {
 		let lastBlock = 0;
-		axios.get('/api/blocks/last', {})
-			.then(response => {
-				lastBlock = response.data[0].block_number;
-				if(lastBlock > this.state.lastBlock)
-				{
-					this.setState({lastBlock: lastBlock}, ()=>{
-						this.add();
-					});
-				}
-			})
-			.catch(error => {console.log('error fetching blocks: ', error)});
+		try{
+			const getLast = await BlockApi.getLastBlock();
+			lastBlock = getLast.data[0].block_number;
+			if(lastBlock > this.state.lastBlock)
+			{
+				this.setState({lastBlock: lastBlock}, ()=>{
+					this.add();
+				});
+			}
+		} catch(error) {
+			console.warn(error);
+		}
 	}
 
 	add() {
