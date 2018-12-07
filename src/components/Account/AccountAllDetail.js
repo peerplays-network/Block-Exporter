@@ -237,7 +237,7 @@ class AccountAllDetail extends Component {
 			case 5:
 				return (
 					<Row key={i}>
-						<Col sm="5"><strong>{parsedTransaction.fee.amount}</strong> paid by {this.findAccountName(parsedTransaction.registrar)} for {this.displayOperation(operationType)} <strong>{this.linkAccountName(parsedTransaction.name)}</strong></Col> 
+						<Col sm="5"><strong>{parsedTransaction.fee.amount}</strong> paid by <strong>{this.findAccountName(parsedTransaction.registrar)}</strong> for {this.displayOperation(operationType)} <strong>{this.linkAccountName(parsedTransaction.name)}</strong></Col> 
 						<Col className="d-inline-flex" sm="4"> Time: <strong>{this.getTimeSince(transaction.expiration)}</strong></Col>
 						<Col sm="2"> Id: <strong>{transaction.id}</strong></Col>
 					</Row> 
