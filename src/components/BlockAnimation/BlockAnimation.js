@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import posed, {PoseGroup} from 'react-pose';
 import { withRouter } from 'react-router';
 import * as Constants from '../../constants/constants';
@@ -20,7 +19,7 @@ class BlockAnimation extends Component
 	async componentDidMount() {
 		let lastBlock = 0;
 		try{
-			const getLast = await BlockApi.getLastBlock();
+			const getLast = await BlockApi.getILastBlock(2);
 			lastBlock = getLast.data[0].block_number;
 			let bars = [];
 			for (let i = lastBlock - Constants.NUMBER_OF_BLOCKS + 1; i <= lastBlock; i++)
@@ -42,7 +41,7 @@ class BlockAnimation extends Component
 	async fetchLastBlock() {
 		let lastBlock = 0;
 		try{
-			const getLast = await BlockApi.getLastBlock();
+			const getLast = await BlockApi.getILastBlock(2);
 			lastBlock = getLast.data[0].block_number;
 			if(lastBlock > this.state.lastBlock)
 			{
