@@ -109,7 +109,7 @@ class TransactionDisplay extends Component {
 			case 5:
 				return (
 					<tr key={i}>
-						<td><strong>{parsedTransaction.fee.amount}</strong> paid by {this.findAccountName(parsedTransaction.registrar)} for {this.displayOperation(operationType)} <strong>{this.linkAccountName(parsedTransaction.name)}</strong></td>
+						<td><strong>{parsedTransaction.fee.amount}</strong> paid by <strong>{this.findAccountName(parsedTransaction.registrar)}</strong> for {this.displayOperation(operationType)} <strong>{this.linkAccountName(parsedTransaction.name)}</strong></td>
 					</tr> 
 				);
 			case 6:
