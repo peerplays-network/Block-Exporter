@@ -58,7 +58,7 @@ class ContractDetail extends Component {
 		}
 	}
 
-	tabNavBuild( index, type) {
+	tabNavBuild( index, type, icon) {
 		if(index === '1' && this.state.Contract.length <= 0 ) {
 			return null;
 		}
@@ -74,7 +74,7 @@ class ContractDetail extends Component {
 		return (
 			<NavItem>
 				<NavLink className={classnames({ active: this.state.activeTab === index })} style={{cursor:'pointer',background:'#3d3d3d',color:'white'}} onClick={() => { this.toggle(index); }}>
-					{ type } ({ this.contract })
+				<span className={`fa ${icon}`}>&nbsp;</span> { type } ({ this.contract })
 				</NavLink>
 			</NavItem>
 		);
@@ -96,10 +96,10 @@ class ContractDetail extends Component {
 				<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3 mt-5`}>
 					<span className="fa fa-file-signature">&nbsp;</span>Smart Contract Information</h1>
 				<Nav tabs>
-					{ this.tabNavBuild('1', 'Contract') }
-					{ this.tabNavBuild('2', 'Transactions') }
-					{ this.tabNavBuild('3', 'Byte Code') }
-					{ this.tabNavBuild('4', 'Source Code') }
+					{ this.tabNavBuild('1', 'Contract', 'fas fa-file-signature') }
+					{ this.tabNavBuild('2', 'Transactions', 'fas fa-handshake') }
+					{ this.tabNavBuild('3', 'Byte Code', '') }
+					{ this.tabNavBuild('4', 'Source Code', '') }
 				</Nav>
 				<Card>
 					<CardBody>
