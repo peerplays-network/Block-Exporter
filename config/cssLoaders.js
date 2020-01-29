@@ -8,8 +8,9 @@ const cssLoaders = [
 		loader: 'css-loader',
 		options: {
 			importLoaders: 1,
-			modules: true,
-			localIdentName: identName
+			modules: {
+				localIdentName: identName
+			}
 		}
 	},
 	{
