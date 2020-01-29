@@ -1,7 +1,7 @@
 /**
  * Store global settings (CONFIG)
  */
-const BLOCKCHAIN_URL = 'ws://10.20.10.51:8090/ws';
+const BLOCKCHAIN_URL = '';
 const SYNC_DATABASE = false;
 
 module.exports = {

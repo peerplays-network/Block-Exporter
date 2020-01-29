@@ -1,5 +1,5 @@
 const moment = require('moment');
-const {Apis, Chainstore} = require('peerplaysjs-lib');
+const {Apis, ChainStore} = require('peerplaysjs-lib');
 const db = require('../database/constants');
 const chalk = require('chalk');
 
@@ -19,13 +19,10 @@ const api = {
 	connect: BLOCKCHAIN_URL => {
 		return new Promise((resolve, reject) => {
 			this.api = Apis.instance(BLOCKCHAIN_URL, true);
-			console.log('hello its me')
 			this.api.init_promise.then((res) => {
-				console.log('1');
 				ChainStore
 					.init()
 					.then(() => {
-					console.log('2');
 				  console.log(chalk.green(`Exeplorer Server> Connected to ${BLOCKCHAIN_URL}`));
 				  resolve();
 					});
@@ -36,7 +33,7 @@ const api = {
 				reject(e);
 			});
 		}).catch(e => {
-			console.log('ruh roh: ', e);
+			console.error(e);
 		});
 	},
 
