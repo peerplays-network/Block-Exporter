@@ -1,8 +1,6 @@
 const moment = require('moment');
-const blockchainWS = require('peerplaysjs-ws');
-const Exeblock = require('peerplaysjs-lib');
+const {Apis, Chainstore} = require('peerplaysjs-lib');
 const db = require('../database/constants');
-const ChainStore = Exeblock.ChainStore;
 const chalk = require('chalk');
 
 const accList = [];
@@ -20,11 +18,14 @@ const api = {
     */
 	connect: BLOCKCHAIN_URL => {
 		return new Promise((resolve, reject) => {
-			this.api = blockchainWS.Apis.instance(BLOCKCHAIN_URL, true);
+			this.api = Apis.instance(BLOCKCHAIN_URL, true);
+			console.log('hello its me')
 			this.api.init_promise.then((res) => {
+				console.log('1');
 				ChainStore
 					.init()
 					.then(() => {
+					console.log('2');
 				  console.log(chalk.green(`Exeplorer Server> Connected to ${BLOCKCHAIN_URL}`));
 				  resolve();
 					});
@@ -34,6 +35,8 @@ const api = {
 				console.error('\x1b[31m', '\n Connection FAILED to ' + BLOCKCHAIN_URL);
 				reject(e);
 			});
+		}).catch(e => {
+			console.log('ruh roh: ', e);
 		});
 	},
 
@@ -51,7 +54,7 @@ const api = {
 			start = 1;
 		}
 
-		blockchainWS.Apis.instance().db_api().exec('get_block', [start]).then(block => {
+		Apis.instance().db_api().exec('get_block', [start]).then(block => {
 			console.log(chalk.cyan(start));
 			// When a block is not found we assume we are up to date.
 			if (!block) {
@@ -188,14 +191,14 @@ const api = {
 		// 	}
 
 		// 	if (rows.length < 1) {
-		// 		blockchainWS.Apis.instance().db_api().exec('get_block', [block_number-1]).then(block => { 
+		// 		Apis.instance().db_api().exec('get_block', [block_number-1]).then(block => { 
 					
 		// 		});
 		// 	}
 		// });
 
 
-		  blockchainWS.Apis.instance().db_api().exec('get_block', [block_number]).then(block => {
+		  Apis.instance().db_api().exec('get_block', [block_number]).then(block => {
 		  // When a block is not found we assume we are up to date.
 		  if (!block) {
 			  console.log('Exeplorer Server> DONE inserting blocks - no block found');
@@ -328,7 +331,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     */
 	getAccount: acc => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('get_accounts', [acc]).then(w => {
+			Apis.instance().db_api().exec('get_accounts', [acc]).then(w => {
 				resolve(w);
 			});
 		});
@@ -340,7 +343,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     */
 	getGlobalProperties: () => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('get_global_properties', []).then(w => {
+			Apis.instance().db_api().exec('get_global_properties', []).then(w => {
 				resolve(w);
 			});
 		});
@@ -354,7 +357,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     */
 	getAccountByName: acc => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('lookup_account_names', [acc]).then(w => {
+			Apis.instance().db_api().exec('lookup_account_names', [acc]).then(w => {
 				resolve(w);
 			});
 		});
@@ -369,7 +372,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 
 	getFullAccounts: acc => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('get_full_accounts', [acc, true]).then(w => {
+			Apis.instance().db_api().exec('get_full_accounts', [acc, true]).then(w => {
 				resolve(w);
 			});
 		});
@@ -384,7 +387,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     returns: Array containing names and ids.
     */
 	getAccountNamesRecursively: (startChar, limit) => {
-		return blockchainWS.Apis.instance().db_api().exec('lookup_accounts', [
+		return Apis.instance().db_api().exec('lookup_accounts', [
 			startChar, limit
 		]).then(accounts => {
 			if (accounts.length > 1) {
@@ -414,7 +417,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     */
 	getAccountBalanceFromName: (name, assets) => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('get_named_account_balances', [name, assets]).then(b => {
+			Apis.instance().db_api().exec('get_named_account_balances', [name, assets]).then(b => {
 				resolve(b);
 			});
 		});
@@ -427,7 +430,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     returns: Array containing names and ids.
     */
 	getWitnessesRecursively: (startChar, limit) => {
-		return blockchainWS.Apis.instance().db_api().exec('lookup_witness_accounts', [
+		return Apis.instance().db_api().exec('lookup_witness_accounts', [
 			startChar, limit
 		]).then(accounts => {
 			if (accounts.length > 1) {
@@ -456,7 +459,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     */
 	getWitnessByAcc: acc => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('get_witness_by_account', [acc]).then(w => {
+			Apis.instance().db_api().exec('get_witness_by_account', [acc]).then(w => {
 				resolve(w);
 			});
 		});
@@ -469,7 +472,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     */
 	getWitnessObjsById: witnessIds => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('get_witnesses', [witnessIds]).then(w => {
+			Apis.instance().db_api().exec('get_witnesses', [witnessIds]).then(w => {
 				resolve(w);
 			});
 		});
@@ -483,7 +486,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     */
 	getBlock: blockNum => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('get_block', [blockNum]).then(b => {
+			Apis.instance().db_api().exec('get_block', [blockNum]).then(b => {
 				resolve(b);
 			});
 		});
@@ -496,7 +499,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     */
 	getBlockHeader: blockNum => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('get_block_header', [blockNum]).then(b => {
+			Apis.instance().db_api().exec('get_block_header', [blockNum]).then(b => {
 				resolve(b);
 			});
 		});
@@ -510,7 +513,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     */
 	getAccountHistory: (name, stop, limit, start)=> {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().history_api().exec('get_account_history', [name, stop, limit, start]).then(r => {
+			Apis.instance().history_api().exec('get_account_history', [name, stop, limit, start]).then(r => {
 				resolve(r);
 			});
 		});
@@ -524,7 +527,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     returns: date
     */
 	getRegDate: (name, start) => {
-		return blockchainWS.Apis.instance().history_api().exec('get_account_history', [name, start, 100, '1.11.0']).then(r => {
+		return Apis.instance().history_api().exec('get_account_history', [name, start, 100, '1.11.0']).then(r => {
 			for (const op of r) {
 				if (op.op[0] == 5) {
 					return api.convertNumberToDate(op.block_num).then((blockTime) => {
@@ -547,7 +550,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
     returns: date
     */
 	getWitnessDate: (name, start) => {
-		return blockchainWS.Apis.instance().history_api().exec('get_account_history', [name, '1.11.0', 100, start]).then(r => {
+		return Apis.instance().history_api().exec('get_account_history', [name, '1.11.0', 100, start]).then(r => {
 			for (const op of r) {
 				if (op.op[0] == 20) {
 					return api.convertNumberToDate(op.block_num).then((blockTime) => {
@@ -605,7 +608,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				}
 			});
 
-			blockchainWS.Apis.instance().db_api().exec('get_committee_members', [committeeAry]).then(w => {
+			Apis.instance().db_api().exec('get_committee_members', [committeeAry]).then(w => {
 				resolve(w);
 			});
 		});
@@ -614,7 +617,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 	// helper function to get a list of committee members
 	listCommittee: () => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('lookup_committee_member_accounts', ['', 1000]).then(w => {
+			Apis.instance().db_api().exec('lookup_committee_member_accounts', ['', 1000]).then(w => {
 				resolve(w);
 			});
 		});
@@ -623,7 +626,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 	// list all smart contracts
 	listAllContracts: () => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('get_all_contracts', []).then(w => {
+			Apis.instance().db_api().exec('get_all_contracts', []).then(w => {
 				resolve(w);
 			});
 		});
@@ -631,7 +634,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 
 	getContractBalance: (contract_id) => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('get_contract_balances', [contract_id]).then(w => {
+			Apis.instance().db_api().exec('get_contract_balances', [contract_id]).then(w => {
 				resolve(w);
 			});
 		});
@@ -639,7 +642,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 
 	getContractStats: (statistics_id) => {
 		return new Promise((resolve, reject) => {
-			blockchainWS.Apis.instance().db_api().exec('get_objects', [[statistics_id]]).then(w => {
+			Apis.instance().db_api().exec('get_objects', [[statistics_id]]).then(w => {
 				resolve(w);
 			});
 		});

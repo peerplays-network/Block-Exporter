@@ -30,7 +30,6 @@
     "node-sass": "^4.13.1",
     "path": "^0.12.7",
     "peerplaysjs-lib": "^0.6.4",
-    "peerplaysjs-ws": "^0.1.11",
     "prop-types": "^15.5.10",
     "raf": "^3.4.0",
     "react": "^16.5.0",

@@ -11,9 +11,6 @@ const bodyParser = require('body-parser');
 
 const config = require('../webpack.config');
 
-const blockchainWS = require("peerplaysjs-ws");
-const blockchainLib = require("peerplaysjs-lib");
-
 const mysql = require('mysql');
 
 const Blockchain = require("./api");
