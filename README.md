@@ -1,9 +1,4 @@
-# peerplays-block-exporter
+# Block Exporter
 
-
-## Quick Start
-https://exeblock.atlassian.net/wiki/spaces/EP/pages/161873932/Quick+Start+Guide
-
-## Developer Documentation
-https://exeblock.atlassian.net/wiki/spaces/EP/pages/162037764/Developer+Documentation
+The installation instructions can be seen here https://peerplays.gitbook.io/community-project-docs/block-explorer/setting-up-the-explorer
 
