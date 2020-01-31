@@ -114,7 +114,7 @@ class Navigation extends React.Component {
 						</NavItem>
 						
 					</Nav>
-					<div className={`${styles['header-contrast-text']} ${styles['header-height']} pt-1`}><a href="/" className={`${styles['link-no-decor']} ${styles['bold']} ${styles['size30']} pl-3`}>EXE EXPLORER</a></div>
+					<div className={`${styles['header-contrast-text']} ${styles['header-height']} pt-1`}><a href="/" className={`${styles['link-no-decor']} ${styles['bold']} ${styles['size30']} pl-3`}>PEERPLAYS BLOCK EXPORTER</a></div>
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar>
 						<Nav className="ml-auto" navbar>

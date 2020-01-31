@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Exe Explorer",
-    "description": "The official API documentation for Exe Explorer.",
+    "title": "Peerplays Exporter",
+    "description": "The official API documentation for Peerplays Block Exporter.",
     "version": "0.1"
   },
   "servers": [

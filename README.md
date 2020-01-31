@@ -1,4 +1,4 @@
-# exechain-block-explorer
+# peerplays-block-exporter
 
 
 ## Quick Start

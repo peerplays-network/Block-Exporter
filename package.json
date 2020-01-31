@@ -1,7 +1,7 @@
 {
-  "name": "exechain-block-explorer",
+  "name": "peerplays-block-exporter",
   "version": "0.3.0",
-  "description": "A block explorer for exechain",
+  "description": "A block exporter for exechain",
   "main": "server/index.js",
   "scripts": {
     "build": "rimraf build && webpack --progress",
@@ -121,11 +121,6 @@
       "^.+\\.js$": "babel-jest"
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@bitbucket.org/exeblock/exe-explorer.git"
-  },
   "author": "",
-  "license": "ISC",
-  "homepage": "https://bitbucket.org/exeblock/exe-explorer#readme"
+  "license": "ISC"
 }
