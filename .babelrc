@@ -1,16 +1,11 @@
 {
   "presets": [
-    ["env", { "targets": { "node": "current" }, "modules": false }],
-    "react",
-    "stage-2"
+    ["@babel/preset-env", { "targets": { "node": "current" }, "modules": false }]
   ],
   "env": {
     "production": {
       "presets": ["minify"]
-    },
-    "test": {
-      "plugins": ["transform-es2015-modules-commonjs"]
     }
   },
-  "plugins": ["react-hot-loader/babel", "transform-es2015-arrow-functions", "transform-es2015-classes"]
+  "plugins": ["react-hot-loader/babel"]
 }

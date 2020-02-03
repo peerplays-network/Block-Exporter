@@ -26,8 +26,12 @@ config.module = {
 		{
 			test: /\.(js|jsx)?$/,
 			exclude: /node_modules/,
-			use: ['babel-loader'],
-			include: paths.app.src
+			loader: 'babel-loader',
+			query: {
+				presets: ['@babel/preset-react', '@babel/preset-env'],
+				plugins: ['transform-class-properties']
+			},
+			include: paths.app.src,
 		},
 		{
 			test: /\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
