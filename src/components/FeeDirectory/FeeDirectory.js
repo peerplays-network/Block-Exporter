@@ -22,7 +22,7 @@ class FeeDirectory extends Component {
 		//API call to search for operations
 		axios.get('api/operations', {
 		}).then(response => {
-			var alphabet = ('abcdefghijklmnopqrstuvwxyz').split('');
+			let alphabet = ('abcdefghijklmnopqrstuvwxyz').split('');
 			const group = [];
 			alphabet.forEach((item, index) => {
 				if(!group[item])
@@ -61,9 +61,9 @@ class FeeDirectory extends Component {
 	}
 
 	findFee(searchFee, data) {
-		var temp_data = [];
+		let temp_data = [];
 		//if the data.id matches accountName add to data
-		for (var operation in data) {
+		for (let operation in data) {
 			if (data[operation].friendly_name.indexOf(searchFee) >= 0 ) 
 				temp_data.push(data[operation]);
 		}

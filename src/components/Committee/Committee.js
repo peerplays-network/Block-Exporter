@@ -53,7 +53,7 @@ class Committee extends Component {
 	}
 
 	findAccountByName(committee, data) {
-		var temp_data = [];
+		let temp_data = [];
 		temp_data = data.filter(obj => {
 			return obj.account_name.includes(committee);
 		  });
@@ -62,7 +62,7 @@ class Committee extends Component {
 	}
 
 	findAccountById(committee, data) {
-		var temp_data = [];
+		let temp_data = [];
 		temp_data = data.filter(obj => {
 			return obj.committee_id === (committee);
 		  });

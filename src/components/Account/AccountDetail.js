@@ -1,16 +1,18 @@
 /*Used in Account*/
 import React,  { Component } from 'react';
-import { NavLink } from 'reactstrap';
-import { NavLink as RRNavLink } from 'react-router-dom';
+import {Link, TableRow, TableCell} from '@material-ui/core';
 
 class AccountDetail extends Component {
 	render() {
+		const account = this.props.detail.account_name;
 		return (
-			<tr>
-				<td><NavLink tag={RRNavLink} to={'/accountAllDetail/'+this.props.detail.account_name} >{ this.props.detail.account_name }</NavLink></td>
-				<td>{ this.props.detail.account_id}</td>
-				<td>{ this.props.detail.referrer }</td>
-			</tr>
+			<TableRow>
+				<TableCell>
+					<Link href={'/accountAllDetail/'+account}>{ account }</Link>
+				</TableCell>
+				<TableCell>{ this.props.detail.account_id}</TableCell>
+				<TableCell>{ this.props.detail.referrer }</TableCell>
+			</TableRow>
 		);
 	}
 }

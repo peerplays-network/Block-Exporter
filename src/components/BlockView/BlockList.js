@@ -87,7 +87,7 @@ class BlockList extends Component {
 	}
 
 	onSearch(data) {
-		var temp_data = [];
+		let temp_data = [];
 		temp_data = data;
 		this.setState({ blocks: temp_data });
 	}

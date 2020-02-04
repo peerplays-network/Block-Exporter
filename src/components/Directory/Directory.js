@@ -19,14 +19,14 @@ class Directory extends Component {
 	fetchData() {
 		axios.get('/api/resources', {
 		}).then(response => {
-			var resources = response.data;
-			var categories = this.state.categories;
+			let resources = response.data;
+			let categories = this.state.categories;
 			categories.push(resources.map((resource, i) => {
 				if(!categories.includes(resource.category)) {
 					return resource.category;
 				}
 			}));
-			var catgo = categories[0].filter((v, i) => categories[0].indexOf(v) === i);
+			let catgo = categories[0].filter((v, i) => categories[0].indexOf(v) === i);
 			console.log('out loop', resources, categories, catgo);
 			this.setState({ resources: resources});
 			this.setState({ categories: catgo});
