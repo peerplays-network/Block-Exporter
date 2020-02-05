@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import AccountDetail from './AccountDetail';
 import PaginationCall from './PaginationCall';
 import { Input, InputGroup } from 'reactstrap';
+import {Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel} from '@material-ui/core';
 import { connect } from 'react-redux';
-import styles from '../WitnessViewer/styles.css';
 import axios from 'axios';
 
 class AccountSearch extends Component {
@@ -17,9 +17,10 @@ class AccountSearch extends Component {
 			currentPage: 0,
 			pageSize: 3,
 			pagesCount: 0,
-			sortType: 'DESC',
+			sortType: 'desc',
 			sortBy: 'account_name',
 		};
+
 		this.gridHeight = 24;
 		//pagination set page length
 		this.onAccountEnter = this.onAccountEnter.bind(this);
@@ -32,7 +33,7 @@ class AccountSearch extends Component {
 	componentDidUpdate(prevProps) {        
 		if(prevProps.accounts !== this.props.accounts) {           
 			this.setState({data: this.props.accounts, temp_data: this.props.accounts});
-			this.refreshPagination(this.props.accounts);    
+			// this.refreshPagination(this.props.accounts);    
 		}
 
 		if(this.props.id !== '' && this.props.visible !== prevProps.visible) {
@@ -41,9 +42,9 @@ class AccountSearch extends Component {
 	}
 
 	findData() {
-		var info = (this.props.accounts === undefined || this.props.accounts.length === 0) ? [] : this.props.accounts;
+		let info = (this.props.accounts === undefined || this.props.accounts.length === 0) ? [] : this.props.accounts;
 		this.sortByColumn('account_name');
-		this.refreshPagination(info);
+		// this.refreshPagination(info);
 	}
 
 	refreshPagination(data) {
@@ -65,7 +66,7 @@ class AccountSearch extends Component {
 	}
 
 	findAccountByName(accountName, data) {
-		var temp_data = [];
+		let temp_data = [];
 		temp_data = data.filter(obj => {
 			return obj.account_name.includes(accountName);
 		  });
@@ -73,8 +74,8 @@ class AccountSearch extends Component {
 		this.refreshPagination(temp_data);
 	}
 
-	findAccountById(accountId, data) {
-		var temp_data = [];
+	findAccountById = (accountId, data) =>{
+		let temp_data = [];
 		console.log('data', data);
 		temp_data = data.filter(obj => {
 			console.log('obj', obj);
@@ -84,37 +85,63 @@ class AccountSearch extends Component {
 		this.refreshPagination(temp_data);
 	}
 
-	changePage(e, index) {
+	changePage = (e, index) => {
 		e.preventDefault();
 		this.setState({ currentPage: index });
 	}
 
-	sortByColumn(colType) {
+	sortByColumn = (colType) => {
 		let sortType = this.state.sortType;
 		if(this.state.sortBy === colType)
 		{
-			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
+			sortType === 'desc' ? sortType='asc': sortType='desc';
 		}
 
 		this.setState({sortType:sortType, sortBy:colType});
 		/*sorts depending on the column type. Also does a lookup on the witness data which
 		  stores the initial API call made when the component is loaded and witness rank is calculated.
 		the witness rank is the appended to the data coming in from the sort API call.*/
-		axios.get(`/api/accounts?sort=${colType}&direction=${sortType}`, {
+		axios.get(`/api/accounts?sort=${colType}&direction=${sortType.toUpperCase()}`, {
 		}).then(response => {
 			this.onSearchAccount(this.state.account, response.data);
 		}).catch(error => {console.log('error fetching witness data', error);});
 	}
 
+	//generates table headers
+	generateTableHeaders = () => {
+		const headCells = [
+			{id: 'account_id', label: 'Account Id'},
+			{id: 'account_name', label: 'Account Name'},
+			{id: 'referrer', label: 'Referer'}
+		]
+
+		const {sortBy, sortType} = this.state;
+
+		return (
+			<TableRow>
+				{headCells.map(headCell => (
+					<TableCell key={headCell.id} sortDirection={sortType}>
+						<TableSortLabel
+							active={sortBy === headCell.id}
+							direction={sortType}
+							onClick={() => this.sortByColumn(headCell.id)}>
+							{headCell.label}
+						</TableSortLabel>
+					</TableCell>
+				))}
+			</TableRow>
+		);
+	}
+
 	render() {
-		const { temp_data, account, currentPage, pageSize } = this.state;
+		const { temp_data, account, currentPage, pageSize, sortType, sortBy } = this.state;
 		
 		return(
-			<div className="table-responsive">
+			<div className="">
 				
 				{!!this.props.history ? // browse all account page
-					<div className="container pt-0 pb-5 mt-5">
-						<div className="pagination-wrapper">
+					<div className="">
+						<div className="">
 							<InputGroup>
 								<Input type="text" value={account} onChange={this.onAccountEnter.bind(this)} placeholder="Account" />
 							</InputGroup>
@@ -122,30 +149,30 @@ class AccountSearch extends Component {
 						</div>
 
 					
-						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-2 pb-3`}>
+						<h1 className="">
 							<span className="fa fa-user-alt">&nbsp;</span> Browse Accounts</h1>
 					
 						
-						<table className="table" >
-							<thead className={`${styles['clickable']} ${styles['accounts-header']} ${styles['header-contrast-text']}`}>
-								<tr>
-									<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Account Name</th>
-									<th onClick={this.sortByColumn.bind(this, 'account_id')} scope="col">Account ID</th>
-									<th onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</th>
-								</tr>
-							</thead>
-							<tbody>
+						<Table className="table" >
+							<TableHead className={''}>
+									{this.generateTableHeaders()}
+									{/* <TableCell scope="col">Account Name</TableCell>
+									<TableSortLabel active={sortBy === 'account_name'} direction={sortType} onClick={createSortHandler(headCell.id)}></TableSortLabel>
+									<TableCell active={sortBy === 'account_id'} onClick={this.sortByColumn.bind(this, 'account_id')} scope="col">Account ID</TableCell>
+									<TableCell active={sortBy === 'account_id'} onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</TableCell> */}
+							</TableHead>
+							<TableBody>
 								{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((account, i) =>
-									<AccountDetail detail={account} key={i}/>
+								<AccountDetail detail={account} key={i}/>
 								)}
-							</tbody>
-						</table>{temp_data.length===0 && <div> No Accounts Found </div>}
+							</TableBody>
+						</Table>{temp_data.length===0 && <div> No Accounts Found </div>}
 
 					</div>
 
 					: 
 					// account feed widget
-					<div className="container pt-0 pb-5 mt-0">
+					<div className="container">
 						<div className="pagination-wrapper">
 							<InputGroup>
 								<Input type="text" value={account} onChange={this.onAccountEnter.bind(this)} placeholder="Account" />
@@ -153,20 +180,20 @@ class AccountSearch extends Component {
 							<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
 						</div>
 
-						<table className="table" >
-							<thead className={`${styles['clickable']} ${styles['accounts-header']} ${styles['header-contrast-text']}`}>
-								<tr>
-									<th onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Account Name</th>
-									<th onClick={this.sortByColumn.bind(this, 'account_id')} scope="col">Account ID</th>
-									<th onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</th>
-								</tr>
-							</thead>
-							<tbody>
+						<Table className="" >
+							<TableHead className={''}>
+								<TableRow>
+									<TableCell onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Account Name</TableCell>
+									<TableCell onClick={this.sortByColumn.bind(this, 'account_id')} scope="col">Account ID</TableCell>
+									<TableCell onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</TableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
 								{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((account, i) =>
 									<AccountDetail detail={account} key={i}/>
 								)}
-							</tbody>
-						</table>{temp_data.length===0 && <div> No Accounts Found </div>}
+							</TableBody>
+						</Table>{temp_data.length===0 && <div> No Accounts Found </div>}
 
 					</div>
 

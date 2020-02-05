@@ -45,7 +45,7 @@ class Search extends Component {
 	getCommitteeName(accounts) {
 		axios.get('/api/committee', {
 		}).then(response => {
-			var newState = response.data;
+			let newState = response.data;
 			newState = newState.filter(el => {return accounts.find(account => account.account_id === el.committee_member_account);});
 			newState.map(el => {return el.account_name = accounts.find(account => account.account_id === el.committee_member_account).account_name;});
 			this.setState({committee: newState});
@@ -59,7 +59,7 @@ class Search extends Component {
 	getWitnessesName(accounts) {
 		axios.get('/api/witnesses', {
 		}).then(response => {
-			var newState = response.data;
+			let newState = response.data;
 			newState = newState.filter(el => {return accounts.find(account => account.account_id === el.witness);});
 			newState.map(el => {return el.account_name = accounts.find(account => account.account_id === el.witness).account_name;});
 			this.setState({witnesses: newState});

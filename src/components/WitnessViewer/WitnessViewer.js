@@ -56,7 +56,7 @@ class WitnessViewer extends Component {
 	}
 
 	findAccountByName(witness, data) {
-		var temp_data = [];
+		let temp_data = [];
 		temp_data = data.filter(obj => {
 			return obj.account_name.includes(witness);
 		  });
@@ -65,7 +65,7 @@ class WitnessViewer extends Component {
 	}
 
 	findAccountById(witness, data) {
-		var temp_data = [];
+		let temp_data = [];
 		temp_data = data.filter(obj => {
 			return obj.account_id === (witness);
 		  });

@@ -54,9 +54,9 @@ class Contract extends Component {
 	}
 
 	findContract(contractName, data) {
-		var temp_data = [];
+		let temp_data = [];
 		//if the data name matches contract name, add to data
-		for (var contract in data) {
+		for (let contract in data) {
 			if (data[contract].name.indexOf(contractName) >= 0 || data[contract].object_id.indexOf(contractName) >= 0) 
 				temp_data.push(data[contract]);
 		}
