@@ -60,8 +60,10 @@ async function syncDatabase(connection) {
 	}
 
 	// Accounts
-	let r1 = await Blockchain.getFullAccounts(nameAry);
-
+	const startIndex = 0;
+	const endIndex = 100;
+	const fullAccountList = [];
+	const r1 = await Blockchain.getFullAccountsRecursively(nameAry, startIndex, endIndex, fullAccountList);
 	r1.forEach(async (data, index) => {
 		if (data && data[1].account) {
 
@@ -70,8 +72,8 @@ async function syncDatabase(connection) {
 			const account_name = data.name;
 			const membership_expiration_date = data.membership_expiration_date;
 			const referrer = data.referrer;
-			const owner_key = data.owner.key_auths[0][0];
-			const active_key = data.active.key_auths[0][0];
+			const owner_key = data.owner.key_auths.length > 0 ? data.owner.key_auths[0][0] : '';
+			const active_key = data.active.key_auths.length > 0 ? data.active.key_auths[0][0] : '';
 			const memo_key = data.options.memo_key;
 			const account_id = data.id;
 
@@ -188,32 +190,6 @@ r4.forEach(async (data, index) => {
 			throw err;
 		}
 });
-})
-
-// Smart Contracts
-let r5 = await Blockchain.listAllContracts();
-
-r5.forEach(async (data, index) => {
-	// console.log(data);
-	let suicided = 0;
-	if (data.suicided == true) {
-		suicided = 1
-	}
-	const balanceObj = await Blockchain.getContractBalance(data.id);
-	const statsObj = await Blockchain.getContractStats(data.statistics);
-
-	const balanceJSON = JSON.stringify(balanceObj);
-	const statsJSON = JSON.stringify(statsObj);
-
-	sql = `INSERT INTO explorer.contracts (object_id, statistics_id, name, suicided, balances, statistics ) VALUES ('${data.id}', '${data.statistics}', '${data.name}', '${suicided}', '${balanceJSON}', '${statsJSON}') ON DUPLICATE KEY UPDATE    
-	object_id='${data.id}', statistics_id='${data.statistics}', name='${data.name}', suicided='${suicided}', balances='${balanceJSON}', statistics='${statsJSON}'`
-
-	connection.query(sql, function (err, result) {
-		if (err) {
-			throw err;
-		}
-});
-	
 })
 
 console.log('Exeplorer Server> Done non-block sync.')

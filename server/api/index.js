@@ -278,11 +278,12 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 						throw err;
 					}
 				});
-			} else if (t.operations[0][0] === 20) {
-				// console.log(t.operations[0][0]);
 			}
-			operations = JSON.stringify(t.operations[0]);
 
+			if (t.operations[0][0] === 77) {
+				t.operations[0].common_options.description = JSON.parse(t.operations[0].common_options.description);
+			} 
+			operations = JSON.stringify(t.operations[0]);
 				
 			operation_results = JSON.stringify(t.operation_results[0]);
 			extensions = JSON.stringify(t.extensions);
@@ -366,12 +367,16 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 
     returns: Array of account object(s)
     */
-
-	getFullAccounts: acc => {
-		return new Promise((resolve, reject) => {
-			Apis.instance().db_api().exec('get_full_accounts', [acc, true]).then(w => {
-				resolve(w);
-			});
+	getFullAccountsRecursively: (allAccounts, startIndex, endIndex, fullAccountList) => {
+		const accList = allAccounts.slice(startIndex, endIndex);
+		return Apis.instance().db_api().exec('get_full_accounts', [accList, false]).then(accounts => {
+			if (accounts.length > 1) {
+				Array.prototype.push.apply(fullAccountList, accounts);
+				return api.getFullAccountsRecursively(allAccounts, startIndex+100, endIndex+100, fullAccountList);
+			} else {
+				// No more accounts in array. Return full accounts list
+				return fullAccountList;
+			}
 		});
 	},
 
@@ -619,31 +624,6 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			});
 		});
 	},
-
-	// list all smart contracts
-	listAllContracts: () => {
-		return new Promise((resolve, reject) => {
-			Apis.instance().db_api().exec('get_all_contracts', []).then(w => {
-				resolve(w);
-			});
-		});
-	},
-
-	getContractBalance: (contract_id) => {
-		return new Promise((resolve, reject) => {
-			Apis.instance().db_api().exec('get_contract_balances', [contract_id]).then(w => {
-				resolve(w);
-			});
-		});
-	},
-
-	getContractStats: (statistics_id) => {
-		return new Promise((resolve, reject) => {
-			Apis.instance().db_api().exec('get_objects', [[statistics_id]]).then(w => {
-				resolve(w);
-			});
-		});
-	}
 };
 
 module.exports = api;
