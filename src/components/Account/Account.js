@@ -1,9 +1,7 @@
 /* Account page includes pagination */
 import React, { Component } from 'react';
 import AccountDetail from './AccountDetail';
-import PaginationCall from './PaginationCall';
-import { Input, InputGroup } from 'reactstrap';
-import {Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel} from '@material-ui/core';
+import {Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel, TableContainer, TablePagination, InputAdornment, Input} from '@material-ui/core';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
@@ -15,19 +13,13 @@ class AccountSearch extends Component {
 			temp_data: (this.props.accounts) ? this.props.accounts : [],
 			account : '',
 			currentPage: 0,
-			pageSize: 3,
+			rowsPerPage: 5,
 			pagesCount: 0,
 			sortType: 'desc',
 			sortBy: 'account_name',
 		};
 
 		this.gridHeight = 24;
-		//pagination set page length
-		this.onAccountEnter = this.onAccountEnter.bind(this);
-	}
-
-	componentDidMount() {
-		this.findData();
 	}
 	
 	componentDidUpdate(prevProps) {        
@@ -41,24 +33,13 @@ class AccountSearch extends Component {
 		}
 	}
 
-	findData() {
-		let info = (this.props.accounts === undefined || this.props.accounts.length === 0) ? [] : this.props.accounts;
-		this.sortByColumn('account_name');
-		// this.refreshPagination(info);
-	}
-
-	refreshPagination(data) {
-		this.setState({pagesCount: Math.ceil(data.length / this.state.pageSize) });
-		this.setState({currentPage: 0});
-	}
-
-	onAccountEnter(e) {
+	onAccountEnter = e => {
 		e.preventDefault();
 		this.setState({ account: e.target.value });
 		this.onSearchAccount(e.target.value, this.state.data);
 	}
 
-	onSearchAccount(value, data) {
+	onSearchAccount = (value, data) => {
 		if(value.includes('1.2.'))
 			this.findAccountById(value, data);
 		else
@@ -71,7 +52,6 @@ class AccountSearch extends Component {
 			return obj.account_name.includes(accountName);
 		  });
 		this.setState({ temp_data: temp_data });
-		this.refreshPagination(temp_data);
 	}
 
 	findAccountById = (accountId, data) =>{
@@ -89,6 +69,11 @@ class AccountSearch extends Component {
 		e.preventDefault();
 		this.setState({ currentPage: index });
 	}
+
+	handleChangeRowsPerPage = event => {
+		this.setState({rowsPerPage: event.target.value});
+		this.changePage(event, 0);
+	};
 
 	sortByColumn = (colType) => {
 		let sortType = this.state.sortType;
@@ -113,7 +98,7 @@ class AccountSearch extends Component {
 			{id: 'account_id', label: 'Account Id'},
 			{id: 'account_name', label: 'Account Name'},
 			{id: 'referrer', label: 'Referer'}
-		]
+		];
 
 		const {sortBy, sortType} = this.state;
 
@@ -134,66 +119,80 @@ class AccountSearch extends Component {
 	}
 
 	render() {
-		const { temp_data, account, currentPage, pageSize, sortType, sortBy } = this.state;
+		const { temp_data, account, currentPage, rowsPerPage } = this.state;
 		
 		return(
 			<div className="">
 				
 				{!!this.props.history ? // browse all account page
-					<div className="">
-						<div className="">
-							<InputGroup>
-								<Input type="text" value={account} onChange={this.onAccountEnter.bind(this)} placeholder="Account" />
-							</InputGroup>
-							<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
+					<div>
+						<div className="account-header-container">
+							<span className="account-header-text"><span className="fa fa-user-alt">&nbsp;</span> Browse Accounts</span>
+							<Input
+								id="standard-adornment-password"
+								type="search"
+								label="Search Accounts"
+								value={account}
+								onChange={this.onAccountEnter}
+								endAdornment={<InputAdornment position="end">search</InputAdornment>}
+							/>
 						</div>
-
-					
-						<h1 className="">
-							<span className="fa fa-user-alt">&nbsp;</span> Browse Accounts</h1>
-					
-						
-						<Table className="table" >
-							<TableHead className={''}>
+						<TableContainer>
+							<Table stickyHeader className="table" >
+								<TableHead className={''}>
 									{this.generateTableHeaders()}
 									{/* <TableCell scope="col">Account Name</TableCell>
 									<TableSortLabel active={sortBy === 'account_name'} direction={sortType} onClick={createSortHandler(headCell.id)}></TableSortLabel>
 									<TableCell active={sortBy === 'account_id'} onClick={this.sortByColumn.bind(this, 'account_id')} scope="col">Account ID</TableCell>
 									<TableCell active={sortBy === 'account_id'} onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</TableCell> */}
-							</TableHead>
-							<TableBody>
-								{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((account, i) =>
-								<AccountDetail detail={account} key={i}/>
-								)}
-							</TableBody>
-						</Table>{temp_data.length===0 && <div> No Accounts Found </div>}
-
+								</TableHead>
+								<TableBody>
+									{temp_data && temp_data.slice( currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage).map((account, i) =>
+										<AccountDetail detail={account} key={i}/>
+									)}
+								</TableBody>
+							</Table>{temp_data.length===0 && <div> No Accounts Found </div>}
+						</TableContainer>
+						<TablePagination
+							rowsPerPageOptions={[5, 10, 25]}
+							component="div"
+							count={temp_data.length}
+							rowsPerPage={rowsPerPage}
+							page={currentPage}
+							onChangePage={this.changePage}
+							onChangeRowsPerPage={this.handleChangeRowsPerPage}
+						/>
 					</div>
 
 					: 
 					// account feed widget
-					<div className="container">
-						<div className="pagination-wrapper">
-							<InputGroup>
-								<Input type="text" value={account} onChange={this.onAccountEnter.bind(this)} placeholder="Account" />
-							</InputGroup>
-							<PaginationCall currentPage={currentPage} handleClick={this.changePage.bind(this)} pagesCount={this.state.pagesCount} />
-						</div>
+					<div>
+						<TableContainer>
 
-						<Table className="" >
-							<TableHead className={''}>
-								<TableRow>
-									<TableCell onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Account Name</TableCell>
-									<TableCell onClick={this.sortByColumn.bind(this, 'account_id')} scope="col">Account ID</TableCell>
-									<TableCell onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</TableCell>
-								</TableRow>
-							</TableHead>
-							<TableBody>
-								{temp_data && temp_data.slice( currentPage * pageSize, (currentPage + 1) * pageSize).map((account, i) =>
-									<AccountDetail detail={account} key={i}/>
-								)}
-							</TableBody>
-						</Table>{temp_data.length===0 && <div> No Accounts Found </div>}
+							<Table stickyHeader className="" >
+								<TableHead className={''}>
+									<TableRow>
+										<TableCell onClick={this.sortByColumn.bind(this, 'account_name')} scope="col">Account Name</TableCell>
+										<TableCell onClick={this.sortByColumn.bind(this, 'account_id')} scope="col">Account ID</TableCell>
+										<TableCell onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</TableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{temp_data && temp_data.slice( currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage).map((account, i) =>
+										<AccountDetail detail={account} key={i}/>
+									)}
+								</TableBody>
+							</Table>{temp_data.length===0 && <div> No Accounts Found </div>}
+						</TableContainer>
+						<TablePagination
+							rowsPerPageOptions={[5, 10, 25]}
+							component="div"
+							count={temp_data.length}
+							rowsPerPage={rowsPerPage}
+							page={currentPage}
+							onChangePage={this.changePage}
+							onChangeRowsPerPage={this.handleChangeRowsPerPage}
+						/>
 
 					</div>
 
