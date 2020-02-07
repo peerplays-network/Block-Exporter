@@ -3,97 +3,12 @@ import React, { Component } from 'react';
 import CustomTable from '../Utility/CustomTable';
 import { connect } from 'react-redux';
 const gridHeight = 24;
-class AccountSearch extends Component {
+class Account extends Component {
 	componentDidUpdate(prevProps) {        
 		if(this.props.id !== '' && this.props.visible !== prevProps.visible) {
 			this.props.calculateComponentHeight(this.props.id, gridHeight);
 		}
 	}
-
-	// onAccountEnter = e => {
-	// 	e.preventDefault();
-	// 	this.setState({ account: e.target.value });
-	// 	this.onSearchAccount(e.target.value, this.state.data);
-	// }
-
-	// onSearchAccount = (value, data) => {
-	// 	if(value.includes('1.2.'))
-	// 		this.findAccountById(value, data);
-	// 	else
-	// 		this.findAccountByName(value, data);
-	// }
-
-	// findAccountByName(accountName, data) {
-	// 	let temp_data = [];
-	// 	temp_data = data.filter(obj => {
-	// 		return obj.account_name.includes(accountName);
-	// 	  });
-	// 	this.setState({ temp_data: temp_data });
-	// }
-
-	// findAccountById = (accountId, data) =>{
-	// 	let temp_data = [];
-	// 	console.log('data', data);
-	// 	temp_data = data.filter(obj => {
-	// 		console.log('obj', obj);
-	// 		return obj.account_id.includes(accountId);
-	// 	  });
-	// 	this.setState({ temp_data: temp_data });
-	// 	this.refreshPagination(temp_data);
-	// }
-
-	// changePage = (e, index) => {
-	// 	e.preventDefault();
-	// 	this.setState({ currentPage: index });
-	// }
-
-	// handleChangeRowsPerPage = event => {
-	// 	this.setState({rowsPerPage: event.target.value});
-	// 	this.changePage(event, 0);
-	// };
-
-	// sortByColumn = (colType) => {
-	// 	let sortType = this.state.sortType;
-	// 	if(this.state.sortBy === colType)
-	// 	{
-	// 		sortType === 'desc' ? sortType='asc': sortType='desc';
-	// 	}
-
-	// 	this.setState({sortType:sortType, sortBy:colType});
-	// 	/*sorts depending on the column type. Also does a lookup on the witness data which
-	// 	  stores the initial API call made when the component is loaded and witness rank is calculated.
-	// 	the witness rank is the appended to the data coming in from the sort API call.*/
-	// 	axios.get(`/api/accounts?sort=${colType}&direction=${sortType.toUpperCase()}`, {
-	// 	}).then(response => {
-	// 		this.onSearchAccount(this.state.account, response.data);
-	// 	}).catch(error => {console.log('error fetching witness data', error);});
-	// }
-
-	//generates table headers
-	// generateTableHeaders = () => {
-	// 	const headCells = [
-	// 		{id: 'account_id', label: 'Account Id'},
-	// 		{id: 'account_name', label: 'Account Name'},
-	// 		{id: 'referrer', label: 'Referer'}
-	// 	];
-
-	// 	const {sortBy, sortType} = this.state;
-
-	// 	return (
-	// 		<TableRow>
-	// 			{headCells.map(headCell => (
-	// 				<TableCell key={headCell.id} sortDirection={sortType}>
-	// 					<TableSortLabel
-	// 						active={sortBy === headCell.id}
-	// 						direction={sortType}
-	// 						onClick={() => this.sortByColumn(headCell.id)}>
-	// 						{headCell.label}
-	// 					</TableSortLabel>
-	// 				</TableCell>
-	// 			))}
-	// 		</TableRow>
-	// 	);
-	// }
 
 	render() {
 		const accounts = this.props.accounts || [];
@@ -124,7 +39,7 @@ class AccountSearch extends Component {
 					// 				<TableCell active={sortBy === 'account_id'} onClick={this.sortByColumn.bind(this, 'referrer')} scope="col">Referrer</TableCell> */}
 					// 			</TableHead>
 					// 			<TableBody>
-					<CustomTable data={accounts} tableHeader="Accounts"/>
+					<CustomTable data={accounts} tableType="accounts" headerLabel="Accounts"/>
 					 			// </TableBody>
 					// 		</Table>{temp_data.length===0 && <div> No Accounts Found </div>}
 					// 	</TableContainer>
@@ -185,4 +100,4 @@ const mapStateToProps = (state) => ({
 	accounts: state.accounts.accountList
 });
 
-export default connect(mapStateToProps)(AccountSearch);
+export default connect(mapStateToProps)(Account);

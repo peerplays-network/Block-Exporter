@@ -1,9 +1,0 @@
-.account-header-container {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 40px;
-}
-
-.account-header-text {
-  font-size: 20px;
-}

@@ -1,0 +1,13 @@
+.table-header-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0px 40px;
+}
+
+.table-header-text {
+  font-size: 40px;
+}
+
+.table-header-search {
+  align-self: center;
+}
