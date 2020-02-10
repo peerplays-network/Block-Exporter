@@ -1,20 +1,34 @@
 import React, { Component } from 'react';
 import {Table, TableContainer, TablePagination, InputAdornment, Input} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import CustomTableHeader from './CustomTableHeader';
 import CustomTableBody from './CustomTableBody';
 import GeneralApi from '../../../api/GeneralApi';
 import styles from './styles.css';
+
+const muiStyle = {
+	root: {
+		backgroundColor: 'white',
+	},
+};
+
 class CustomTable extends Component {
-  state = {
-  	searchText : '',
-  	currentPage: 0,
-  	rowsPerPage: 5,
-  	sortType: 'desc',
-  	sortBy: '',
-  	filteredData: ''
-    
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			searchText : '',
+			currentPage: 0,
+			rowsPerPage: 5,
+			sortType: 'desc',
+			sortBy: '',
+			filteredData: ''
+			
+		};
+
+		this.containerClass = this.props.widget ? 'table-border-sm' : 'table-border';
+		this.tableHeaderClass = this.props.widget ? 'table-header-container-sm' : 'table-header-container';
+	}
 
 	changePage = (e, index) => {
 		e.preventDefault();
@@ -70,16 +84,18 @@ class CustomTable extends Component {
   
 	 render() {
 	 	const {currentPage, rowsPerPage, filteredData, sortBy, sortType, searchText} = this.state;
-	 	const {data, tableType, headerLabel, headerIcon} = this.props;
+	 	const {data, tableType, headerLabel, headerIcon, widget, classes} = this.props;
 		 //If the table sort or search is active display filtered data otherwise display pure data
 		 const tableData = filteredData || searchText ? filteredData : data;
   	return (
-  		<div>
-  			<TableContainer>
-	 				<div className={`${styles['table-header-container']}`}>
-	 					<span className={`${styles['table-header-text']}`}><span className="fa fa-user-alt">&nbsp;</span>{headerLabel}</span>
+  		<div className={`${styles[this.containerClass]}`}>
+  			<TableContainer className={`${styles['table-container']}`}>
+					 <div className={`${styles[this.tableHeaderClass]}`}>
+					 {widget ? null :
+						 <span className={`${styles['table-header-text']}`}><span className={headerIcon}/>{headerLabel}</span>
+	 					}
 	 					<Input
-						 className={`${styles['table-header-search']}`}
+						 className={`${classes.root} ${styles['table-header-search']}`}
 	 						id="standard-adornment-password"
 	 						type="search"
 	 						label="Search"
@@ -110,4 +126,4 @@ class CustomTable extends Component {
   	);
 	 }
 }
-export default CustomTable;
+export default withStyles(muiStyle)(CustomTable);

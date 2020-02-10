@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import {TableRow, TableCell, TableSortLabel, TableHead, Input, InputAdornment} from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
+import {TableRow, TableCell, TableSortLabel, TableHead} from '@material-ui/core';
 
 class CustomTableHeader extends Component {
   generateHeadCells = () => {
