@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { NavLink as RRNavLink } from 'react-router-dom';
-import {NavLink} from 'reactstrap';
+import {Link, TableRow, TableCell} from '@material-ui/core';
 
 class CommitteeRow extends Component {
 	render() {
+		const {detail} = this.props;
 		return (
-			<tr>
-				<td className="align-middle">{this.props.rank}</td>
-				<td className="align-middle"><NavLink tag={RRNavLink} to={`/accountAllDetail/${this.props.committee_name}/${this.props.committee}`}>{this.props.committee_name}</NavLink></td>
-				<td className="align-middle">{this.props.votes}</td>
-				<td className="align-middle">{this.props.url}</td>
-			</tr>
+			<TableRow>
+				<TableCell>{detail.rank}</TableCell>
+				<TableCell><Link href={`/accountAllDetail/${detail.account_name}/${detail.committee}`}>{detail.account_name}</Link></TableCell>
+				<TableCell>{detail.total_votes}</TableCell>
+				<TableCell>{detail.url}</TableCell>
+			</TableRow>
 		);
 	}
 }

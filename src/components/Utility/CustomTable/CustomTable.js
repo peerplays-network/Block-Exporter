@@ -43,9 +43,10 @@ class CustomTable extends Component {
 
 	/* Searches by Id or name. When value = 1.2.xx search accounts by id
 	* When value = 1.6.xx search witnesses by id
+	* When value = 1.5.xx search committee by id
 	*/
 	onSearchData = (value, data) => {
-		if(value.includes('1.2.') || value.includes('1.6.'))
+		if(value.includes('1.2.') || value.includes('1.6.') || value.includes('1.5.'))
 			this.search('id', value, data);
 		else
 			this.search('name', value, data);
@@ -55,7 +56,7 @@ class CustomTable extends Component {
 		let searchData = [];
 		if(searchType === 'id') {
 			searchData = data.filter(obj => {
-				return obj.account_id.includes(value);
+				return obj.account_id ? obj.account_id.includes(value) : obj.committee_id.includes(value);
 			});
 		} else {
 			searchData = data.filter(obj => {
@@ -84,7 +85,7 @@ class CustomTable extends Component {
 		 this.setState({sortType:sortType, sortBy:colType});
 		
 	 	//sort with rank for witness table
-	 	if (tableType === 'witnesses') {
+	 	if (tableType === 'witnesses' || tableType === 'committee') {
 	 		GeneralApi.sortWithRank(tableData, tableType, colType, sortType).then((sortedData) => {
 	 			this.onSearchData(searchText, sortedData);
 	 		});

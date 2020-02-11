@@ -10,17 +10,18 @@ import { bindActionCreators } from 'redux';
 import { fetchWitnesses } from '../../actions/WitnessActions';
 import { fetchAccounts } from '../../actions/AccountActions';
 import { fetchContracts } from '../../actions/ContractActions';
+import { fetchCommittee } from '../../actions/CommitteeActions';
 
 class ReduxWrapper extends Component {
 	componentDidMount() {
 		this.props.fetchWitnesses();
 		this.props.fetchAccounts();
 		this.props.fetchContracts();
+		console.log('calling committee');
+		this.props.fetchCommittee();
 	}
 
 	render() {
-		console.log('witnesses', this.props.witnesses);
-		console.log('accounts', this.props.accounts);
 		return (
 			<div>
 				<NavBar />
@@ -36,7 +37,7 @@ const mapStateToProps = (state) => ({
 });
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({ fetchWitnesses, fetchAccounts, fetchContracts }, dispatch);
+	return bindActionCreators({ fetchWitnesses, fetchAccounts, fetchContracts, fetchCommittee }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReduxWrapper);

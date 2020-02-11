@@ -10,7 +10,7 @@ class CustomTableHeader extends Component {
   				{id: 'account_id', label: 'Account Id'},
   				{id: 'referrer', label: 'Referer'}
   			];
-  		case 'witnesses': {
+  		case 'witnesses':
   			return [
   				{id: 'rank', label: 'Rank'},
   				{id: 'account_name', label: 'Witness Name'},
@@ -18,7 +18,13 @@ class CustomTableHeader extends Component {
   				{id: 'total_missed', label: 'Misses'},
   				{id: 'url', label: 'URL'}
   			];
-  		}
+  		case 'committee':
+  			return [
+  				{id: 'rank', label: 'Rank'},
+  				{id: 'committee_id', label: 'Committee Member'},
+  				{id: 'total_votes', label: 'Votes'},
+  				{id: 'url', label: 'URL'}
+  			];
   		default:
   			break;
   	}
