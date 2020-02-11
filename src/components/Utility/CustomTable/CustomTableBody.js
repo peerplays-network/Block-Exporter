@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {TableBody} from '@material-ui/core';
 import AccountDetail from '../../Account/AccountDetail';
+import WitnessRow from '../../WitnessViewer/WitnessRow';
 
 class CustomTableBody extends Component {
   generateTableRows = (rowData, i) => {
@@ -8,6 +9,8 @@ class CustomTableBody extends Component {
   	switch(tableType) {
   		case 'accounts':
   			return <AccountDetail detail={rowData} key={i}/>;
+  		case 'witnesses':
+  			return <WitnessRow detail={rowData} key={i} />;
   		default:
   			return;
   	}

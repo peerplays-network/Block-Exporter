@@ -41,28 +41,30 @@ class CustomTable extends Component {
   	this.onSearchData(e.target.value, this.props.data);
   }
 
+	/* Searches by Id or name. When value = 1.2.xx search accounts by id
+	* When value = 1.6.xx search witnesses by id
+	*/
 	onSearchData = (value, data) => {
-		if(value.includes('1.2.'))
-			this.searchDataById(value, data);
+		if(value.includes('1.2.') || value.includes('1.6.'))
+			this.search('id', value, data);
 		else
-			this.searchDataByName(value, data);
+			this.search('name', value, data);
 	}
 
-	searchDataByName(name, data) {
-		let temp_data = [];
-		temp_data = data.filter(obj => {
-			return obj.account_name.includes(name);
-		});
-		this.setState({ filteredData: temp_data, currentPage: 0 });//This needs to be fixed
-	}
+	search(searchType, value, data) {
+		let searchData = [];
+		if(searchType === 'id') {
+			searchData = data.filter(obj => {
+				return obj.account_id.includes(value);
+			});
+		} else {
+			searchData = data.filter(obj => {
+				return obj.account_name.includes(value);
+			});
+		}
 
-	searchDataById = (id, data) =>{
-		let temp_data = [];
-		temp_data = data.filter(obj => {
-			return obj.account_id.includes(id);
-		  });
-		this.setState({ filteredData: temp_data, currentPage: 0 });//This needs to be fixed
-	}
+		this.setState({ filteredData: searchData, currentPage: 0 });
+	} 
   
 	changeRowsPerPage = event => {
 		this.setState({rowsPerPage: event.target.value});
@@ -70,16 +72,27 @@ class CustomTable extends Component {
 	};
 
 	 sortByColumn = (colType) => {
-	 	let sortType = this.state.sortType;
-	 	if(this.state.sortBy === colType)
+		 const {sortBy, searchText, filteredData} = this.state;
+		 let {sortType} = this.state;
+		 const {tableType, data} = this.props;
+		 const tableData = filteredData || searchText ? filteredData : data;
+
+	 	if (sortBy === colType)
 	 	{
 	 		sortType === 'desc' ? sortType='asc': sortType='desc';
 	 	}
 		 this.setState({sortType:sortType, sortBy:colType});
-		 
-	 	GeneralApi.sort(this.props.tableType, colType, sortType).then((sortedData) => {
-	 		this.onSearchData(this.state.searchText, sortedData.data);
-		 });
+		
+	 	//sort with rank for witness table
+	 	if (tableType === 'witnesses') {
+	 		GeneralApi.sortWithRank(tableData, tableType, colType, sortType).then((sortedData) => {
+	 			this.onSearchData(searchText, sortedData);
+	 		});
+		 } else {//sort without rank for account
+	 		GeneralApi.sort(tableType, colType, sortType).then((sortedData) => {
+	 			this.onSearchData(searchText, sortedData);
+	 		});
+		 }
 	 }
   
 	 render() {
@@ -109,7 +122,7 @@ class CustomTable extends Component {
   					/>
 	 				</div>
   				<Table stickyHeader>
-  					<CustomTableHeader sortByColumn={this.sortByColumn} sortBy={sortBy} sortType={sortType}/>
+  					<CustomTableHeader sortByColumn={this.sortByColumn} sortBy={sortBy} sortType={sortType} tableType={tableType}/>
 	 					<CustomTableBody tableData={tableData} currentPage={currentPage} rowsPerPage={rowsPerPage} tableType={tableType}/>
   				</Table>
   			</TableContainer>

@@ -2,22 +2,34 @@ import React, { Component } from 'react';
 import {TableRow, TableCell, TableSortLabel, TableHead} from '@material-ui/core';
 
 class CustomTableHeader extends Component {
-  generateHeadCells = () => {
-  	const headCells = [
-  		{id: 'account_name', label: 'Account Name'},
-  		{id: 'account_id', label: 'Account Id'},
-  		{id: 'referrer', label: 'Referer'}
-  	];
-
-  	return headCells;
+  generateHeadCells = (tableType) => {
+  	switch(tableType) {
+  		case 'accounts':
+  			return [
+  				{id: 'account_name', label: 'Account Name'},
+  				{id: 'account_id', label: 'Account Id'},
+  				{id: 'referrer', label: 'Referer'}
+  			];
+  		case 'witnesses': {
+  			return [
+  				{id: 'rank', label: 'Rank'},
+  				{id: 'account_name', label: 'Witness Name'},
+  				{id: 'total_votes', label: 'Votes'},
+  				{id: 'total_missed', label: 'Misses'},
+  				{id: 'url', label: 'URL'}
+  			];
+  		}
+  		default:
+  			break;
+  	}
   }
   
   render() {
-  	const {sortBy, sortType} = this.props;
+  	const {sortBy, sortType, tableType} = this.props;
   	return (
   		<TableHead className={''}>
   			<TableRow>
-  				{this.generateHeadCells().map(headCell => (
+  				{this.generateHeadCells(tableType).map(headCell => (
   					<TableCell key={headCell.id} sortDirection={sortType}>
   						<TableSortLabel
   							active={sortBy === headCell.id}

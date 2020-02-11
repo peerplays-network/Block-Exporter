@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import GeneralUtils from '../components/Utility/GeneralUtils';
 const SortApi = {
 
 	/**
@@ -14,9 +14,26 @@ const SortApi = {
 		const query = `/api/${apiName}?sort=${colType}&direction=${sortType.toUpperCase()}`;
 		return new Promise(async (resolve, reject) => {
 			const response = await axios.get(query);
-			return resolve(response);
+			return resolve(response.data);
 		});
-	}
+	},
+   
+	sortWithRank(tableData, apiName, colType, sortType) {
+		const query = `/api/${apiName}?sort=${colType}&direction=${sortType.toUpperCase()}`;
+		return new Promise(async (resolve, reject) => {
+			if(colType === 'rank') {
+				const rankedList = GeneralUtils.sortByRank(tableData, sortType);
+				resolve(rankedList);
+			} else {
+				const response = await axios.get(query);
+				const rankedRes = response.data.map(object => {
+					const rankObject = tableData.find(el => el.id === object.id);
+					return rankObject;
+				});
+				return resolve(rankedRes);
+			}
+		});
+	},
 };
 
 export default SortApi;

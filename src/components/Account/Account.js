@@ -15,10 +15,10 @@ class Account extends Component {
 		return(
 			!!this.props.history ?
 			//Accounts page
-				<CustomTable data={accounts} tableType="accounts" headerLabel="Accounts" headerIcon="fa fa-user-alt"/>
+				<CustomTable data={accounts} tableType="accounts" headerLabel="Browse Accounts" headerIcon="fa fa-user-alt"/>
 				:
 			//Accounts Widget
-				<CustomTable data={accounts} tableType="accounts" headerLabel="Accounts" headerIcon="fa fa-user-alt"
+				<CustomTable data={accounts} tableType="accounts" headerLabel="Browse Accounts" headerIcon="fa fa-user-alt"
 					widget={true}/>
 		);
 	}	
