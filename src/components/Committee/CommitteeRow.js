@@ -5,7 +5,7 @@ class CommitteeRow extends Component {
 	render() {
 		const {detail} = this.props;
 		return (
-			<TableRow>
+			<TableRow hover={true}>
 				<TableCell>{detail.rank}</TableCell>
 				<TableCell><Link href={`/accountAllDetail/${detail.account_name}/${detail.committee}`}>{detail.account_name}</Link></TableCell>
 				<TableCell>{detail.total_votes}</TableCell>

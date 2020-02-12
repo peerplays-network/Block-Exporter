@@ -94,7 +94,6 @@ class Navigation extends React.Component {
 								<DropdownItem href="/transactions/">Transactions</DropdownItem>
 								<DropdownItem href="/witnesses">Witnesses</DropdownItem>
 								<DropdownItem href="/committee">Committee</DropdownItem>
-								<DropdownItem href="/contracts">Contracts</DropdownItem>
 								<DropdownItem href="/feeDirectory">Fee Schedule</DropdownItem>
 								<DropdownItem href="/directory">Useful Resources</DropdownItem>
 								<DropdownItem href="/block-list">Blocks</DropdownItem>
@@ -128,7 +127,7 @@ class Navigation extends React.Component {
 							</NavItem>
 							<Tooltip placement="left" isOpen={this.state.tooltipOpen} autohide={false} target="searchBar"
 								toggle={this.toggleToolTip.bind(this)}>
-								Search for Accounts, Witnesses, Smart Contracts, Blocks, or Committee Members by name or id
+								Search for Accounts, Witnesses, Blocks, or Committee Members by name or id
 							</Tooltip>
 							<NavItem>
 								<BlockAnimation />
