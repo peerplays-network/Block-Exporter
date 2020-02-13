@@ -3,6 +3,7 @@ import {TableBody} from '@material-ui/core';
 import AccountDetail from '../../Account/AccountDetail';
 import WitnessRow from '../../WitnessViewer/WitnessRow';
 import CommitteeRow from '../../Committee/CommitteeRow';
+import TransactionRow from '../../Transactions/TransactionRow';
 
 class CustomTableBody extends Component {
   generateTableRows = (rowData, i) => {
@@ -14,6 +15,8 @@ class CustomTableBody extends Component {
   			return <WitnessRow detail={rowData} key={i} />;
   		case 'committee':
   			return <CommitteeRow detail={rowData} key={i} />;
+  		case 'transactions':
+  			return <TransactionRow detail={rowData} key={i} />;
   		default:
   			return;
   	}

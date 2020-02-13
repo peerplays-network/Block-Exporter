@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import CustomTableHeader from './CustomTableHeader';
 import CustomTableBody from './CustomTableBody';
-import GeneralApi from '../../../api/GeneralApi';
+import {sortWithRank, sort} from '../../../api/GeneralApi';
 import styles from './styles.css';
 
 const muiStyle = {
@@ -86,11 +86,11 @@ class CustomTable extends Component {
 		
 	 	//sort with rank for witness table
 	 	if (tableType === 'witnesses' || tableType === 'committee') {
-	 		GeneralApi.sortWithRank(tableData, tableType, colType, sortType).then((sortedData) => {
+	 		sortWithRank(tableData, tableType, colType, sortType).then((sortedData) => {
 	 			this.onSearchData(searchText, sortedData);
 	 		});
 		 } else {//sort without rank for account
-	 		GeneralApi.sort(tableType, colType, sortType).then((sortedData) => {
+	 		sort(tableType, colType, sortType).then((sortedData) => {
 	 			this.onSearchData(searchText, sortedData);
 	 		});
 		 }

@@ -26,7 +26,7 @@ class CustomTableHeader extends Component {
   				{id: 'url', label: 'URL'}
   			];
   		default:
-  			break;
+  			return [];
   	}
   }
   
