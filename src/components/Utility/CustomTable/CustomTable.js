@@ -95,20 +95,26 @@ class CustomTable extends Component {
 	 		});
 		 }
 	 }
-  
-	 render() {
-	 	const {currentPage, rowsPerPage, filteredData, sortBy, sortType, searchText} = this.state;
-	 	const {data, tableType, headerLabel, headerIcon, widget, classes} = this.props;
-		 //If the table sort or search is active display filtered data otherwise display pure data
-		 const tableData = filteredData || searchText ? filteredData : data;
-  	return (
-  		<div className={`${styles[this.containerClass]}`}>
-  			<TableContainer className={`${styles['table-container']}`}>
-					 <div className={`${styles[this.tableHeaderClass]}`}>
-					 {widget ? null :
-						 <span className={`${styles['table-header-text']}`}><span className={headerIcon}/>{headerLabel}</span>
-	 					}
-	 					<Input
+
+	 /*
+	* @param {string} Renders the content in the header. 
+	* If simpleTable table props is passed the input will not be rendered.
+	* If 
+	*/
+
+	 /**
+   * Return a list of blocks
+   *
+   * @param {string} searchText - text in the search input
+   * @param {string} headerLabel - Text displayed in header
+   * @param {string} headerIcon - Icon displayed in header
+	 * @param {string} widget - If widget props is passed the header Icon and Label will not be displayed
+	 * @param {string} simpleTable - No search bar will be displayed
+   */
+	 renderHeaderContent = (searchText, headerLabel, headerIcon, widget, simpleTable, classes) => {
+	 	let headerIconAndLabel = <span className={`${styles['table-header-text']}`}><span className={`${headerIcon} ${styles['icon-padding']}`}/>{headerLabel}</span>;
+	 	let input = (
+	 		<Input
 						 className={`${classes.root} ${styles['table-header-search']}`}
 	 						id="standard-adornment-password"
 	 						type="search"
@@ -121,7 +127,33 @@ class CustomTable extends Component {
 	 							</InputAdornment>
 	 						}
   					/>
-	 				</div>
+		 );
+
+	 	if (simpleTable && widget) { //no header label, icon or search bar
+	 		return;
+	 	} else if (simpleTable) { //no search bar
+	 		input = null;
+	 	} else if (widget) {//no header label and icon
+	 		headerIconAndLabel = null;
+		 }
+
+	 	return (
+	 		<div className={`${styles[this.tableHeaderClass]}`}>
+	 			{ headerIconAndLabel}
+	 			{ input }
+	 		</div>
+	 	);
+	 }
+  
+	 render() {
+	 	const {currentPage, rowsPerPage, filteredData, sortBy, sortType, searchText} = this.state;
+	 	const {data, tableType, headerLabel, headerIcon, widget, simpleTable, classes} = this.props;
+	 	//If the table sort or search is active display filtered data otherwise display pure data
+	 	const tableData = filteredData || searchText ? filteredData : data;
+  	return (
+  		<div className={`${styles[this.containerClass]}`}>
+  			<TableContainer className={`${styles['table-container']}`}>
+					 {this.renderHeaderContent(searchText, headerLabel, headerIcon, widget, simpleTable, classes)}
   				<Table stickyHeader>
   					<CustomTableHeader sortByColumn={this.sortByColumn} sortBy={sortBy} sortType={sortType} tableType={tableType}/>
 	 					<CustomTableBody tableData={tableData} currentPage={currentPage} rowsPerPage={rowsPerPage} tableType={tableType}/>

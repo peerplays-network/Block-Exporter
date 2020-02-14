@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import styles from './styles.css';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { setOperations } from '../../actions/TransactionActions';
 import TransactionApi from '../../api/TransactionApi';
 import CustomTable from '../Utility/CustomTable';
 //State will be removed once data feed is established
@@ -9,7 +10,7 @@ class TransactionDisplay extends Component {
 	constructor() {
 		super();
 		this.state = {
-			transactionData:[], operations: [], transactionLength: 10
+			transactionData:[], transactionLength: 10
 		};
 	}
 
@@ -23,20 +24,9 @@ class TransactionDisplay extends Component {
 		}
 	}
 
-	async findOperations(e) {
-		try{
-			const operations = await TransactionApi.getOperations();
-			this.setState({Operations: operations.data});
-		} catch(error) {
-			console.warn(error);
-		}
-	}
-
 	componentDidMount() {
 		this.fetchData();
-		this.findOperations();
-
-		if(!!this.props.calculateComponentHeight)
+		if (!!this.props.calculateComponentHeight)
 			this.props.calculateComponentHeight(this.props.id, gridHeight);
 	}
 
@@ -69,26 +59,23 @@ class TransactionDisplay extends Component {
 
 	render() {
 		const {transactionData} = this.state;
-
+		console.log('history: ', this.props.history);
 		return (
-			<div className="container pt-1 pb-5 mt-4">
-				<div className="card-block">
-
-					{/* {!!this.props.history ? //display on browse transaction page, hides it onthe transaction widget
-						<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3 mt-2 mb-2s`}>
-							<span className="fa fa-handshake">&nbsp;</span>Browse Transactions</h1>
-						: null//display on browse transaction page, hides it on the transaction widget
-					} */}
-	
-					<CustomTable data={transactionData} tableType="transactions" headerLabel="Browse Transactions" headerIcon="fa fa-handshake"/>
-				</div>
+			<div>
+				{!!this.props.history ? //display on browse transaction page, hides it onthe transaction widget
+					<CustomTable data={transactionData} tableType="transactions" headerLabel="Browse Transactions" headerIcon="fa fa-handshake"
+						simpleTable={true}/>
+					:
+					<CustomTable data={transactionData} tableType="transactions" headerLabel="Browse Transactions" headerIcon="fa fa-handshake"
+						widget={true} simpleTable={true}/>
+				}
 			</div>
 		);
 	}
 }
 
-const mapStateToProps = (state) => ({
-	accounts: state.accounts.accountList
-});
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({ setOperations }, dispatch);
+};
 
-export default connect(mapStateToProps)(TransactionDisplay);
+export default connect(mapDispatchToProps)(TransactionDisplay);

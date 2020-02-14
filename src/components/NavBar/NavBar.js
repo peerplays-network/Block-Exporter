@@ -17,7 +17,6 @@ import {
 	InputGroupAddon,
 	Button,
 	Tooltip} from 'reactstrap';
-import { NavLink as RRNavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import styles from './NavBar.css';
 import BlockAnimation from '../BlockAnimation/BlockAnimation';
@@ -113,7 +112,7 @@ class Navigation extends React.Component {
 						</NavItem>
 						
 					</Nav>
-					<div className={`${styles['header-contrast-text']} ${styles['header-height']} pt-1`}><a href="/" className={`${styles['link-no-decor']} ${styles['bold']} ${styles['size30']} pl-3`}>PEERPLAYS BLOCK EXPORTER</a></div>
+					<div className={`${styles['header-contrast-text']} ${styles['header-height']} pt-1`}><a href="/" className={`${styles['link-no-decor']} ${styles['bold']} ${styles['size30']} pl-3`}>Exporter</a></div>
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar>
 						<Nav className="ml-auto" navbar>

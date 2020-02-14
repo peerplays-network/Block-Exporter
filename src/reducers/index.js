@@ -7,6 +7,7 @@ import AccountReducer from './AccountReducer';
 import GridReducer from './GridReducer';
 import NavigationReducer from './NavigationReducer';
 import CommitteeReducer from './CommitteeReducer';
+import TransactionReducer from './TransactionReducer';
 
 const rootReducer = combineReducers({
 	routing: routerReducer,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
 	accounts: AccountReducer,
 	grid: GridReducer,
 	nav: NavigationReducer,
-	committee: CommitteeReducer
+	committee: CommitteeReducer,
+	transactions: TransactionReducer
 });
 
 export default rootReducer;

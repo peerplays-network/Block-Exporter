@@ -44,6 +44,6 @@ export const getMaintenanceTime = () => {
 	const query = 'api/variables/';
 	return new Promise(async (resolve, reject) => {
 		const response = await axios.get(query);
-		resolve(response.data[0].value);
+		response.data[0] ? resolve(response.data[0].value) : resolve(0); 
 	});
 };

@@ -1,27 +1,25 @@
 import React, { Component } from 'react';
-import {Link, TableRow, TableCell} from '@material-ui/core';
 import { connect } from 'react-redux';
+import {Link, TableRow, TableCell} from '@material-ui/core';
 
 class TransactionRow extends Component {
 	findAccountName(id) {
-		const accountName = this.props.accounts.find(el => el.account_id === id);
-		console.log('account name: ', accountName);
-		return !!accountName ? <span><Link className="d-inline p-0" href={`/accountAllDetail/${accountName.account_name}`}>{accountName.account_name}</Link></span>  : id;
+		const accountName = this.props.accounts ? this.props.accounts.find(el => el.account_id === id) : '';
+		return accountName ? <span><Link className="d-inline p-0" href={`/accountAllDetail/${accountName.account_name}`}>{accountName.account_name}</Link></span>  : <span>Account Id: {id}</span>;
 	}
 	
 	linkAccountName(accountName) {
-		return !!accountName ? <span><Link className="d-inline p-0" href={`/accountAllDetail/${accountName}`}>{accountName}</Link></span> : accountName;
+		return accountName ? <span><Link className="d-inline p-0" href={`/accountAllDetail/${accountName}`}>{accountName}</Link></span> : accountName;
 	}
   
 	renderOther(operationType, parsedTransaction, i) {
-		console.log('operation and parsedTransaction', operationType, parsedTransaction);
 		return (
 			<TableCell sm="5"> <strong> {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong> {this.findAccountName(parsedTransaction.account)}</strong></TableCell>
 		);
 	}
   
 	displayOperation( operation ) {
-		return this.state.Operations[operation].friendly_name;
+		return this.props.operations[operation].friendly_name;
 	}
 
 	renderTransaction(transaction, i) {
@@ -79,7 +77,8 @@ class TransactionRow extends Component {
 }
 
 const mapStateToProps = (state) => ({
-	accounts: state.accounts.accountList
+	accounts: state.accounts.accountList,
+	operations: state.transactions.operations
 });
 
 export default connect(mapStateToProps)(TransactionRow);

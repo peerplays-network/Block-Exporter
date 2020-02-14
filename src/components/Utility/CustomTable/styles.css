@@ -28,8 +28,12 @@
   font-size: 40px;
   display: flex;
   align-items: center;
-  width: 400px;
-  justify-content: space-evenly;
+  width: 70%;
+  justify-content: left;
+}
+
+.icon-padding {
+  padding-right: 15px;
 }
 
 @media only screen and (max-width: 500px) {
@@ -38,7 +42,7 @@
   }
 
   .table-header-container {
-    padding: 0;
+    padding: 0 5px;
   }
   
   .table-border {
