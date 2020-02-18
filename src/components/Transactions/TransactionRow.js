@@ -19,7 +19,11 @@ class TransactionRow extends Component {
 	}
   
 	displayOperation( operation ) {
-		return this.props.operations[operation].friendly_name;
+		if(this.props.operations) {
+			return this.props.operations[operation].friendly_name;
+		}
+
+		return;
 	}
 
 	renderTransaction(transaction, i) {
