@@ -8,10 +8,11 @@
     "coverage": "jest --coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "start": "cross-env SYNC=false node server/index.js",
-    "start-full": "cross-env SYNC=true node server/index.js",
-    "server:dev": "cross-env SYNC=true pm2 start server/index.js  --name dev-exechain-explorer-45",
-    "server:qa": "cross-env SYNC=true pm2 start server/index.js  --name qc-exechain-explorer-44",
+    "start": "cross-env SYNC=false STREAM=false node server/index.js",
+    "stream": "cross-env SYNC=false STREAM=true node server/index.js",
+    "start-full": "cross-env SYNC=true STREAM=false node server/index.js",
+    "server:dev": "cross-env SYNC=true STREAM=false pm2 start server/index.js  --name dev-exechain-explorer-45",
+    "server:qa": "cross-env SYNC=true STREAM=false pm2 start server/index.js  --name qc-exechain-explorer-44",
     "test": "jest"
   },
   "dependencies": {
