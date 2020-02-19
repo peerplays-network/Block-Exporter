@@ -13,9 +13,11 @@ class TransactionRow extends Component {
 	}
   
 	renderOther(operationType, parsedTransaction, i) {
-		return (
-			<TableCell sm="5"> <strong> {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong> {this.findAccountName(parsedTransaction.account)}</strong></TableCell>
-		);
+		if(parsedTransaction.fee) {
+			return (
+				<TableCell sm="5"> <strong> {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong> {this.findAccountName(parsedTransaction.account)}</strong></TableCell>
+			);
+		}
 	}
   
 	displayOperation( operation ) {

@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { setOperations } from '../../actions/TransactionActions';
 import TransactionApi from '../../api/TransactionApi';
 import CustomTable from '../Utility/CustomTable';
 //State will be removed once data feed is established
@@ -45,8 +42,4 @@ class TransactionDisplay extends Component {
 	}
 }
 
-function mapDispatchToProps(dispatch) {
-	return bindActionCreators({ setOperations }, dispatch);
-};
-
-export default connect(mapDispatchToProps)(TransactionDisplay);
+export default (TransactionDisplay);
