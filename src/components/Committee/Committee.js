@@ -26,9 +26,16 @@ class Committee extends Component {
 
 	mergeCommitteeWithAccounts() {
 		const appendAccountNames = this.props.committee;
-		appendAccountNames.map(el => {
-			return el.account_name = this.props.accounts.find(account => account.account_id === el.committee_member_account).account_name;
-		});
+		if(appendAccountNames) {
+			appendAccountNames.map(el => {
+				const account = this.props.accounts.find(account => account.account_id === el.committee_member_account);
+				if(account) {
+					return el.account_name = account.account_name;
+				}
+
+				return el.account_name = 'NOT FOUND';
+			});
+		}
 		this.setState({committeeList: appendAccountNames});
 	}
 
