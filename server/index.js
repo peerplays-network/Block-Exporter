@@ -232,6 +232,7 @@ connection.connect(function(err) {
   Blockchain.connect(config_server.BLOCKCHAIN_URL).then(async () => {
 
 	if (process.env.SYNC == 'true') {
+		streaming = false;
 		console.log('Sync mode is ON');
 		await syncDatabase(connection);
 
@@ -248,10 +249,20 @@ connection.connect(function(err) {
 				throw err;
 			}
 			console.log(chalk.blueBright(`Exeplorer Server> Starting from block #: ${result+1}`))
-			Blockchain.populateBlocks(connection, result, '');
+			Blockchain.populateBlocks(connection, result, '', streaming);
 			
 		});
 
+	} else if(process.env.SYNC == 'false' && process.env.STREAM == 'true') {
+			streaming = true;
+			await syncDatabase(connection);
+
+			Blockchain.getObject('2.1.0', (error, dynamicGlobal) => {
+				startingBlock = dynamicGlobal.head_block_number - 100;
+				console.log(chalk.blueBright(`Exeplorer Server> Starting from block #: ${startingBlock}`))
+
+				Blockchain.populateBlocks(connection, startingBlock, '', streaming);
+			});
 	}
 
 

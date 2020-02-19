@@ -46,7 +46,7 @@ const api = {
 	sql: used for recursion, should be empty if calling manually
 
     */
-	populateBlocks: (connection, start, sql) => {
+	populateBlocks: (connection, start, sql, streaming) => {
 		if (!start) {
 			start = 1;
 		}
@@ -56,7 +56,7 @@ const api = {
 			// When a block is not found we assume we are up to date.
 			if (!block) {
 				console.log(chalk.green('Exeplorer Server> DONE inserting blocks - no block found'));
-				api.startMonitor(connection);
+				api.startMonitor(connection, streaming);
 				return;
 			}
 
@@ -103,7 +103,7 @@ const api = {
 			}
 
 			  start++;
-			  api.populateBlocks(connection, start, sql);
+			  api.populateBlocks(connection, start, sql, streaming);
 		  });
 	},
 
@@ -112,20 +112,18 @@ const api = {
 
 	*/
 
-	startMonitor: (connection) => {
+	startMonitor: (connection, streaming) => {
 		console.log(chalk.green('Exeplorer Server> Monitoring for new blocks!'));
-		ChainStore.subscribe(() => api.updateDatabase(connection));
+		ChainStore.subscribe(() => api.updateDatabase(connection, streaming));
 	  },
 
 	/* Update the DB with data from the monitor
 	connection: A valid MYSQL connection
 	*/
 
-	updateDatabase: (connection) => {
+	updateDatabase: (connection, streaming) => {
 		api.getObject('2.1.0', (error, dynamicGlobal) => {
 			// console.log(dynamicGlobal);
-
-
 
 			const sql = `INSERT INTO explorer.variables (var_name, value) VALUES('next_maintenance_time', '${dynamicGlobal.next_maintenance_time}') ON DUPLICATE KEY UPDATE    
 			var_name='next_maintenance_time', value='${dynamicGlobal.next_maintenance_time}'`;
@@ -138,7 +136,9 @@ const api = {
 				// console.log('Result: ' + JSON.stringify(result));
 			});
 
-			api.backtrackChain(connection, dynamicGlobal.head_block_number);
+			if (!streaming) {
+				api.backtrackChain(connection, dynamicGlobal.head_block_number);
+			}
 			// Get the latest block reference in the dynamicGlobal.
 			api.insertBlock(connection, dynamicGlobal, (error, block) => {
 				if (error) {
@@ -196,6 +196,7 @@ const api = {
 
 
 		  Apis.instance().db_api().exec('get_block', [block_number]).then(block => {
+			console.log(chalk.cyan(block_number));
 		  // When a block is not found we assume we are up to date.
 		  if (!block) {
 			  console.log('Exeplorer Server> DONE inserting blocks - no block found');
@@ -393,8 +394,6 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			startChar, limit
 		]).then(accounts => {
 			if (accounts.length > 1) {
-				console.log('Recursively calling function... ');
-
 				if (startChar !== '') {
 					accounts.splice(0, 1);
 				}
@@ -436,8 +435,6 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			startChar, limit
 		]).then(accounts => {
 			if (accounts.length > 1) {
-				console.log('Recursively calling function... ');
-
 				if (startChar !== '') {
 					accounts.splice(0, 1);
 				}
