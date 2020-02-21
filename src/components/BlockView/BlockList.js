@@ -64,7 +64,9 @@ class BlockList extends Component {
 	}
 
 	getWitnessName(witnessId) {
-		return this.props.witnesses.find(el => el.account_id === witnessId).account_name;
+		if (this.props.witnesses) {
+			return this.props.witnesses.find(el => el.account_id === witnessId).account_name;
+		}
 	}
 
 	sortByColumn(colType) {

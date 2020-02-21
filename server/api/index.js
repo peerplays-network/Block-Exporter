@@ -47,10 +47,6 @@ const api = {
 
     */
 	populateBlocks: (connection, start, sql, streaming) => {
-		if (!start) {
-			start = 1;
-		}
-
 		Apis.instance().db_api().exec('get_block', [start]).then(block => {
 			console.log(chalk.cyan(start));
 			// When a block is not found we assume we are up to date.
@@ -104,6 +100,67 @@ const api = {
 
 			  start++;
 			  api.populateBlocks(connection, start, sql, streaming);
+		  });
+	},
+
+	fastSyncBlocks: (connection, start, finish, sql, streaming) => {
+		if(start >= finish) {
+			return;
+		}
+
+		Apis.instance().db_api().exec('get_block', [start]).then(block => {
+			console.log(chalk.cyan(start));
+			// When a block is not found we assume we are up to date.
+			if (!block) {
+				console.log(chalk.green('Exeplorer Server> DONE inserting blocks - no block found'));
+				// api.startMonitor(connection, streaming);
+				// return;
+			}
+
+
+			api.parseBlock(block, connection, 0);
+
+
+			// Build block object to be inserted
+			
+			const transaction_count = block.transactions.length;
+			const operation_count = block.extensions.length;
+			const witness = block.witness;
+			const signature = block.witness_signature;
+			const previous_block_hash = block.previous;
+			const merkle_root = block.transaction_merkle_root;
+			const timestamp = block.timestamp;
+			
+			// Create SQL Query
+			if (sql === '') {
+				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+	  VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
+			} else if (start % 1000 === 0) {
+			} else {
+				sql = sql + `, ('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
+				// console.log(sql);
+			}
+  
+			// Run Query
+			// console.log(start);
+			if (start % 1000 === 0) {
+				connection.query(sql, function (err, result) {
+					if (err) {
+						throw err;
+					}
+				  //   console.log('Result: ' + JSON.stringify(result));
+				  console.log(start);
+				});
+				// return;itne
+			}
+
+			if (start % 1000 === 0) {
+				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+				VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
+			}
+
+			  start++;
+			  api.fastSyncBlocks(connection, start, finish, sql, streaming);
 		  });
 	},
 

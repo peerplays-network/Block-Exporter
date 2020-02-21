@@ -1,8 +1,6 @@
 /* eslint-disable */
 require('dotenv').config()
 const chalk = require('chalk');
-
-
 const path = require('path');
 
 const express = require('express');
@@ -232,27 +230,37 @@ connection.connect(function(err) {
   Blockchain.connect(config_server.BLOCKCHAIN_URL).then(async () => {
 
 	if (process.env.SYNC == 'true') {
-		streaming = false;
 		console.log('Sync mode is ON');
 		await syncDatabase(connection);
-
 		let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
-		connection.query(sql, function (err, result) {
-			if (result[0]) {
-				result = result[0].block_number;
+		connection.query(sql, function (err, startBlock) {
+			if (startBlock[0]) {//sync from block n to chainLength
+				startBlock = startBlock[0].block_number;
 	
-			} else {
-				result = 0;
+			} else {//full sync from block 0
+				Blockchain.getObject('2.1.0', (error, dynamicGlobal) => {
+					chainLength = dynamicGlobal.head_block_number;
+					startBlock = chainLength;
+					let processes = 1000;
+					const workerChunk = Math.floor(chainLength/processes);
+					let i = 0;
+					while(processes >= 0) {
+						const start = (workerChunk * i) + 1;
+						const finish = ((workerChunk) * (i + 1));
+						Blockchain.fastSyncBlocks(connection, start, finish, '', false);
+						i++;
+						processes--;
+					}
+				});
 			}
+
+			Blockchain.populateBlocks(connection, startBlock, '');
 	
 			if (err) {
 				throw err;
 			}
-			console.log(chalk.blueBright(`Exeplorer Server> Starting from block #: ${result+1}`))
-			Blockchain.populateBlocks(connection, result, '', streaming);
-			
 		});
-
+	//sync from n-100 blocks, where n is the length of the blockchain
 	} else if(process.env.SYNC == 'false' && process.env.STREAM == 'true') {
 			streaming = true;
 			await syncDatabase(connection);
