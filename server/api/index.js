@@ -303,34 +303,32 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 		let extensions;
 		let signatures;
 		const timestamp = b.timestamp;
-
 		b.transactions.map(async (t) => {
 			parent_block = t.ref_block_num;
 			expiration = t.expiration;
-
 			// Account and Witness Data
 			if (t.operations[0][0] === 5 && live == 1) {
 				const data = t.operations[0][1];
-					
+				
 				const account_name = data.name;
 				const referrer = data.referrer;
 				const owner_key = data.owner.key_auths[0][0];
 				const active_key = data.active.key_auths[0][0];
 				const memo_key = data.options.memo_key;
 				const member_since = timestamp;
-
+				
 				const accountObj = await api.getAccountByName([account_name]);
 				const membership_expiration_date = accountObj[0].membership_expiration_date;
 				const account_id = accountObj[0].id;
-
-		
+				
+				
 				// console.log(accountObj[0]);
 				// console.log(t.operations[0][1]);
 				// console.log(t.operations[0][1].name);
-
+				
 				const sql = `INSERT INTO accounts (account_name, membership_expiration, referrer, owner_key, active_key, memo_key, member_since, account_id)
-					VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '${member_since}', '${account_id}')`;
-		
+				VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '${member_since}', '${account_id}')`;
+				
 				connection.query(sql, function(err, result) {
 					if (err) {
 						throw err;
@@ -338,25 +336,25 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				});
 			}
 
-			if (t.operations[0][0] === 77) {
-				t.operations[0].common_options.description = JSON.parse(t.operations[0].common_options.description);
-			} 
-			operations = JSON.stringify(t.operations[0]);
-				
-			operation_results = JSON.stringify(t.operation_results[0]);
-			extensions = JSON.stringify(t.extensions);
-			signatures = JSON.stringify(t.signatures);
-
-			const sql = `INSERT INTO explorer.transactions (parent_block, expiration, operations, operation_results, extensions, signatures) VALUES('${parent_block}', '${expiration}', '${operations}', '${operation_results}', '${extensions}', '${signatures}') ON DUPLICATE KEY UPDATE    
-				parent_block='${parent_block}', expiration='${expiration}', operations='${operations}', operation_results='${operation_results}', extensions='${extensions}', signatures='${signatures}'`;
-
-			connection.query(sql, function (err, result) {
-				  if (err) {
-					  throw err;
-				  }
+			if (t.operations[0][0] !== 77 && t.operations[0][0] !== 22) {
+				operations = JSON.stringify(t.operations[0]);
+				//JSON.stringify();
+				operation_results = JSON.stringify(t.operation_results[0]);
+				extensions = JSON.stringify(t.extensions);
+				signatures = JSON.stringify(t.signatures);
+				const sql = `INSERT INTO explorer.transactions (parent_block, expiration, operations, operation_results, extensions, signatures) VALUES('${parent_block}', '${expiration}', '${operations}', '${operation_results}', '${extensions}', '${signatures}') ON DUPLICATE KEY UPDATE    
+					parent_block='${parent_block}', expiration='${expiration}', operations='${operations}', operation_results='${operation_results}', extensions='${extensions}', signatures='${signatures}'`;
+			
+				connection.query(sql, function (err, result) {
+					if (err) {
+						console.error('ERROR: ', operations);
+						console.error('parent_block: ', parent_block);
+					//throw err;
+					}
 				//   console.log('Result: ' + JSON.stringify(result));
-			  });
-			  });	
+				});
+			}
+		});	
 	  },
 
 	  /* Get a single object from the blockchain

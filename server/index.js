@@ -215,7 +215,8 @@ app.listen(port, err => {
 	host     : db.HOST,
 	user     : db.USER,
 	password : db.PASSWORD,
-	database : db.DATABASE
+	database : db.DATABASE,
+	connectTimeout: 10000
   });
 
 connection.connect(function(err) {
@@ -225,13 +226,13 @@ connection.connect(function(err) {
 }
   
 	console.log(chalk.blueBright(`Exeplorer Server> Connected to DB: ${connection.threadId}`));
-	});
+});
 
   Blockchain.connect(config_server.BLOCKCHAIN_URL).then(async () => {
 
 	if (process.env.SYNC == 'true') {
 		console.log('Sync mode is ON');
-		await syncDatabase(connection);
+		// await syncDatabase(connection);
 		let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
 		connection.query(sql, function (err, startBlock) {
 			if (startBlock[0]) {//sync from block n to chainLength
@@ -241,7 +242,7 @@ connection.connect(function(err) {
 				Blockchain.getObject('2.1.0', (error, dynamicGlobal) => {
 					chainLength = dynamicGlobal.head_block_number;
 					startBlock = chainLength;
-					let processes = 1000;
+					let processes = 100;
 					const workerChunk = Math.floor(chainLength/processes);
 					let i = 0;
 					while(processes >= 0) {
@@ -263,7 +264,7 @@ connection.connect(function(err) {
 	//sync from n-100 blocks, where n is the length of the blockchain
 	} else if(process.env.SYNC == 'false' && process.env.STREAM == 'true') {
 			streaming = true;
-			await syncDatabase(connection);
+			// await syncDatabase(connection);
 
 			Blockchain.getObject('2.1.0', (error, dynamicGlobal) => {
 				startingBlock = dynamicGlobal.head_block_number - 100;

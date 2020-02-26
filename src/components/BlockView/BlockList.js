@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import Pagination from 'react-paginate';
 import styles from './styles.css';
-import {Table} from 'reactstrap'; 
-import { NavLink } from 'reactstrap';
-import { NavLink as RRNavLink } from 'react-router-dom';
-import { connect } from 'react-redux'; 
+import { Link, Table, TableHead, TableBody, TableRow, TableCell, TableSortLabel, TablePagination, Card} from '@material-ui/core';
+import { connect } from 'react-redux';
 import * as Constants from '../../constants/constants';
 import BlockApi from '../../api/BlockApi';
 
@@ -14,7 +10,7 @@ class BlockList extends Component {
 		super(props);
 
 		this.state = {
-			blocks: [], currentPage: 0, blockLength: 0, sortType: 'ASC', sortBy: 'default', bottom: 0, 
+			blocks: [], currentPage: 0, rowsPerPage: 10, blockLength: 0, sortType: 'ASC', sortBy: 'default'
 		};
 	}
 
@@ -35,7 +31,9 @@ class BlockList extends Component {
 
 	loadNextBlocks(currentPage) {
 		const requestedBlockRange = this.state.upper - (Constants.BLOCKS_PER_PAGE*currentPage);
+		console.log('(', requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1), ',', requestedBlockRange, ')');
 		BlockApi.getBlocks(requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1), requestedBlockRange).then(response => {
+			console.log('loading next blocks: ', response.data.reverse());
 			this.setState({blocks: response.data.reverse()});
 		}).catch(error => console.log('error fetching blocks'));
 	}
@@ -50,17 +48,17 @@ class BlockList extends Component {
 		}).catch(error => console.log('error fetching blocks'));
 	}
 
-	changePage(index) {
-		this.setState({currentPage: index.selected});
-		if(this.state.sortBy === 'default')
-			this.loadNextBlocks(index.selected);
-		else
-			this.loadNextSortedBlocks(index.selected, this.state.sortType);
-	}
-
-	refreshPagination (data) {
-		this.setState({pagesCount: Math.ceil(data.length / this.state.pageSize) });
-		this.setState({currentPage: 0});
+	changePage = (e, index) => {
+		e.preventDefault();
+		this.setState({currentPage: index});
+		if (this.state.sortBy === 'default') {
+			console.log('deafult');
+			this.loadNextBlocks(index);
+		}
+		else {
+			console.log('not default');
+			this.loadNextSortedBlocks(index, this.state.sortType);
+		}
 	}
 
 	getWitnessName(witnessId) {
@@ -94,45 +92,88 @@ class BlockList extends Component {
 		this.setState({ blocks: temp_data });
 	}
 
+	changeRowsPerPage = event => {
+		this.setState({rowsPerPage: event.target.value});
+		this.changePage(0);
+	};
+
 	render() {
-		const {blocks, blockLength} = this.state;
-		let nextStyle = `${styles['pagination']} page-item`;
-		if (this.state.currentPage === Math.floor(blockLength/Constants.BLOCKS_PER_PAGE)) {
-			nextStyle = `${styles['pagination']} page-item disabled`;
-		}
+		const {blocks, blockLength, sortBy, currentPage, rowsPerPage} = this.state;
+		console.log('blocks: ', blocks);
 		return (
 			<div className="container pt-1 pb-5 mt-4">
-				
-				<div className="card-block">
-
-
+				<Card>
 					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3`}>
 						<span className="fa fa-cubes">&nbsp;</span> Browse Blocks</h1>
-					<Table responsive>
-						<thead className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>
-							<tr>
-								<th onClick={this.sortByColumn.bind(this, 'block_number')}>Height</th>
-								<th onClick={this.sortByColumn.bind(this, 'timestamp')}>Time</th>
-								<th onClick={this.sortByColumn.bind(this, 'witness')} scope="col">Witness</th>
-								<th onClick={this.sortByColumn.bind(this, 'transaction_count')}>Transactions</th>
-								<th onClick={this.sortByColumn.bind(this, 'operation_count')}>Operations</th>
-							</tr>
-						</thead>
-						<tbody className="text-center">
+					<Table stickyHeader>
+						<TableHead className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>
+							<TableRow>
+								<TableCell>
+									<TableSortLabel
+										active={sortBy === 'block_number'}
+										direction={sortBy}
+										onClick={() => this.props.sortByColumn('block_number')}>
+										Height
+  								</TableSortLabel>
+								</TableCell>
+								<TableCell>
+									<TableSortLabel
+										active={sortBy === 'timestamp'}
+										direction={sortBy}
+										onClick={() => this.props.sortByColumn('timestamp')}>
+										Time
+  								</TableSortLabel>
+								</TableCell>
+								<TableCell>
+									<TableSortLabel
+										active={sortBy === 'witness'}
+										direction={sortBy}
+										onClick={() => this.props.sortByColumn('witness')}>
+										Witness
+  								</TableSortLabel>
+								</TableCell>
+								<TableCell>
+									<TableSortLabel
+										active={sortBy === 'transaction_count'}
+										direction={sortBy}
+										onClick={() => this.props.sortByColumn('transaction_count')}>
+										Transactions
+  								</TableSortLabel>
+								</TableCell>
+								<TableCell>
+									<TableSortLabel
+										active={sortBy === 'operations_count'}
+										direction={sortBy}
+										onClick={() => this.props.sortByColumn('operations_count')}>
+										Operations
+  								</TableSortLabel>
+								</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody className="text-center">
 							{blocks.map((block) => {
 								return(
-									<tr key={block.id}>
-										<td><NavLink tag={RRNavLink} to={`/block-view/${block.block_number}`}>{block.block_number}</NavLink></td>
-										<td>{new Date(block.timestamp).toLocaleTimeString()}</td>
-										<td><NavLink tag={RRNavLink} to={`/accountAllDetail/${this.getWitnessName(block.witness)}/${block.witness}`}>{this.getWitnessName(block.witness)}</NavLink></td>
-										<td>{block.transaction_count}</td>
-										<td>{block.operation_count}</td>
-									</tr>
+									<TableRow hover key={block.id}>
+										<TableCell><Link href={`/block-view/${block.block_number}`}>{block.block_number}</Link></TableCell>
+										<TableCell>{new Date(block.timestamp).toLocaleTimeString()}</TableCell>
+										<TableCell><Link href={`/accountAllDetail/${this.getWitnessName(block.witness)}/${block.witness}`}>{this.getWitnessName(block.witness)}</Link></TableCell>
+										<TableCell>{block.transaction_count}</TableCell>
+										<TableCell>{block.operation_count}</TableCell>
+									</TableRow>
 								);
 							})}
-						</tbody>
+						</TableBody>
 					</Table>
-					<Pagination
+					<TablePagination
+						rowsPerPageOptions={[5, 10, 20]}
+						component="div"
+						count={blockLength}
+						rowsPerPage={rowsPerPage}
+						page={currentPage}
+						onChangePage={this.changePage}
+						onChangeRowsPerPage={this.changeRowsPerPage}
+					/>
+					{/* <Pagination
 						activeClassName="active"
 						disabledClassName="disabled"
 						breakClassName={`${styles['pagination']}`}
@@ -149,9 +190,8 @@ class BlockList extends Component {
 						onPageChange={this.changePage.bind(this)}
 						nextLabel="»"
 						previousLabel="«"
-          				/>
-				</div>
-				
+          				/> */}
+				</Card>
 			</div>
 		);
 	}
