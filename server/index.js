@@ -233,9 +233,10 @@ connection.connect(function(err) {
 	if (process.env.SYNC == 'true') {
 		console.log('Sync mode is ON');
 		// await syncDatabase(connection);
-		let sql = `SELECT block_number FROM explorer.blocks ORDER BY ID DESC LIMIT 1`;
+		let sql = `SELECT block_number FROM explorer.blocks ORDER BY BLOCK_NUMBER DESC LIMIT 1`;
 		connection.query(sql, function (err, startBlock) {
 			if (startBlock[0]) {//sync from block n to chainLength
+				console.log('startBlock: ', startBlock[0].block_number);
 				startBlock = startBlock[0].block_number;
 	
 			} else {//full sync from block 0
