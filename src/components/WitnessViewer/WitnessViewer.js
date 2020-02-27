@@ -1,7 +1,7 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux'; 
 import CustomTable from '../Utility/CustomTable';
-const gridHeight = 25;
+const gridHeight = 31;
 class WitnessViewer extends Component {
 	componentDidMount() {
 		if(this.props.history === undefined)

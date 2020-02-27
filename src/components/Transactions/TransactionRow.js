@@ -31,8 +31,6 @@ class TransactionRow extends Component {
 	renderTransaction(transaction, i) {
 		const operationType = JSON.parse(transaction.operations)[0];
 		const parsedTransaction = JSON.parse(transaction.operations)[1];
-		console.log(operationType);
-		console.log(parsedTransaction);
 		switch(operationType) {
 			case 0:
 				const senderAccount = this.findAccountName(parsedTransaction.from);
