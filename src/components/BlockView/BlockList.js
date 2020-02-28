@@ -10,7 +10,7 @@ class BlockList extends Component {
 		super(props);
 
 		this.state = {
-			blocks: [], currentPage: 0, rowsPerPage: 10, blockLength: 0, sortType: 'ASC', sortBy: 'default'
+			blocks: [], currentPage: 0, rowsPerPage: 10, blockLength: 0, sortType: 'asc', sortBy: 'default'
 		};
 	}
 
@@ -21,7 +21,6 @@ class BlockList extends Component {
 			const last = await BlockApi.getLastBlock();
 			lower = last.data[0].block_number-(Constants.BLOCKS_PER_PAGE-1);
 			upper = last.data[0].block_number;
-	
 			const blocks = await BlockApi.getBlocks(lower, upper);
 			this.setState({blockLength: upper, blocks: blocks.data.reverse(), lower, upper});
 		  } catch(error) {
@@ -29,21 +28,19 @@ class BlockList extends Component {
 		  }
 	}
 
-	loadNextBlocks(currentPage) {
+	loadNextBlocks = (currentPage) => {
 		const requestedBlockRange = this.state.upper - (Constants.BLOCKS_PER_PAGE*currentPage);
-		console.log('(', requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1), ',', requestedBlockRange, ')');
 		BlockApi.getBlocks(requestedBlockRange-(Constants.BLOCKS_PER_PAGE-1), requestedBlockRange).then(response => {
-			console.log('loading next blocks: ', response.data.reverse());
 			this.setState({blocks: response.data.reverse()});
 		}).catch(error => console.log('error fetching blocks'));
 	}
 
-	loadNextSortedBlocks(currentPage, sortType) {
+	loadNextSortedBlocks = (currentPage, sortType) => {
 		const colType = this.state.sortBy;
 		const x = ((this.state.bottom + (Constants.BLOCKS_PER_PAGE*currentPage)) <= this.state.upper ) ? this.state.bottom + (Constants.BLOCKS_PER_PAGE*currentPage) : this.state.upper;
 		const y = (Constants.BLOCKS_PER_PAGE-1);
 
-		BlockApi.getBlocksLimited(colType, sortType, x, y, this.state.blockLength).then((response) => {
+		BlockApi.getBlocksLimited(colType, sortType.toLowerCase(), x, y, this.state.blockLength).then((response) => {
 			this.setState({blocks: response.data});
 		}).catch(error => console.log('error fetching blocks'));
 	}
@@ -61,21 +58,18 @@ class BlockList extends Component {
 		}
 	}
 
-	getWitnessName(witnessId) {
+	getWitnessName = (witnessId) => {
 		if (this.props.witnesses) {
 			return this.props.witnesses.find(el => el.account_id === witnessId).account_name;
 		}
 	}
 
-	sortByColumn(colType) {
+	sortByColumn = (colType) => {
 		// Update block length for pagination
-		// const updateLength = await axios.get('api/blocks/last');
-		// this.setState({blockLength: updateLength.data[0].block_number});
-
 		let sortType = this.state.sortType;
 		if(this.state.sortBy === colType)
 		{
-			sortType === 'DESC' ? sortType='ASC': sortType='DESC';
+			sortType === 'desc' ? sortType='asc': sortType='asc';
 		}
 		this.setState({sortType:sortType, sortBy:colType, currentPage: 0});
 		/*sorts depending on the column type. Also does a lookup on the witness data which
@@ -86,7 +80,7 @@ class BlockList extends Component {
 		}).catch(error => console.log('error fetching blocks'));
 	}
 
-	onSearch(data) {
+	onSearch = (data) => {
 		let temp_data = [];
 		temp_data = data;
 		this.setState({ blocks: temp_data });
@@ -99,6 +93,8 @@ class BlockList extends Component {
 
 	render() {
 		const {blocks, blockLength, sortBy, currentPage, rowsPerPage} = this.state;
+		const sortType = this.state.sortType.toLowerCase();
+
 		console.log('blocks: ', blocks);
 		return (
 			<div className="container pt-1 pb-5 mt-4">
@@ -111,40 +107,40 @@ class BlockList extends Component {
 								<TableCell>
 									<TableSortLabel
 										active={sortBy === 'block_number'}
-										direction={sortBy}
-										onClick={() => this.props.sortByColumn('block_number')}>
+										direction={sortType}
+										onClick={() => this.sortByColumn('block_number')}>
 										Height
   								</TableSortLabel>
 								</TableCell>
 								<TableCell>
 									<TableSortLabel
 										active={sortBy === 'timestamp'}
-										direction={sortBy}
-										onClick={() => this.props.sortByColumn('timestamp')}>
+										direction={sortType}
+										onClick={() => this.sortByColumn('timestamp')}>
 										Time
   								</TableSortLabel>
 								</TableCell>
 								<TableCell>
 									<TableSortLabel
 										active={sortBy === 'witness'}
-										direction={sortBy}
-										onClick={() => this.props.sortByColumn('witness')}>
+										direction={sortType}
+										onClick={() => this.sortByColumn('witness')}>
 										Witness
   								</TableSortLabel>
 								</TableCell>
 								<TableCell>
 									<TableSortLabel
 										active={sortBy === 'transaction_count'}
-										direction={sortBy}
-										onClick={() => this.props.sortByColumn('transaction_count')}>
+										direction={sortType}
+										onClick={() => this.sortByColumn('transaction_count')}>
 										Transactions
   								</TableSortLabel>
 								</TableCell>
 								<TableCell>
 									<TableSortLabel
 										active={sortBy === 'operations_count'}
-										direction={sortBy}
-										onClick={() => this.props.sortByColumn('operations_count')}>
+										direction={sortType}
+										onClick={() => this.sortByColumn('operations_count')}>
 										Operations
   								</TableSortLabel>
 								</TableCell>
@@ -173,24 +169,6 @@ class BlockList extends Component {
 						onChangePage={this.changePage}
 						onChangeRowsPerPage={this.changeRowsPerPage}
 					/>
-					{/* <Pagination
-						activeClassName="active"
-						disabledClassName="disabled"
-						breakClassName={`${styles['pagination']}`}
-						breakLabel={<a className="page-link">...</a>}
-						pageClassName={`${styles['pagination']} page-item`}
-						previousClassName={`${styles['pagination']} page-item`}
-						nextClassName={nextStyle}
-						pageLinkClassName="page-link"
-						previousLinkClassName="page-link"
-						nextLinkClassName="page-link"
-						pageCount={blockLength/Constants.BLOCKS_PER_PAGE}
-						pageRangeDisplayed={2}
-						forcePage={this.state.currentPage}
-						onPageChange={this.changePage.bind(this)}
-						nextLabel="»"
-						previousLabel="«"
-          				/> */}
 				</Card>
 			</div>
 		);
