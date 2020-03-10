@@ -33,6 +33,8 @@ class CustomTable extends Component {
 	changePage = (e, index) => {
 		e.preventDefault();
 		this.setState({ currentPage: index });
+
+		this.props.loadNextDataChunk(index, this.state.rowsPerPage); //only used for pages where data is loaded in chunks (e.g Transactions)
 	}
   //processes both table search and table filter
   searchTable = e => {
@@ -147,9 +149,10 @@ class CustomTable extends Component {
   
 	 render() {
 	 	const {currentPage, rowsPerPage, filteredData, sortBy, sortType, searchText} = this.state;
-	 	const {data, tableType, headerLabel, headerIcon, widget, simpleTable, classes} = this.props;
+	 	const {data, tableType, headerLabel, headerIcon, widget, simpleTable, classes, length} = this.props;
 	 	//If the table sort or search is active display filtered data otherwise display pure data
-	 	const tableData = filteredData || searchText ? filteredData : data;
+		 const tableData = filteredData || searchText ? filteredData : data;
+		 const dataLength = length ? length : tableData.length;
   	return (
   		<div className={`${styles[this.containerClass]}`}>
   			<TableContainer className={`${styles['table-container']}`}>
@@ -162,7 +165,7 @@ class CustomTable extends Component {
   			<TablePagination
   				rowsPerPageOptions={[5, 10, 25]}
   				component="div"
-  				count={tableData.length}
+  				count={dataLength}
   				rowsPerPage={rowsPerPage}
   				page={currentPage}
   				onChangePage={this.changePage}
