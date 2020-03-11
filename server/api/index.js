@@ -46,7 +46,7 @@ const api = {
 	sql: used for recursion, should be empty if calling manually
 
     */
-	populateBlocks: (connection, start, sql, streaming) => {
+	populateBlocks: (connection, start, sql) => {
 		if (!start) {
 			start = 1;
 		}
@@ -56,7 +56,7 @@ const api = {
 			// When a block is not found we assume we are up to date.
 			if (!block) {
 				console.log(chalk.green('Exeplorer Server> DONE inserting blocks - no block found'));
-				api.startMonitor(connection, streaming);
+				api.startMonitor(connection);
 				return;
 			}
 
@@ -76,7 +76,7 @@ const api = {
 			
 			// Create SQL Query
 			if (sql === '') {
-				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+				sql = `INSERT INTO blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 	  VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 			} else if (start % 1000 === 0) {
 			} else {
@@ -98,12 +98,12 @@ const api = {
 			}
 
 			if (start % 1000 === 0) {
-				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+				sql = `INSERT INTO blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 				VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 			}
 
 			  start++;
-			  api.populateBlocks(connection, start, sql, streaming);
+			  api.populateBlocks(connection, start, sql);
 		  });
 	},
 
@@ -112,20 +112,22 @@ const api = {
 
 	*/
 
-	startMonitor: (connection, streaming) => {
+	startMonitor: (connection) => {
 		console.log(chalk.green('Exeplorer Server> Monitoring for new blocks!'));
-		ChainStore.subscribe(() => api.updateDatabase(connection, streaming));
+		ChainStore.subscribe(() => api.updateDatabase(connection));
 	  },
 
 	/* Update the DB with data from the monitor
 	connection: A valid MYSQL connection
 	*/
 
-	updateDatabase: (connection, streaming) => {
+	updateDatabase: (connection) => {
 		api.getObject('2.1.0', (error, dynamicGlobal) => {
 			// console.log(dynamicGlobal);
 
-			const sql = `INSERT INTO explorer.variables (var_name, value) VALUES('next_maintenance_time', '${dynamicGlobal.next_maintenance_time}') ON DUPLICATE KEY UPDATE    
+
+
+			const sql = `INSERT INTO variables (var_name, value) VALUES('next_maintenance_time', '${dynamicGlobal.next_maintenance_time}') ON DUPLICATE KEY UPDATE    
 			var_name='next_maintenance_time', value='${dynamicGlobal.next_maintenance_time}'`;
 
 
@@ -136,9 +138,7 @@ const api = {
 				// console.log('Result: ' + JSON.stringify(result));
 			});
 
-			if (!streaming) {
-				api.backtrackChain(connection, dynamicGlobal.head_block_number);
-			}
+			api.backtrackChain(connection, dynamicGlobal.head_block_number);
 			// Get the latest block reference in the dynamicGlobal.
 			api.insertBlock(connection, dynamicGlobal, (error, block) => {
 				if (error) {
@@ -161,7 +161,7 @@ const api = {
 	  backtrackChain: (connection, blockNum) => {
 		const block_number = blockNum; // head block # from CHAIN
 		const dynamicGlobal = {head_block_id: '', head_block_number: block_number-1};
-		connection.query(`SELECT * FROM explorer.blocks WHERE block_number=${block_number-1}`, function (err, rows, result) { // check the -1
+		connection.query(`SELECT * FROM blocks WHERE block_number=${block_number-1}`, function (err, rows, result) { // check the -1
 			if (err) {
 				throw err;
 			}
@@ -196,7 +196,6 @@ const api = {
 
 
 		  Apis.instance().db_api().exec('get_block', [block_number]).then(block => {
-			console.log(chalk.cyan(block_number));
 		  // When a block is not found we assume we are up to date.
 		  if (!block) {
 			  console.log('Exeplorer Server> DONE inserting blocks - no block found');
@@ -217,7 +216,7 @@ const api = {
 		  
 
 			  // Create SQL Query
-			  const sql = `INSERT INTO explorer.blocks (block_id, block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+			  const sql = `INSERT INTO blocks (block_id, block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 
 		  // Run Query
@@ -290,7 +289,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			extensions = JSON.stringify(t.extensions);
 			signatures = JSON.stringify(t.signatures);
 
-			const sql = `INSERT INTO explorer.transactions (parent_block, expiration, operations, operation_results, extensions, signatures) VALUES('${parent_block}', '${expiration}', '${operations}', '${operation_results}', '${extensions}', '${signatures}') ON DUPLICATE KEY UPDATE    
+			const sql = `INSERT INTO transactions (parent_block, expiration, operations, operation_results, extensions, signatures) VALUES('${parent_block}', '${expiration}', '${operations}', '${operation_results}', '${extensions}', '${signatures}') ON DUPLICATE KEY UPDATE    
 				parent_block='${parent_block}', expiration='${expiration}', operations='${operations}', operation_results='${operation_results}', extensions='${extensions}', signatures='${signatures}'`;
 
 			connection.query(sql, function (err, result) {
@@ -394,6 +393,8 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			startChar, limit
 		]).then(accounts => {
 			if (accounts.length > 1) {
+				console.log('Recursively calling function... ');
+
 				if (startChar !== '') {
 					accounts.splice(0, 1);
 				}
@@ -435,6 +436,8 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			startChar, limit
 		]).then(accounts => {
 			if (accounts.length > 1) {
+				console.log('Recursively calling function... ');
+
 				if (startChar !== '') {
 					accounts.splice(0, 1);
 				}

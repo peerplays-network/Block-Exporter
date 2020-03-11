@@ -40,10 +40,10 @@ router.get('/transactions/recent', function (req, res) {
 	const connection = DatabaseUtils.connect();
 
 
-	let sql = `SELECT * FROM explorer.transactions ORDER BY id DESC LIMIT ${req.query.limit};`;
+	let sql = `SELECT * FROM transactions ORDER BY id DESC LIMIT ${req.query.limit};`;
 
 	if (req.query.id) {
-		sql = `SELECT * FROM explorer.transactions WHERE id <=${req.query.id} ORDER BY id DESC LIMIT ${req.query.limit};`;
+		sql = `SELECT * FROM transactions WHERE id <=${req.query.id} ORDER BY id DESC LIMIT ${req.query.limit};`;
 	}
 
 
@@ -73,7 +73,7 @@ router.get('/transactions/:id', function (req, res) {
 	const connection = DatabaseUtils.connect();
 
 	// Perform Query
-	connection.query('SELECT * FROM explorer.transactions', function (err, rows, fields) {
+	connection.query('SELECT * FROM transactions', function (err, rows, fields) {
 		if (err) throw err;
 		
 		// console.log(rows);
@@ -98,7 +98,7 @@ router.get('/transactions', function (req, res) {
 	const end = req.query.end;
 	const connection = DatabaseUtils.connect();
 
-	let sql = `SELECT * FROM explorer.transactions WHERE parent_block >= ${start} AND parent_block <= ${end}`;
+	let sql = `SELECT * FROM transactions WHERE parent_block >= ${start} AND parent_block <= ${end}`;
 
 	if (req.query.direction) {
 		if (req.query.direction !== 'ASC' && (req.query.direction !== 'DESC')) {
