@@ -34,10 +34,10 @@ router.get('/blocks/length', function (req, res) {
 router.get('/blocks/last', function (req, res) {
 	const connection = DatabaseUtils.connect();
 
-	let sql = 'SELECT * FROM explorer.blocks ORDER BY block_number DESC LIMIT 1';
+	let sql = 'SELECT * FROM blocks ORDER BY block_number DESC LIMIT 1';
 
 	if (req.query.transactions == 1) {
-		sql = 'SELECT * FROM explorer.blocks WHERE transaction_count >= 1 ORDER BY block_number DESC LIMIT 1';
+		sql = 'SELECT * FROM blocks WHERE transaction_count >= 1 ORDER BY block_number DESC LIMIT 1';
 	}
 
 	// Perform Query
@@ -83,15 +83,15 @@ router.get('/blocks/sorted', function (req, res) {
 
 	const connection = DatabaseUtils.connect();
 	
-	let sql = `SELECT * FROM explorer.blocks ORDER BY ${req.query.sort} ${req.query.direction} LIMIT ${req.query.x}, ${req.query.y}`;
+	let sql = `SELECT * FROM blocks ORDER BY ${req.query.sort} ${req.query.direction} LIMIT ${req.query.x}, ${req.query.y}`;
 
 	if (req.query.last) {
-		sql = `SELECT * FROM explorer.blocks WHERE blocks.block_number <= ${req.query.last} ORDER BY ${req.query.sort} ${req.query.direction} LIMIT ${req.query.x}, ${req.query.y}`;
+		sql = `SELECT * FROM blocks WHERE blocks.block_number <= ${req.query.last} ORDER BY ${req.query.sort} ${req.query.direction} LIMIT ${req.query.x}, ${req.query.y}`;
 	}
 
 	if (req.query.sort === 'witness') { // Need to use a JOIN if the column is witness, because we store them as IDs -- not names
-		sql = `SELECT b.*, w.account_name FROM explorer.blocks b
-		JOIN explorer.witnesses w on b.witness = w.account_id
+		sql = `SELECT b.*, w.account_name FROM blocks b
+		JOIN witnesses w on b.witness = w.account_id
 		order by account_name ${req.query.direction}
 		LIMIT ${req.query.x} , ${req.query.y};`;
 	}
@@ -132,10 +132,10 @@ router.get('/blocks', function (req, res) {
 
 	const connection = DatabaseUtils.connect();
 
-	let sql = `SELECT * FROM explorer.blocks WHERE block_number >= ${start} AND block_number <= ${end}`;
+	let sql = `SELECT * FROM blocks WHERE block_number >= ${start} AND block_number <= ${end}`;
 
 	if (req.query.sort) { // Handle sorting and direction
-		sql = `SELECT * FROM explorer.blocks WHERE block_number >= ${start} AND block_number <= ${end} ORDER BY block_number`;
+		sql = `SELECT * FROM blocks WHERE block_number >= ${start} AND block_number <= ${end} ORDER BY block_number`;
 		if (req.query.direction) {
 			if (req.query.direction !== 'ASC' && (req.query.direction !== 'DESC')) {
 				return res.status(400).send('400 Bad Request - Invalid direction');
@@ -166,7 +166,7 @@ router.get('/variables', function (req, res) {
 	const connection = DatabaseUtils.connect();
 
 	// Perform Query
-	connection.query('SELECT * FROM explorer.variables', function (err, rows, fields) {
+	connection.query('SELECT * FROM variables', function (err, rows, fields) {
 		if (err) throw err;
 		res.send(rows);
 	});

@@ -29,7 +29,7 @@ router.get('/resources', function (req, res) {
 
 	const connection = DatabaseUtils.connect();
 
-	const sql = 'SELECT * FROM explorer.resources';
+	const sql = 'SELECT * FROM resources';
 
 	// Perform Query
 	connection.query(sql, function (err, rows, fields) {
@@ -72,33 +72,33 @@ router.get('/search', function (req, res) {
 
 	switch (searchType) {
 		case 'BLOCK':
-			sql = `SELECT * FROM explorer.blocks WHERE block_number = '${searchInput}'`;
+			sql = `SELECT * FROM blocks WHERE block_number = '${searchInput}'`;
 			break;
 		case 'NAME':
 			sql =
-		`SELECT *, MATCH(account_name) AGAINST ('*${searchInput}*' IN BOOLEAN MODE) score FROM explorer.accounts
+		`SELECT *, MATCH(account_name) AGAINST ('*${searchInput}*' IN BOOLEAN MODE) score FROM accounts
 		having score > 0
 		order by score desc;`;
 			break;
 		case 'ACCOUNT':
 			sql =
-			`SELECT * FROM explorer.accounts WHERE account_id = '${searchInput}'`;
+			`SELECT * FROM accounts WHERE account_id = '${searchInput}'`;
 			break;
 		case 'COMMITTEE':
 			sql =
-			`SELECT * FROM explorer.committee WHERE committee_id = '${searchInput}'`;
+			`SELECT * FROM committee WHERE committee_id = '${searchInput}'`;
 			break;
 		case 'WITNESS':
 			sql =
-			`SELECT * FROM explorer.witnesses WHERE account_id = '${searchInput}'`;
+			`SELECT * FROM witnesses WHERE account_id = '${searchInput}'`;
 			break;
 		case 'CONTRACT':
 			sql =
-			`SELECT * FROM explorer.contracts WHERE object_id = '${searchInput}'`;
+			`SELECT * FROM contracts WHERE object_id = '${searchInput}'`;
 			break;
 		default: // Unknown --- search multiple tables
 			sql =
-		`SELECT *, MATCH(account_name) AGAINST ('*${searchInput}*' IN BOOLEAN MODE) score FROM explorer.accounts
+		`SELECT *, MATCH(account_name) AGAINST ('*${searchInput}*' IN BOOLEAN MODE) score FROM accounts
 		having score > 0
 		order by score desc;`;
 			break;
