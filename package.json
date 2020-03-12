@@ -1,7 +1,7 @@
 {
   "name": "peerplays-block-exporter",
-  "version": "0.3.0",
-  "description": "A block exporter for exechain",
+  "version": "0.1.0",
+  "description": "A block exporter for peerplays",
   "main": "server/index.js",
   "scripts": {
     "build": "rimraf build && webpack --progress",
