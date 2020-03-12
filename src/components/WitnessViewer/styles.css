@@ -1,0 +1,32 @@
+.clickable {
+    cursor: pointer;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+
+.header-background{
+    background: black;
+  }
+  .header-contrast-text{
+    color: white;
+  }
+  
+  .accounts-header{
+    background: rgb(61, 61, 61);
+  }
+  
+  
+  .text-center{
+    text-align: center!important;
+  }
+
+  .header-contrast-text{
+    color: white;
+  }
+  
+  .witness-header{
+    background: rgb(61, 61, 61);
+  }

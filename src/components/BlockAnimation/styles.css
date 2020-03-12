@@ -1,0 +1,13 @@
+.bar {
+    height: 20px;
+    width: 20px;
+    margin: 5px;
+    background-color: rgb(255, 255, 255);
+    cursor: pointer;
+    border-bottom: 3px solid rgb(156, 156, 156);
+    border-left: 3px solid rgb(156, 156, 156);
+}
+
+.block-container {
+    display: flex;
+}

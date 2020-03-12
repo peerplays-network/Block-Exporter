@@ -1,0 +1,42 @@
+.disabled {
+display: none !important;
+/* pointer-events: none; */
+}
+
+.header-background {
+  background: black;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.header-icon {
+  display: flex;
+  align-items: center;
+}
+
+.header-contrast-text {
+  color: white;
+}
+
+.block-item-container {
+  padding-top: 100px;
+}
+
+.block-item-buttons {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.blocks-header {
+  background: rgb(61, 61, 61);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-bold {
+  font-weight: bold;
+}

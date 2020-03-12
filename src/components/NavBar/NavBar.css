@@ -1,0 +1,101 @@
+@import '_global';
+
+.nav-item-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.logo-container {
+  display: flex;
+  width: 200px;
+  justify-content: space-evenly;
+}
+
+.block-search-container {
+  display: flex;
+  justify-content: space-evenly;
+  width: 650px;
+}
+
+.nav-divider {
+  border: 1px solid #FFFFFF;
+  opacity: 0.29;
+}
+
+.peerplays-logo {
+  width: 100px;
+  cursor: pointer;
+}
+
+.nav-header-text {
+  display: flex;
+  align-items: center;  
+}
+
+.header-background{
+  background: black;
+}
+.header-contrast-text{
+  color: white;
+}
+
+.search-input {
+  height: 30px;
+  width: 280px;
+  background-color: white;
+  border-radius: 4px;
+}
+
+/* .search-input:hover {
+  background-color: white;
+} */
+.button-label {
+  color: white;
+}
+
+
+
+
+
+
+
+
+
+.link-no-decor{
+  text-decoration: none;
+  color:white;
+  
+}
+
+.link-no-decor:hover{
+  text-decoration: none;
+  color:white;
+}
+
+.nav {
+  margin-top: 8px;
+}
+
+.nav a {
+  margin-right: 8px;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+
+.header-height{
+  height:60px;
+}
+.bold{
+  font-weight: bold;
+}
+.size30{
+  font-size: 30px;
+}
+
+.size25{
+  font-size: 25px;
+}
