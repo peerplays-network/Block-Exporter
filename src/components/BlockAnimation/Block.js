@@ -1,33 +1,35 @@
 import React, { Component } from 'react';
-import {Tooltip} from 'reactstrap';
+import Tooltip from '@material-ui/core/Tooltip';
 import styles from './styles.css';
 
 class Block extends Component
 {
-	constructor(props) {
-		super(props);
-		this.state = {tooltipOpen:false};
-		this.toggle = this.toggle.bind(this);
-	}
+		state = {tooltipOpen:false};
 
-	toggle() {
+	open = () => {
 		this.setState({
-		  	tooltipOpen: !this.state.tooltipOpen
+		  	tooltipOpen: true
 		});
 	}
 
-	render()
+	close = () => {
+		this.setState({
+		  	tooltipOpen: false
+		});
+	}
+
+	render ()
 	{
 		const {
-			toggle,
 			state: { tooltipOpen },
 			props:{num}
 		} = this;
-		return(
+		return (
 			<div>
 				<div id={`block${num}`} className={`${styles['bar']} d-inline-flex`} onClick={(i)=>this.props.onClick({num})}></div>
-				<Tooltip target={`block${num}`} placement="bottom" isOpen={tooltipOpen} toggle={toggle} 
-					delay={{show:250, hide:0}}>
+				<Tooltip title={`block${num}`} placement="bottom" open={tooltipOpen} onOpen={this.open}
+					onClose={this.close}
+					enterDelay={250}>
 					{`Block: ${num}`}
 				</Tooltip>
 			</div>

@@ -1,11 +1,13 @@
-.box-shadow {
-    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);
-}
-
-.centerText {
+.display {
     text-align: center;
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    font-family: LiquidCrystal;
+    /* font-size: 2em; */
+    font-style: italic;
+    background: black;
+    color: #00ff00;
 }
-
 /* font for countdown panel */
 @font-face {
     font-family: LiquidCrystal;
@@ -22,13 +24,5 @@
     font-family: LiquidCrystal;
     src: url(../../assets/fonts/liquid_crystal/LiquidCrystal-BoldItalic.otf);
     font-style: italic;
-}
-
-.digital {
-    font-family: LiquidCrystal;
-    /* font-size: 2em; */
-    font-style: italic;
-    background: black;
-    color: #00ff00;
 }
 /* end font code */

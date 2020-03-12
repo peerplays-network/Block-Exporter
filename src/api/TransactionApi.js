@@ -10,8 +10,8 @@ const TransactionApi = {
    * @param {string} direction - ASC or DESC, defaults to ASC if none is supplied
    */
 
-	getTransactions() {
-		const query = '/api/transactions/recent?id=&limit=10';
+	getTransactions(limit) {
+		const query = `/api/transactions/recent?limit=${limit}`;
 
 		return new Promise(async (resolve, reject) => {
 			const response = await axios.get(query);

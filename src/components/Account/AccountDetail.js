@@ -6,7 +6,7 @@ class AccountDetail extends Component {
 	render() {
 		const account = this.props.detail.account_name;
 		return (
-			<TableRow>
+			<TableRow hover={true}>
 				<TableCell>
 					<Link href={'/accountAllDetail/'+account}>{ account }</Link>
 				</TableCell>
