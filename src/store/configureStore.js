@@ -1,10 +1,18 @@
 import { createStore, applyMiddleware, compose } from 'redux';
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 import { routerMiddleware } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
 // import thunk from 'redux-thunk';
 import promise from 'redux-promise';
 
 import rootReducer from '../reducers';
+
+const persistConfig = {
+	key: 'root',
+	storage,
+}
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -22,7 +30,7 @@ export default function configureStore(history) {
 	}
 
 	const store = createStore(
-		rootReducer,
+		persistedReducer,
 		initialState,
 		composeEnhancers(applyMiddleware(...middlewares))
 	);
@@ -34,5 +42,7 @@ export default function configureStore(history) {
 		});
 	}
 
-	return store;
+	let persistor = persistStore(store);
+
+	return { store, persistor }
 }
