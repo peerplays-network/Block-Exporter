@@ -25,24 +25,36 @@ class CustomTableHeader extends Component {
   				{id: 'total_votes', label: 'Votes'},
   				{id: 'url', label: 'URL'}
   			];
+  		case 'transactions':
+  			return [
+  				{id: 'block', label: 'Block'},
+  				{id: 'account', label: 'Account'},
+  				{id: 'operation', label: 'Operation'},
+  				{id: 'fee', label: 'Fee'},
+  				{id: 'date', label: 'Date'}
+  			];
   		default:
   			return [];
   	}
   }
   
   render() {
-  	const {sortBy, sortType, tableType} = this.props;
+  	const {sortBy, sortType, tableType, simpleTable} = this.props;
   	return (
   		<TableHead className={''}>
   			<TableRow>
   				{this.generateHeadCells(tableType).map(headCell => (
   					<TableCell key={headCell.id} sortDirection={sortType}>
-  						<TableSortLabel
-  							active={sortBy === headCell.id}
-  							direction={sortType}
-  							onClick={() => this.props.sortByColumn(headCell.id)}>
-  							{headCell.label}
-  						</TableSortLabel>
+  						{simpleTable ? 
+  							<span>{headCell.label}</span>
+  							:
+  							<TableSortLabel
+  								active={sortBy === headCell.id}
+  								direction={sortType}
+  								onClick={() => this.props.sortByColumn(headCell.id)}>
+  								{headCell.label}
+  							</TableSortLabel>
+  						}
   					</TableCell>
   				))}
   			</TableRow>

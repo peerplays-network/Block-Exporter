@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Table, TableContainer, TablePagination, InputAdornment, Input} from '@material-ui/core';
+import {Table, TableContainer, TablePagination, InputAdornment, Input, CircularProgress} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import CustomTableHeader from './CustomTableHeader';
@@ -158,8 +158,17 @@ class CustomTable extends Component {
   			<TableContainer className={`${styles['table-container']}`}>
 					 {this.renderHeaderContent(searchText, headerLabel, headerIcon, widget, simpleTable, classes)}
   				<Table stickyHeader>
-  					<CustomTableHeader sortByColumn={this.sortByColumn} sortBy={sortBy} sortType={sortType} tableType={tableType}/>
-	 					<CustomTableBody tableData={tableData} currentPage={currentPage} rowsPerPage={rowsPerPage} tableType={tableType}/>
+						 {data.length === 0 ? 
+						 <div className={`${styles['table-loader']}`}>
+						 	<CircularProgress disableShrink />
+						 </div>
+						 :
+						 <>
+	 							<CustomTableHeader simpleTable={simpleTable} sortByColumn={this.sortByColumn} sortBy={sortBy} sortType={sortType} 
+	 								tableType={tableType}/>
+	 							<CustomTableBody tableData={tableData} currentPage={currentPage} rowsPerPage={rowsPerPage} tableType={tableType}/>
+	 						</>
+	 					}
   				</Table>
   			</TableContainer>
   			<TablePagination

@@ -8,17 +8,17 @@ class TransactionRow extends Component {
 		return accountName ? <span><Link className="d-inline p-0" href={`/accountAllDetail/${accountName.account_name}`}>{accountName.account_name}</Link></span>  : <span>Account Id: {id}</span>;
 	}
 	
-	linkAccountName(accountName) {
-		return accountName ? <span><Link className="d-inline p-0" href={`/accountAllDetail/${accountName}`}>{accountName}</Link></span> : accountName;
-	}
+	// linkAccountName(accountName) {
+	// 	return accountName ? <span><Link className="d-inline p-0" href={`/accountAllDetail/${accountName}`}>{accountName}</Link></span> : accountName;
+	// }
   
-	renderOther(operationType, parsedTransaction, i) {
-		if(parsedTransaction.fee) {
-			return (
-				<TableCell sm="5"> <strong> {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong> {this.findAccountName(parsedTransaction.account)}</strong></TableCell>
-			);
-		}
-	}
+	// renderOther(operationType, parsedTransaction, i) {
+	// 	if(parsedTransaction.fee) {
+	// 		return (
+	// 			<TableCell sm="5"> <strong> {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong> {this.findAccountName(parsedTransaction.account)}</strong></TableCell>
+	// 		);
+	// 	}
+	// }
   
 	displayOperation( operation ) {
 		if(this.props.operations[operation]) {
@@ -28,58 +28,60 @@ class TransactionRow extends Component {
 		return;
 	}
 
-	renderTransaction(transaction, i) {
+	getAccountName(transaction) {
+		let accountName = '';
 		const operationType = JSON.parse(transaction.operations)[0];
 		const parsedTransaction = JSON.parse(transaction.operations)[1];
 		switch(operationType) {
 			case 0:
-				const senderAccount = this.findAccountName(parsedTransaction.from);
-				const receiverAccount = this.findAccountName(parsedTransaction.to);
-				return (
-					<TableCell className={`${styles['text-center']}`}><strong>fee: {parsedTransaction.amount.amount}</strong> {this.displayOperation(operationType)} <strong>{receiverAccount}</strong> from <strong>{senderAccount}</strong></TableCell> 
-				);
+				accountName = parsedTransaction.from;
+				break;
 			case 5:
-				return (
-					<TableCell className={`${styles['text-center']}`}><strong>fee: {parsedTransaction.fee.amount}</strong> paid by <strong>{this.findAccountName(parsedTransaction.registrar)}</strong> for {this.displayOperation(operationType)} <strong>{this.linkAccountName(parsedTransaction.name)}</strong></TableCell>
-				);
+				accountName = parsedTransaction.registrar;
+				break;
 			case 6:
-				return (
-					<TableCell className={`${styles['text-center']}`}><strong>fee: {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.account)}</strong></TableCell>
-				);
+				accountName = parsedTransaction.account;
+				break;
 			case 8:
-				return (
-					<TableCell className={`${styles['text-center']}`}><strong>fee: {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.account_to_upgrade)}</strong></TableCell>
-				);
+				accountName = parsedTransaction.account_to_upgrade;
+				break;
 			case 20:
-				return (
-					<TableCell className={`${styles['text-center']}`}><strong>fee: {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.witness_account)}</strong></TableCell>
-				);
+				accountName = parsedTransaction.witness_account;
+				break;
 			case 29:
-				return (
-					<TableCell className={`${styles['text-center']}`}><strong>fee: {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.committee_member_account)}</strong></TableCell>
-				);
+				accountName = parsedTransaction.committee_member_account;
+				break;
 			case 37:
-				return (
-					<TableCell className={`${styles['text-center']}`}><strong>fee: {parsedTransaction.total_claimed.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.deposit_to_account)}</strong></TableCell>
-				);
+				accountName = parsedTransaction.deposit_to_account;
+				break;
 			case 47:
-				return (
-					<TableCell className={`${styles['text-center']}`}><strong>fee: {parsedTransaction.fee.amount}</strong> {this.displayOperation(operationType)} <strong>{this.findAccountName(parsedTransaction.registrar)}</strong></TableCell>
-				);
+				accountName = parsedTransaction.registrar;
+				break;
 			case 62:
-				return (
-					<TableCell className={`${styles['text-center']}`}><strong>fee: {parsedTransaction.fee.amount}</strong> bet_place <strong>{this.findAccountName(parsedTransaction.bettor_id)}</strong></TableCell>
-				);
+				accountName = parsedTransaction.bettor_id;
+				break;
 			default:
-				return this.renderOther(transaction, operationType, parsedTransaction, i);
+				break;
 		}
+
+		return accountName;
+	}
+
+	getOperation = (transaction) => {
+		const opCode = JSON.parse(transaction.operations)[0];
+		const operationType = this.props.operations.find(opCode);
+		return operationType;
 	}
   
 	render() {
 		const {detail, key} = this.props;
 		return (
 			<TableRow hover={true} key={key}>
-				{this.renderTransaction(detail)}
+				<TableCell className={`${styles['text-center']}`}>{detail.parent_block}</TableCell>
+				<TableCell>{this.getAccountName(detail)}</TableCell>
+				<TableCell className={`${styles['text-center']}`}>{this.getOperation(detail)}</TableCell>
+				<TableCell className={`${styles['text-center']}`}>{detail.fee.amount}</TableCell>
+				<TableCell className={`${styles['text-center']}`}>{detail.expiration}</TableCell>
 			</TableRow>
 		);
 	}

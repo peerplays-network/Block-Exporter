@@ -40,3 +40,9 @@ display: none !important;
 .text-bold {
   font-weight: bold;
 }
+
+.table-loader {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}

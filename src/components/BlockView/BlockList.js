@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './styles.css';
-import { Link, Table, TableHead, TableBody, TableRow, TableCell, TableSortLabel, TablePagination, Card} from '@material-ui/core';
+import { Link, Table, TableHead, TableBody, TableRow, TableCell, TableSortLabel, TablePagination, Card, CircularProgress} from '@material-ui/core';
 import { connect } from 'react-redux';
 import * as Constants from '../../constants/constants';
 import BlockApi from '../../api/BlockApi';
@@ -102,7 +102,13 @@ class BlockList extends Component {
 					<h1 className={`${styles['header-contrast-text']} ${styles['header-background']} display-5 text-center pt-3 pb-3`}>
 						<span className="fa fa-cubes">&nbsp;</span> Browse Blocks</h1>
 					<Table stickyHeader>
-						<TableHead className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>
+						{blocks.length === 0 ? 
+							<div className={`${styles['table-loader']}`}>
+						 	<CircularProgress disableShrink />
+							</div>
+							:
+							<>
+							<TableHead className={`${styles['header-contrast-text']} ${styles['blocks-header']}  ${styles['text-center']}`}>
 							<TableRow>
 								<TableCell>
 									<TableSortLabel
@@ -159,6 +165,8 @@ class BlockList extends Component {
 								);
 							})}
 						</TableBody>
+						</>
+						}
 					</Table>
 					<TablePagination
 						rowsPerPageOptions={[5, 10, 20]}

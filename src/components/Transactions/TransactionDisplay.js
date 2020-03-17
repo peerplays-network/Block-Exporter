@@ -8,8 +8,8 @@ class TransactionDisplay extends Component {
 		super();
 		this.state = {
 			transactionData: [],
-			transactionDataLength: 100,
-			limit: 1000
+			transactionDataLength: 0,
+			limit: 10
 		};
 	}
 

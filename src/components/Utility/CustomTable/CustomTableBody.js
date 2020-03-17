@@ -24,12 +24,13 @@ class CustomTableBody extends Component {
 
   render() {
   	const {currentPage, rowsPerPage, tableData} = this.props;
+  	console.log('data: ', tableData);
   	return (
   		<TableBody>
   			{tableData && tableData.slice( currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage).map((rowData, i) =>
-  			{return this.generateTableRows(rowData, i);}
-  			)}
-  			{tableData.length===0 && <div> No Search Results </div>}
+  					{return this.generateTableRows(rowData, i);}
+  				)
+  			}
   		</TableBody>
   	);
   }
