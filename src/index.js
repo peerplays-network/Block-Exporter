@@ -9,13 +9,16 @@ import { AppContainer } from 'react-hot-loader';
 
 import configureStore from './store/configureStore';
 import routes from './routes';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const history = createBrowserHistory();
-const store = configureStore(history);
+const { store, persistor } = configureStore(history);
 
 const app = (
 	<Provider store={store}>
-		<ConnectedRouter history={history}>{routes}</ConnectedRouter>
+		<PersistGate loading={null} persistor={persistor}>
+			<ConnectedRouter history={history}>{routes}</ConnectedRouter>
+		</PersistGate>
 	</Provider>
 );
 
