@@ -23,7 +23,7 @@ import AccountSearch from '../Account/Account';
 import GridLayout, {WidthProvider as widthProvider} from 'react-grid-layout';
 import Contract from '../Contracts/Contract';
 import Committee from '../Committee/Committee';
-import {LayoutChange} from "../../actions/GridLayoutActions";
+import {onChangeLayout} from "../../actions/GridLayoutActions";
 
 const Grid = widthProvider(GridLayout);
 
@@ -59,7 +59,7 @@ class Welcome extends Component {
 			}
 			else
 				stateCopy.layout[0].w = 0;
-			this.props.LayoutChange({...this.props.gridLayout,layout:stateCopy.layout});
+			this.props.onChangeLayout({...this.props.gridLayout,layout:stateCopy.layout});
 		}
 	}
 
@@ -72,7 +72,7 @@ class Welcome extends Component {
 				stateCopy.layout[index] = initialPanelLayout[el.id].gridPlacement;
 			}
 		});
-		this.props.LayoutChange({layout:stateCopy.layout, components:stateCopy.components});
+		this.props.onChangeLayout({layout:stateCopy.layout, components:stateCopy.components});
 	}
 
 	onClosePanel(id) {
@@ -81,7 +81,7 @@ class Welcome extends Component {
 		const index = stateCopy.layout.findIndex(x => x.i===id.toString()); 
 		stateCopy.layout.splice(Number(index), 1);
 		stateCopy.components[id].visible = false;
-		this.props.LayoutChange({layout: stateCopy.layout, components: stateCopy.components});
+		this.props.onChangeLayout({layout: stateCopy.layout, components: stateCopy.components});
 	}
 
 	changePanelSize(id, size) {
@@ -117,7 +117,7 @@ class Welcome extends Component {
 				stateCopy.layout[index].x = this.startingX;
 		}
 		stateCopy.components[id].visible = true;
-		this.props.LayoutChange({layout: stateCopy.layout, components: stateCopy.components});
+		this.props.onChangeLayout({layout: stateCopy.layout, components: stateCopy.components});
 	}
 
 	renderComponent(component) {
@@ -152,7 +152,7 @@ class Welcome extends Component {
 		stateCopy.components[id].gridPlacement = {i: id.toString(), x: newItem.x, y: newItem.y, w: newItem.w, h: newItem.h};
 		stateCopy.layout[layoutIndex] = stateCopy.components[id].gridPlacement;
 
-		this.props.LayoutChange({layout: stateCopy.layout, components: stateCopy.components});
+		this.props.onChangeLayout({layout: stateCopy.layout, components: stateCopy.components});
 
 		this.onDragStop(layout, oldItem, newItem, placeholder, e, element);
 	}
@@ -174,7 +174,7 @@ class Welcome extends Component {
 		const layoutIndex = stateCopy.layout.findIndex(x => x.i===id.toString());
 		stateCopy.layout[layoutIndex].h = height;
 
-		this.props.LayoutChange({ ...this.props.gridLayout,layout: stateCopy.layout})
+		this.props.onChangeLayout({ ...this.props.gridLayout,layout: stateCopy.layout})
 	}
 
 	onLayoutChange(layout) {
@@ -189,7 +189,7 @@ class Welcome extends Component {
 			stateCopy.layout[layoutIndex].x = this.startingX;
 
 			this.elementOverlap = null;
-			this.props.LayoutChange({layout: stateCopy.layout, components: stateCopy.components})
+			this.props.onChangeLayout({layout: stateCopy.layout, components: stateCopy.components})
 		}
 	}
 
@@ -236,7 +236,7 @@ class Welcome extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({ showSideBarIcon, LayoutChange }, dispatch);
+	return bindActionCreators({ showSideBarIcon, onChangeLayout }, dispatch);
 }
 
 const mapStateToProps = (state) => ({
