@@ -7,7 +7,6 @@ const DatabaseUtils = require('../utility/DatabaseUtils');
 
 // Transactions API: GET # of transactions
 router.get('/transactions/length', function (req, res) {
-
 	const connection = DatabaseUtils.connect();
 
 
@@ -31,7 +30,6 @@ router.get('/transactions/length', function (req, res) {
 
 // Transactions API: GET recent transactions
 router.get('/transactions/recent', function (req, res) {
-	// Start and End are required.
 	if (!req.query.limit) {
 		res.status(400).send('400 Bad Request');
 		return;
@@ -39,13 +37,7 @@ router.get('/transactions/recent', function (req, res) {
 
 	const connection = DatabaseUtils.connect();
 
-
-	let sql = `SELECT * FROM explorer.transactions ORDER BY id DESC LIMIT ${req.query.limit};`;
-
-	if (req.query.id) {
-		sql = `SELECT * FROM explorer.transactions WHERE id <=${req.query.id} ORDER BY id DESC LIMIT ${req.query.limit};`;
-	}
-
+	const sql = `SELECT * FROM explorer.transactions ORDER BY expiration DESC LIMIT ${req.query.limit};`;
 
 	// Perform Query
 	connection.query(sql, function (err, rows, fields) {
@@ -54,7 +46,6 @@ router.get('/transactions/recent', function (req, res) {
 		if (rows.length < 1) {
 			return res.status(404).send('404 - NO DATA AVAILABLE');
 		}
-		  
 		res.send(rows);
 		  });
 
@@ -64,7 +55,6 @@ router.get('/transactions/recent', function (req, res) {
 
 // Transactions API: GET transactions for account
 router.get('/transactions/:id', function (req, res) {
-
 	if (!req.params.id.startsWith('1.2')) {
 		res.status(400).send('400 Invalid format');
 		return;

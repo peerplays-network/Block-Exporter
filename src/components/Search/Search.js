@@ -100,9 +100,6 @@ class Search extends Component {
 			const accountName = this.getAccountName(responseObj.committee_member_account);
 			this.props.history.push(`/accountAllDetail/${accountName}/${responseObj.committee_id}`);
 		}
-		else if(!!responseObj.statistics) {
-			this.props.history.push(`/contractDetail/${responseObj.name}`);
-		}
 		else
 			console.log('no matches');
 	}

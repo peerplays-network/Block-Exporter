@@ -3,6 +3,7 @@ import { Button, Card, CardText, CardBody, Col } from 'reactstrap';
 import styles from './styles.css';
 import axios from 'axios';
 
+//leaving this page with bootstrap until it is decided what data is displayed in this page
 class Directory extends Component {
 	constructor() {
 		super();
@@ -19,14 +20,14 @@ class Directory extends Component {
 	fetchData() {
 		axios.get('/api/resources', {
 		}).then(response => {
-			let resources = response.data;
-			let categories = this.state.categories;
+			const resources = response.data;
+			const categories = this.state.categories;
 			categories.push(resources.map((resource, i) => {
 				if(!categories.includes(resource.category)) {
 					return resource.category;
 				}
 			}));
-			let catgo = categories[0].filter((v, i) => categories[0].indexOf(v) === i);
+			const catgo = categories[0].filter((v, i) => categories[0].indexOf(v) === i);
 			console.log('out loop', resources, categories, catgo);
 			this.setState({ resources: resources});
 			this.setState({ categories: catgo});

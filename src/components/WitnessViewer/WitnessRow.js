@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
-import Link from '@material-ui/core/Link';
+import {Link, TableRow, TableCell} from '@material-ui/core';
 
 class WitnessRow extends Component {
 	render() {
-		const witnessLink = `/accountAllDetail/${this.props.witness}/${this.props.account_id}`;
+		const {detail} = this.props;
+		const detailLink = `/accountAllDetail/${detail.account_name}/${detail.account_id}`;
 		return (
-			<tr>
-				<td className="align-middle">{this.props.rank}</td>
-				<td className="align-middle"><Link href={witnessLink}>{this.props.witness}</Link></td>
-				<td className="align-middle">{this.props.votes}</td>
-				<td className="align-middle">{this.props.misses}</td>
-				<td className="align-middle">{this.props.lastBlock}</td>
-			</tr>
+			<TableRow hover={true}>
+				<TableCell>{detail.rank}</TableCell>
+				<TableCell>
+					<Link href={detailLink}>{detail.account_name}</Link>
+				</TableCell>
+				<TableCell>{detail.total_votes}</TableCell>
+				<TableCell>{detail.total_missed}</TableCell>
+				<TableCell>{detail.url}</TableCell>
+			</TableRow>
 		);
 	}
 }

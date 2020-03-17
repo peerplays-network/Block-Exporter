@@ -46,17 +46,13 @@ const api = {
 	sql: used for recursion, should be empty if calling manually
 
     */
-	populateBlocks: (connection, start, sql) => {
-		if (!start) {
-			start = 1;
-		}
-
+	populateBlocks: (connection, start, sql, streaming) => {
 		Apis.instance().db_api().exec('get_block', [start]).then(block => {
 			console.log(chalk.cyan(start));
 			// When a block is not found we assume we are up to date.
 			if (!block) {
 				console.log(chalk.green('Exeplorer Server> DONE inserting blocks - no block found'));
-				api.startMonitor(connection);
+				api.startMonitor(connection, streaming);
 				return;
 			}
 
@@ -103,7 +99,68 @@ const api = {
 			}
 
 			  start++;
-			  api.populateBlocks(connection, start, sql);
+			  api.populateBlocks(connection, start, sql, streaming);
+		  });
+	},
+
+	fastSyncBlocks: (connection, start, finish, sql, streaming) => {
+		if(start >= finish) {
+			return;
+		}
+
+		Apis.instance().db_api().exec('get_block', [start]).then(block => {
+			console.log(chalk.cyan(start));
+			// When a block is not found we assume we are up to date.
+			if (!block) {
+				console.log(chalk.green('Exeplorer Server> DONE inserting blocks - no block found'));
+				// api.startMonitor(connection, streaming);
+				// return;
+			}
+
+
+			api.parseBlock(block, connection, 0);
+
+
+			// Build block object to be inserted
+			
+			const transaction_count = block.transactions.length;
+			const operation_count = block.extensions.length;
+			const witness = block.witness;
+			const signature = block.witness_signature;
+			const previous_block_hash = block.previous;
+			const merkle_root = block.transaction_merkle_root;
+			const timestamp = block.timestamp;
+			
+			// Create SQL Query
+			if (sql === '') {
+				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+	  VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
+			} else if (start % 1000 === 0) {
+			} else {
+				sql = sql + `, ('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
+				// console.log(sql);
+			}
+  
+			// Run Query
+			// console.log(start);
+			if (start % 1000 === 0) {
+				connection.query(sql, function (err, result) {
+					if (err) {
+						throw err;
+					}
+				  //   console.log('Result: ' + JSON.stringify(result));
+				  console.log(start);
+				});
+				// return;itne
+			}
+
+			if (start % 1000 === 0) {
+				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+				VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
+			}
+
+			  start++;
+			  api.fastSyncBlocks(connection, start, finish, sql, streaming);
 		  });
 	},
 
@@ -112,20 +169,18 @@ const api = {
 
 	*/
 
-	startMonitor: (connection) => {
+	startMonitor: (connection, streaming) => {
 		console.log(chalk.green('Exeplorer Server> Monitoring for new blocks!'));
-		ChainStore.subscribe(() => api.updateDatabase(connection));
+		ChainStore.subscribe(() => api.updateDatabase(connection, streaming));
 	  },
 
 	/* Update the DB with data from the monitor
 	connection: A valid MYSQL connection
 	*/
 
-	updateDatabase: (connection) => {
+	updateDatabase: (connection, streaming) => {
 		api.getObject('2.1.0', (error, dynamicGlobal) => {
 			// console.log(dynamicGlobal);
-
-
 
 			const sql = `INSERT INTO explorer.variables (var_name, value) VALUES('next_maintenance_time', '${dynamicGlobal.next_maintenance_time}') ON DUPLICATE KEY UPDATE    
 			var_name='next_maintenance_time', value='${dynamicGlobal.next_maintenance_time}'`;
@@ -138,7 +193,9 @@ const api = {
 				// console.log('Result: ' + JSON.stringify(result));
 			});
 
-			api.backtrackChain(connection, dynamicGlobal.head_block_number);
+			if (!streaming) {
+				api.backtrackChain(connection, dynamicGlobal.head_block_number);
+			}
 			// Get the latest block reference in the dynamicGlobal.
 			api.insertBlock(connection, dynamicGlobal, (error, block) => {
 				if (error) {
@@ -196,6 +253,7 @@ const api = {
 
 
 		  Apis.instance().db_api().exec('get_block', [block_number]).then(block => {
+			console.log(chalk.cyan(block_number));
 		  // When a block is not found we assume we are up to date.
 		  if (!block) {
 			  console.log('Exeplorer Server> DONE inserting blocks - no block found');
@@ -245,34 +303,32 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 		let extensions;
 		let signatures;
 		const timestamp = b.timestamp;
-
 		b.transactions.map(async (t) => {
 			parent_block = t.ref_block_num;
 			expiration = t.expiration;
-
 			// Account and Witness Data
 			if (t.operations[0][0] === 5 && live == 1) {
 				const data = t.operations[0][1];
-					
+				
 				const account_name = data.name;
 				const referrer = data.referrer;
 				const owner_key = data.owner.key_auths[0][0];
 				const active_key = data.active.key_auths[0][0];
 				const memo_key = data.options.memo_key;
 				const member_since = timestamp;
-
+				
 				const accountObj = await api.getAccountByName([account_name]);
 				const membership_expiration_date = accountObj[0].membership_expiration_date;
 				const account_id = accountObj[0].id;
-
-		
+				
+				
 				// console.log(accountObj[0]);
 				// console.log(t.operations[0][1]);
 				// console.log(t.operations[0][1].name);
-
+				
 				const sql = `INSERT INTO accounts (account_name, membership_expiration, referrer, owner_key, active_key, memo_key, member_since, account_id)
-					VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '${member_since}', '${account_id}')`;
-		
+				VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '${member_since}', '${account_id}')`;
+				
 				connection.query(sql, function(err, result) {
 					if (err) {
 						throw err;
@@ -280,25 +336,25 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				});
 			}
 
-			if (t.operations[0][0] === 77) {
-				t.operations[0].common_options.description = JSON.parse(t.operations[0].common_options.description);
-			} 
-			operations = JSON.stringify(t.operations[0]);
-				
-			operation_results = JSON.stringify(t.operation_results[0]);
-			extensions = JSON.stringify(t.extensions);
-			signatures = JSON.stringify(t.signatures);
-
-			const sql = `INSERT INTO explorer.transactions (parent_block, expiration, operations, operation_results, extensions, signatures) VALUES('${parent_block}', '${expiration}', '${operations}', '${operation_results}', '${extensions}', '${signatures}') ON DUPLICATE KEY UPDATE    
-				parent_block='${parent_block}', expiration='${expiration}', operations='${operations}', operation_results='${operation_results}', extensions='${extensions}', signatures='${signatures}'`;
-
-			connection.query(sql, function (err, result) {
-				  if (err) {
-					  throw err;
-				  }
+			if (t.operations[0][0] !== 77 && t.operations[0][0] !== 22) {
+				operations = JSON.stringify(t.operations[0]);
+				//JSON.stringify();
+				operation_results = JSON.stringify(t.operation_results[0]);
+				extensions = JSON.stringify(t.extensions);
+				signatures = JSON.stringify(t.signatures);
+				const sql = `INSERT INTO explorer.transactions (parent_block, expiration, operations, operation_results, extensions, signatures) VALUES('${parent_block}', '${expiration}', '${operations}', '${operation_results}', '${extensions}', '${signatures}') ON DUPLICATE KEY UPDATE    
+					parent_block='${parent_block}', expiration='${expiration}', operations='${operations}', operation_results='${operation_results}', extensions='${extensions}', signatures='${signatures}'`;
+			
+				connection.query(sql, function (err, result) {
+					if (err) {
+						console.error('ERROR: ', operations);
+						console.error('parent_block: ', parent_block);
+					//throw err;
+					}
 				//   console.log('Result: ' + JSON.stringify(result));
-			  });
-			  });	
+				});
+			}
+		});	
 	  },
 
 	  /* Get a single object from the blockchain
@@ -393,8 +449,6 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			startChar, limit
 		]).then(accounts => {
 			if (accounts.length > 1) {
-				console.log('Recursively calling function... ');
-
 				if (startChar !== '') {
 					accounts.splice(0, 1);
 				}
@@ -436,8 +490,6 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			startChar, limit
 		]).then(accounts => {
 			if (accounts.length > 1) {
-				console.log('Recursively calling function... ');
-
 				if (startChar !== '') {
 					accounts.splice(0, 1);
 				}

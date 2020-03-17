@@ -1,10 +1,10 @@
-import { FETCH_CONTRACT_LIST } from '../actions/ContractActions';
+import { FETCH_OPERATIONS } from '../actions/TransactionActions';
 
 export default function(state = [], action) {
 	switch (action.type) {
-		case FETCH_CONTRACT_LIST:
+		case FETCH_OPERATIONS:
 			return Object.assign({}, state, {
-				contractList: action.payload
+				operations: action.payload
 			});
 
 		default:

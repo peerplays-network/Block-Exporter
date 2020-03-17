@@ -24,6 +24,14 @@ config.module = {
 			include: paths.app.src
 		},
 		{
+			test: /\.(png|jpe?g|gif)$/i,
+			use: [
+				{
+					loader: 'file-loader',
+				},
+			],
+		},
+		{
 			test: /\.(js|jsx)?$/,
 			exclude: /node_modules/,
 			loader: 'babel-loader',

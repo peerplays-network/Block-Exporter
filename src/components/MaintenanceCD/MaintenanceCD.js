@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Countdown from 'react-countdown-now';
-import axios from 'axios';
 import styles from './styles.css';
+import {getMaintenanceTime} from '../../api/GeneralApi';
 
 class MaintenanceCD extends Component {
 	constructor() {
@@ -12,15 +12,14 @@ class MaintenanceCD extends Component {
 		const gridHeight=11;
 		this.props.calculateComponentHeight(this.props.id, gridHeight);
 
-		axios.get('api/variables/', {
-		}).then(response => {
-			this.setState({nextMaintenanceTime: response.data[0].value});
+		getMaintenanceTime().then(response => {
+			this.setState({nextMaintenanceTime: response});
 		}).catch(error => {console.log('error fetching maintenance data', error);});
 	}
 	
 	render() {
 		return (
-			<div className={`${styles['box-shadow']} ${styles['centerText']} ${styles['digital']} p-3`} style={this.props.size}>
+			<div className={`${styles['display']}`} style={this.props.size}>
 				<Countdown date={this.state.nextMaintenanceTime} />
 			</div>
 		);

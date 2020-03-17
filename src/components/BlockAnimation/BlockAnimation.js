@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 import * as Constants from '../../constants/constants';
 import Block from './Block';
 import BlockApi from '../../api/BlockApi';
+import styles from './styles.css';
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -75,7 +76,7 @@ class BlockAnimation extends Component
 	render()
 	{
 		return(
-			<div className="container d-flex" >
+			<div className={`${styles['block-container']}`}>
 				<PoseGroup>
 					{this.state.bars.map(num=>(
 						<Item key={num}>
