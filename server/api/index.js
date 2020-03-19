@@ -72,7 +72,7 @@ const api = {
 			
 			// Create SQL Query
 			if (sql === '') {
-				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+				sql = `INSERT INTO blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 	  VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 			} else if (start % 1000 === 0) {
 			} else {
@@ -94,7 +94,7 @@ const api = {
 			}
 
 			if (start % 1000 === 0) {
-				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+				sql = `INSERT INTO blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 				VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 			}
 
@@ -122,7 +122,7 @@ const api = {
 
 
 			// Build block object to be inserted
-			
+
 			const transaction_count = block.transactions.length;
 			const operation_count = block.extensions.length;
 			const witness = block.witness;
@@ -130,17 +130,17 @@ const api = {
 			const previous_block_hash = block.previous;
 			const merkle_root = block.transaction_merkle_root;
 			const timestamp = block.timestamp;
-			
+
 			// Create SQL Query
 			if (sql === '') {
-				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+				sql = `INSERT INTO blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 	  VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 			} else if (start % 1000 === 0) {
 			} else {
 				sql = sql + `, ('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 				// console.log(sql);
 			}
-  
+
 			// Run Query
 			// console.log(start);
 			if (start % 1000 === 0) {
@@ -155,7 +155,7 @@ const api = {
 			}
 
 			if (start % 1000 === 0) {
-				sql = `INSERT INTO explorer.blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+				sql = `INSERT INTO blocks (block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 				VALUES('${start}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 			}
 
@@ -182,7 +182,7 @@ const api = {
 		api.getObject('2.1.0', (error, dynamicGlobal) => {
 			// console.log(dynamicGlobal);
 
-			const sql = `INSERT INTO explorer.variables (var_name, value) VALUES('next_maintenance_time', '${dynamicGlobal.next_maintenance_time}') ON DUPLICATE KEY UPDATE    
+			const sql = `INSERT INTO variables (var_name, value) VALUES('next_maintenance_time', '${dynamicGlobal.next_maintenance_time}') ON DUPLICATE KEY UPDATE    
 			var_name='next_maintenance_time', value='${dynamicGlobal.next_maintenance_time}'`;
 
 
@@ -218,7 +218,7 @@ const api = {
 	  backtrackChain: (connection, blockNum) => {
 		const block_number = blockNum; // head block # from CHAIN
 		const dynamicGlobal = {head_block_id: '', head_block_number: block_number-1};
-		connection.query(`SELECT * FROM explorer.blocks WHERE block_number=${block_number-1}`, function (err, rows, result) { // check the -1
+		connection.query(`SELECT * FROM blocks WHERE block_number=${block_number-1}`, function (err, rows, result) { // check the -1
 			if (err) {
 				throw err;
 			}
@@ -239,7 +239,7 @@ const api = {
 		  const block_id = dynamicGlobal.head_block_id;
 		  const block_number = dynamicGlobal.head_block_number;
 
-		//   connection.query(`SELECT * FROM explorer.blocks WHERE block_number=${block_number-1}`, function (err, rows, result) {
+		//   connection.query(`SELECT * FROM blocks WHERE block_number=${block_number-1}`, function (err, rows, result) {
 		// 	if (err) {
 		// 		throw err;
 		// 	}
@@ -274,7 +274,7 @@ const api = {
 		  
 
 			  // Create SQL Query
-			  const sql = `INSERT INTO explorer.blocks (block_id, block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
+			  const sql = `INSERT INTO blocks (block_id, block_number, transaction_count, operation_count, witness, signature, previous_block_hash, merkle_root, timestamp)
 VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_count}', '${witness}', '${signature}', '${previous_block_hash}', '${merkle_root}', '${timestamp}')`;
 
 		  // Run Query
@@ -309,26 +309,26 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 			// Account and Witness Data
 			if (t.operations[0][0] === 5 && live == 1) {
 				const data = t.operations[0][1];
-				
+
 				const account_name = data.name;
 				const referrer = data.referrer;
 				const owner_key = data.owner.key_auths[0][0];
 				const active_key = data.active.key_auths[0][0];
 				const memo_key = data.options.memo_key;
 				const member_since = timestamp;
-				
+
 				const accountObj = await api.getAccountByName([account_name]);
 				const membership_expiration_date = accountObj[0].membership_expiration_date;
 				const account_id = accountObj[0].id;
-				
-				
+
+
 				// console.log(accountObj[0]);
 				// console.log(t.operations[0][1]);
 				// console.log(t.operations[0][1].name);
-				
+
 				const sql = `INSERT INTO accounts (account_name, membership_expiration, referrer, owner_key, active_key, memo_key, member_since, account_id)
 				VALUES ('${account_name}', '${membership_expiration_date}', '${referrer}', '${owner_key}', '${active_key}', '${memo_key}', '${member_since}', '${account_id}')`;
-				
+
 				connection.query(sql, function(err, result) {
 					if (err) {
 						throw err;
@@ -342,9 +342,9 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				operation_results = JSON.stringify(t.operation_results[0]);
 				extensions = JSON.stringify(t.extensions);
 				signatures = JSON.stringify(t.signatures);
-				const sql = `INSERT INTO explorer.transactions (parent_block, expiration, operations, operation_results, extensions, signatures) VALUES('${parent_block}', '${expiration}', '${operations}', '${operation_results}', '${extensions}', '${signatures}') ON DUPLICATE KEY UPDATE    
+				const sql = `INSERT INTO transactions (parent_block, expiration, operations, operation_results, extensions, signatures) VALUES('${parent_block}', '${expiration}', '${operations}', '${operation_results}', '${extensions}', '${signatures}') ON DUPLICATE KEY UPDATE    
 					parent_block='${parent_block}', expiration='${expiration}', operations='${operations}', operation_results='${operation_results}', extensions='${extensions}', signatures='${signatures}'`;
-			
+
 				connection.query(sql, function (err, result) {
 					if (err) {
 						console.error('ERROR: ', operations);
@@ -354,7 +354,7 @@ VALUES('${block_id}', '${block_number}', '${transaction_count}', '${operation_co
 				//   console.log('Result: ' + JSON.stringify(result));
 				});
 			}
-		});	
+		});
 	  },
 
 	  /* Get a single object from the blockchain

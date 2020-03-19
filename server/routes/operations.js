@@ -7,7 +7,7 @@ router.get('/operations/:id', function (req, res) {
 	const connection = DatabaseUtils.connect();
 
 	// Perform Query
-	connection.query(`SELECT * FROM explorer.operations WHERE id=${req.params.id}`, function (err, rows, fields) {
+	connection.query(`SELECT * FROM operations WHERE id=${req.params.id}`, function (err, rows, fields) {
 		if (err) throw err;
 		// console.log(rows[0])
 		res.send(rows);
@@ -24,7 +24,7 @@ router.get('/operations', function (req, res) {
 	const connection = DatabaseUtils.connect();
 
 	// Perform Query
-	connection.query('SELECT * FROM explorer.operations', function (err, rows, fields) {
+	connection.query('SELECT * FROM operations', function (err, rows, fields) {
 		if (err) throw err;
 		res.send(rows);
 		  });
