@@ -65,5 +65,26 @@ router.get('/accounts', function (req, res, next) {
 	connection.end();
 });
 
+// Accounts API: GET count of accounts
+router.get('/acccountCount', function (req, res) {
+	const connection = DatabaseUtils.connect();
+
+
+	const sql = 'SELECT COUNT(*) FROM accounts;';
+
+	// Perform Query
+	connection.query(sql, function (err, rows, fields) {
+		if (err) throw err;
+
+		if (rows) {
+			res.send(rows[0]['COUNT(*)'].toString());
+		} else {
+			res.send('0');
+		}
+	});
+
+	// Close connection
+	connection.end();
+});
 
 module.exports = router;
