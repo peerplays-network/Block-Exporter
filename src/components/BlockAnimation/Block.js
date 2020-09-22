@@ -30,7 +30,7 @@ class Block extends Component
 				<Tooltip title={`block${num}`} placement="bottom" open={tooltipOpen} onOpen={this.open}
 					onClose={this.close}
 					enterDelay={250}>
-					{`Block: ${num}`}
+					 <span>{`Block: ${num}`}</ span>
 				</Tooltip>
 			</div>
 		);
