@@ -1,0 +1,20 @@
+# gitlab scanning
+include:
+  - template: Dependency-Scanning.gitlab-ci.yml
+  - template: License-Management.gitlab-ci.yml
+  - template: SAST.gitlab-ci.yml
+  - template: Code-Quality.gitlab-ci.yml
+
+# node docker image on which this would be run
+image: node:12.2.0
+
+stages:
+  - test
+
+# builds app
+build:
+  stage: test
+  script:
+    - npm install
+  tags:
+    - docker

@@ -22,6 +22,7 @@ import FeeDirectory from '../FeeDirectory/FeeDirectory';
 import Account from '../Account/Account';
 import GridLayout, {WidthProvider as widthProvider} from 'react-grid-layout';
 import Committee from '../Committee/Committee';
+import AccountCount from '../../components/Account/AccountCount'
 
 const Grid = widthProvider(GridLayout);
 
@@ -203,6 +204,7 @@ class Welcome extends Component {
 		return (
 			<div>
 				<div>
+					<AccountCount />
 					<Grid className={`${styles['react-grid-layout']} layout`} layout={newLayout} cols={80} compactType={'vertical'} 
 						rowHeight={10} draggableCancel=".panel-body,.close" autoSize={false} isResizable={false} 
 						margin={[10, 10]} containerPadding={[0, 10]} onLayoutChange={(newLayout) => this.onLayoutChange(newLayout)}

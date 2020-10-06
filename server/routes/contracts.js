@@ -7,7 +7,7 @@ router.get('/contracts/:name', function (req, res) {
 
 	const connection = DatabaseUtils.connect();
     
-	const sql = `SELECT * FROM explorer.contracts WHERE name = '${req.params.name}'`;
+	const sql = `SELECT * FROM contracts WHERE name = '${req.params.name}'`;
     
 	// Perform Query
 	connection.query(sql, function (err, rows, fields) {
@@ -31,7 +31,7 @@ router.get('/contracts', function (req, res) {
 	const connection = DatabaseUtils.connect();
 
     
-	let sql = 'SELECT * FROM explorer.contracts';
+	let sql = 'SELECT * FROM contracts';
     
 
 	if (req.query.sort) { // Handle sorting and direction
@@ -39,9 +39,9 @@ router.get('/contracts', function (req, res) {
 			res.status(400).send('400 Bad Request - Invalid sort parameter, shame on you');
 			return;
 		}
-		sql = `SELECT * FROM explorer.contracts ORDER BY LENGTH(${req.query.sort}) ASC, ${req.query.sort} ASC`; // Natural Sort
+		sql = `SELECT * FROM contracts ORDER BY LENGTH(${req.query.sort}) ASC, ${req.query.sort} ASC`; // Natural Sort
 		if (req.query.sort == 'balances') {
-			sql = `SELECT *, JSON_EXTRACT(balances, "$[0].amount") as amount FROM explorer.contracts
+			sql = `SELECT *, JSON_EXTRACT(balances, "$[0].amount") as amount FROM contracts
 			order by amount ASC, amount ASC`;
 		}
 		if (req.query.direction) {
@@ -49,9 +49,9 @@ router.get('/contracts', function (req, res) {
 				res.status(400).send('400 Bad Request - Invalid direction');
 				return;
 			} else {
-				sql = `SELECT * FROM explorer.contracts ORDER BY LENGTH(${req.query.sort}) ${req.query.direction}, ${req.query.sort} ${req.query.direction}`; // NATURAL SORT;
+				sql = `SELECT * FROM contracts ORDER BY LENGTH(${req.query.sort}) ${req.query.direction}, ${req.query.sort} ${req.query.direction}`; // NATURAL SORT;
 				if (req.query.sort == 'balances') {
-					sql = `SELECT *, JSON_EXTRACT(balances, "$[0].amount") as amount FROM explorer.contracts
+					sql = `SELECT *, JSON_EXTRACT(balances, "$[0].amount") as amount FROM contracts
 					order by amount ${req.query.direction}, amount ${req.query.direction}`;
 				}
 			}
